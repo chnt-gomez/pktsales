@@ -5,4 +5,16 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+    <string name="success">Success!</string>
+    <string name="error">Error</string>
+    <string name="title_activity_inventory">InventoryActivity</string>
+    <string name="menu_inventory">Inventory</string>
+    <string name="menu_sales">Sales</string>
+    <string name="menu_sort">Sort</string>
+    <string name="menu_search">Search</string>
+    <string name="search">Search...</string>
+    <string name="hint_product_name">Product name...</string>
+    <string name="hint_sell_price">Price...</string>
+    <string name="desc_ok_button">Create</string>
+    <string name="desc_cancel_button">Cancel</string>
 </resources>
