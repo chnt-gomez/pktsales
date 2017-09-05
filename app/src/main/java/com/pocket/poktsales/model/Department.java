@@ -18,10 +18,12 @@ public class Department extends SugarRecord {
     @Ignore
     public static final int INACTIVE = 1;
 
-    public String departmentName;
-    public int departmentStatus;
-    public int iconResource;
-    public int colorResource;
+    private String departmentName;
+    private int departmentStatus;
+    private int iconResource;
+    private int colorResource;
+
+    public Department(){}
 
     public String getDepartmentName() {
         if (departmentName == null)

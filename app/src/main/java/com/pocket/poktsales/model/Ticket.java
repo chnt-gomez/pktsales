@@ -8,9 +8,10 @@ import com.orm.SugarRecord;
 
 public class Ticket extends SugarRecord {
 
-    public long dateTime;
+    private long dateTime;
+    private float saleTotal;
 
-    public float saleTotal;
+    public Ticket(){}
 
     public long getDateTime() {
         return dateTime;

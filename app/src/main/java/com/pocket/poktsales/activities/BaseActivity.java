@@ -8,8 +8,11 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.animation.AccelerateInterpolator;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.pocket.poktsales.R;
+import com.pocket.poktsales.interfaces.OnLoadingEventListener;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
 
 import butterknife.BindView;
@@ -19,13 +22,15 @@ import butterknife.ButterKnife;
  * Created by vicente on 30/08/17.
  */
 
-public class BaseActivity extends AppCompatActivity implements RequiredViewOps {
+public class BaseActivity extends AppCompatActivity implements RequiredViewOps, OnLoadingEventListener {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
     @BindView(R.id.coordinator_layout)
     CoordinatorLayout coordinatorLayout;
+
+    protected ProgressBar loadingBar;
 
     protected int layoutResourceId;
 
@@ -83,5 +88,47 @@ public class BaseActivity extends AppCompatActivity implements RequiredViewOps {
         TextView tv = (TextView)snack.getView().findViewById((android.support.design.R.id.snackbar_text));
         tv.setTextColor(Color.parseColor("#ff7f7f"));
         snack.show();
+    }
+
+    @Override
+    public void onLoadingPrepare() {
+        if (loadingBar != null){
+            loadingBar.animate()
+                    .setInterpolator(new AccelerateInterpolator())
+                    .setDuration(300)
+                    .alpha(1f);
+        }
+    }
+
+    @Override
+    public void onLoading() {
+
+    }
+
+    @Override
+    public void onLoading(String searchArgs) {
+
+    }
+
+    @Override
+    public void onLoadingComplete() {
+        if (loadingBar != null){
+            loadingBar.animate()
+                    .translationY(-loadingBar.getHeight())
+                    .setInterpolator(new AccelerateInterpolator())
+                    .setDuration(300)
+                    .alpha(0f);
+        }
+    }
+
+    @Override
+    public void onLoadingError() {
+        if (loadingBar != null){
+            loadingBar.animate()
+                    .translationY(-loadingBar.getHeight())
+                    .setInterpolator(new AccelerateInterpolator())
+                    .setDuration(300)
+                    .alpha(0f);
+        }
     }
 }

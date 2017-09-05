@@ -23,8 +23,9 @@ public class Product extends SugarRecord {
     private int productMeasureUnit;
     private float productSellPrice;
     private int productStatus;
-
     private Department department;
+
+    public Product (){}
 
     public String getProductName() {
         if (productName == null)

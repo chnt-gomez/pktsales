@@ -17,4 +17,13 @@
     <string name="hint_sell_price">Price...</string>
     <string name="desc_ok_button">Create</string>
     <string name="desc_cancel_button">Cancel</string>
+    <string name="measure_piece">Piece</string>
+    <string name="measure_kg">Kilogram</string>
+    <string name="measure_lb">Pound</string>
+    <string name="measure_g">Gram</string>
+    <string name="measure_lt">Liter</string>
+    <string name="measure_oz">Ounce</string>
+    <string name="measure_non_specified">Not measured</string>
+    <string name="header_product_name">Product name</string>
+    <string name="header_product_price">Price</string>
 </resources>

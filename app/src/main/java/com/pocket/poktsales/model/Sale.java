@@ -8,12 +8,13 @@ import com.orm.SugarRecord;
 
 public class Sale extends SugarRecord {
 
-    public String saleConcept;
-    public float productAmount;
-    public float saleTotal;
+    private String saleConcept;
+    private float productAmount;
+    private float saleTotal;
+    private Product product;
+    private Ticket ticket;
 
-    public Product product;
-    public Ticket ticket;
+    public Sale(){}
 
     public String getSaleConcept() {
         return saleConcept;
