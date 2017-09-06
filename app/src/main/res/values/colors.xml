@@ -5,4 +5,5 @@
     <color name="colorAccent">#0cc4f7</color>
     <color name="colorSubtleGray">#d3d3d3</color>
     <color name="colorSubtleError">#ff7f7f</color>
+    <color name="defaultText">#757575</color>
 </resources>

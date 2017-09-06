@@ -33,7 +33,6 @@ public class DialogBuilder {
         spnProductMeasure.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item,
                 MeasurePicker.getEntries(context.getResources())));
         ImageButton positiveButton = (ImageButton)dialogView.findViewById(R.id.btn_ok);
-        ImageButton negativeButton = (ImageButton)dialogView.findViewById(R.id.btn_cancel);
         positiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -44,12 +43,6 @@ public class DialogBuilder {
                 if (instance != null)
                     instance.dismiss();
                 callback.onNewProduct(product);
-            }
-        });
-        negativeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                instance.dismiss();
             }
         });
         builder.setView(dialogView);

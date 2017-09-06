@@ -37,6 +37,8 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps 
     @Override
     public long createProduct(Product product) {
         if (!isProductNameInUse(product.getProductName())) {
+            if (product.getProductName().equals("")){}
+                //TODO: Name it with a custom label.
             product.save();
             view.onSuccess();
             return product.getId();

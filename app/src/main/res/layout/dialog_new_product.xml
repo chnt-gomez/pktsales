@@ -7,22 +7,25 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/margin_big"
+        android:paddingTop="@dimen/margin_big"
         android:background="@color/colorPrimary"
-        android:orientation="horizontal">
+        android:layout_marginBottom="@dimen/margin_big"
+        android:orientation="vertical">
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/padding_title"
+            android:layout_gravity="center_horizontal"
             android:src="@drawable/ic_box_big"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
-            android:textStyle="bold"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:textAlignment="center"
             android:layout_gravity="center_vertical"
-            android:text="New product"
+            android:text="@string/new_product"
             android:padding="@dimen/padding_title"/>
     </LinearLayout>
 
@@ -57,21 +60,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="end"
         android:background="@color/colorSubtleGray">
 
         <ImageButton
-            android:contentDescription="@string/desc_cancel_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/btn_cancel"
-            android:src="@drawable/ic_close"/>
-
-        <ImageButton
+            android:padding="@dimen/padding_medium"
             android:contentDescription="@string/desc_ok_button"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/btn_ok"
+            android:background="@drawable/selector_button_gray"
             android:src="@drawable/ic_check"/>
 
     </LinearLayout>

@@ -109,13 +109,13 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        onSuccess();
+        search(query);
         return true;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        if (newText.length() >= 3 && newText.length() % 3 == 0){
+        if (newText.length() >= 3 || newText.length() % 3 == 0){
             search(newText);
         }
 

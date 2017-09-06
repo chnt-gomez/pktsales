@@ -26,4 +26,5 @@
     <string name="measure_non_specified">Not measured</string>
     <string name="header_product_name">Product name</string>
     <string name="header_product_price">Price</string>
+    <string name="new_product">New product...</string>
 </resources>
