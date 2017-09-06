@@ -17,15 +17,35 @@ public class Product extends SugarRecord {
     public static final int ACTIVE = 0;
     @Ignore
     public static final int INACTIVE = 1;
+    @Ignore
+    public static final int INVENTORY_YES = 1;
+    @Ignore
+    public static final int INVENTORY_NO = 0;
 
     private String productName;
     private float productExistences;
     private int productMeasureUnit;
     private float productSellPrice;
     private int productStatus;
+    private int productInventory;
     private Department department;
 
     public Product (){}
+
+    public int getProductInventory() {
+        return productInventory;
+    }
+
+    public void setProductInventory(int productInventory) {
+        if (productInventory == INVENTORY_YES) {
+            this.productInventory = productInventory;
+        }else if (productInventory == INVENTORY_NO) {
+            this.productInventory = productInventory;
+        }else {
+            Log.w(getClass().getSimpleName(), String.format(Locale.getDefault(),
+                    "Product inventory was expected to be 1 or 0. Setting 0 instead of %d", productInventory));
+        }
+    }
 
     public String getProductName() {
         if (productName == null)
@@ -74,5 +94,17 @@ public class Product extends SugarRecord {
             Log.w(getClass().getSimpleName(), String.format(Locale.getDefault(),
                     "Product status was expected to be 1 or 0. Setting 0 instead of %d", productStatus));
         }
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public enum Sorting {
+        ALPHABETICAL, PRICE, NONE
     }
 }

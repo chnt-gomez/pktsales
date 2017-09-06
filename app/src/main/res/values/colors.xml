@@ -3,6 +3,8 @@
     <color name="colorPrimary">#1c2430</color>
     <color name="colorPrimaryDark">#1c2430</color>
     <color name="colorAccent">#0cc4f7</color>
+    <color name="colorAccentDark">#088db2</color>
+    <color name="colorAccentLight">#a3dded</color>
     <color name="colorSubtleGray">#d3d3d3</color>
     <color name="colorSubtleError">#ff7f7f</color>
     <color name="defaultText">#757575</color>

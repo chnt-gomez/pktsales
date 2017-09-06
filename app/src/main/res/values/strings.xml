@@ -27,4 +27,10 @@
     <string name="header_product_name">Product name</string>
     <string name="header_product_price">Price</string>
     <string name="new_product">New product...</string>
+    <string name="desc_product">Product description</string>
+    <string name="inventory_product">Inventory product</string>
+    <string name="sort">Sort by...</string>
+    <string name="alphabetically">Alphabetically</string>
+    <string name="price">Price</string>
+    <string name="none">None</string>
 </resources>

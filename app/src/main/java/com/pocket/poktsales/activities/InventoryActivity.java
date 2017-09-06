@@ -9,6 +9,7 @@ import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import com.pocket.poktsales.R;
@@ -22,7 +23,8 @@ import com.pocket.poktsales.utils.DialogBuilder;
 
 import butterknife.BindView;
 
-public class InventoryActivity extends BaseActivity implements SearchView.OnQueryTextListener {
+public class InventoryActivity extends BaseActivity implements SearchView.OnQueryTextListener,
+        AdapterView.OnItemClickListener {
 
     @BindView(R.id.fab)
     FloatingActionButton btnAdd;
@@ -33,6 +35,8 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
 
     @BindView(R.id.lv_products)
     ListView lvProducts;
+
+    Product.Sorting sessionSorting = Product.Sorting.NONE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +57,24 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
         searchView.setSubmitButtonEnabled(true);
         searchView.setOnQueryTextListener(this);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_sort){
+            openSelectionDialog();
+            return true;
+        }
+        return false;
+    }
+
+    private void openSelectionDialog() {
+        DialogBuilder.sortProductsDialog(InventoryActivity.this, new DialogBuilder.DialogInteractionListener.OnSortProductsListener() {
+            @Override
+            public void onSortProducts(long departmentId, Product.Sorting sorting) {
+
+            }
+        }).show();
     }
 
     @Override
@@ -80,7 +102,7 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
                 }).show();
             }
         });
-
+        lvProducts.setOnItemClickListener(this);
 
     }
 
@@ -92,7 +114,7 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
     @Override
     public void onLoading() {
         adapter = new SimpleProductAdapter(getApplicationContext(), R.layout.row_simple_product,
-                presenter.getAllProducts());
+                presenter.getAllProducts(sessionSorting));
     }
 
     @Override
@@ -133,5 +155,24 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
     @Override
     public void onSuccess() {
         start();
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+       seeProduct(l);
+    }
+
+    private void seeProduct(long id) {
+        if (id != -1){
+            DialogBuilder.seeProductDialog(InventoryActivity.this, presenter.getProduct(id),
+                    presenter, new DialogBuilder.DialogInteractionListener.OnSaveProductListener() {
+                        @Override
+                        public void onSaveProduct(Product product) {
+                            presenter.updateProduct(product);
+                        }
+                    }).show();
+        }else{
+            onError();
+        }
     }
 }

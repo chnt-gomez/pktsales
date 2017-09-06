@@ -45,4 +45,10 @@ public class SimpleProductAdapter extends ArrayAdapter<Product> {
 
         return convertView;
     }
+
+    @Override
+    public long getItemId(int position) {
+        Product product = getItem(position);
+        return product != null ? product.getId(): -1;
+    }
 }

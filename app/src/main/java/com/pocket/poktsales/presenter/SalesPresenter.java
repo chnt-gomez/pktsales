@@ -69,8 +69,9 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps 
     }
 
     @Override
-    public List<Product> getAllProducts() {
-        return findAllProducts();
+    public List<Product> getAllProducts(Product.Sorting sorting) {
+
+        return findAllProducts(sorting);
     }
 
     @Override
@@ -133,11 +134,10 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps 
         }
     }
 
-
-
-
-
-
+    @Override
+    public List<Department> getAllDepartments() {
+        return Department.listAll(Department.class);
+    }
 
     /*
     Internal Methods
@@ -165,8 +165,12 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps 
         }
     }
 
-    private List<Product> findAllProducts() {
-        return Product.listAll(Product.class);
+    private List<Product> findAllProducts(Product.Sorting sorting) {
+        if (sorting == Product.Sorting.ALPHABETICAL)
+            return Product.find(Product.class, "product_status = ?", String.valueOf(Product.ACTIVE), null, "product_name", null);
+        if (sorting == Product.Sorting.PRICE)
+            return Product.find(Product.class, "product_status = ?", String.valueOf(Product.ACTIVE), null, "product_sell_price", null);
+        return Product.find(Product.class, "product_status = ?", String.valueOf(Product.ACTIVE));
     }
 
     private static String formatForQuery(String rawQuery){
@@ -174,10 +178,12 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps 
     }
 
     private List<Product> searchProductsWithQuery(String searchArg) {
-        return Product.find(Product.class, "product_name LIKE ?", "%"+formatForQuery(searchArg)+"%");
+        return Product.find(Product.class, "product_name LIKE ? AND product_status = ?", "%"+formatForQuery(searchArg)+"%",
+                String.valueOf(Product.ACTIVE));
     }
 
-    private List<Product> getProductsFromDepartment(Long id) {
-        return Product.find(Product.class, "department = ?", String.valueOf(id));
+    private List<Product> getProductsFromDepartment(long id) {
+        return Product.find(Product.class, "department = ? AND product_status = ?", String.valueOf(id)
+        , String.valueOf(Product.ACTIVE));
     }
 }

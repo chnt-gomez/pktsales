@@ -15,7 +15,7 @@ public interface RequiredPresenterOps {
         long createProduct(Product product);
         Product getProduct(String productName);
         Product getProduct(long productId);
-        List<Product> getAllProducts();
+        List<Product> getAllProducts(Product.Sorting sorting);
         List<Product> searchProducts(String searchArg);
         List<Product> getProductsInDepartment(Department department);
         List<Product> getProductsInDepartment(long departmentId);
@@ -23,7 +23,6 @@ public interface RequiredPresenterOps {
         void deactivateProduct(Product product);
         void deactivateProduct(long productId);
         long reActivateProduct(long productId);
+        List<Department> getAllDepartments();
     }
-
-
 }
