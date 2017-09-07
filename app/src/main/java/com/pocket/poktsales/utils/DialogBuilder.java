@@ -3,12 +3,14 @@ package com.pocket.poktsales.utils;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -20,6 +22,8 @@ import com.pocket.poktsales.model.Product;
 import com.pocket.poktsales.presenter.SalesPresenter;
 
 import java.util.List;
+
+import butterknife.internal.ListenerClass;
 
 /**
  * Created by MAV1GA on 04/09/2017.
@@ -58,21 +62,42 @@ public class DialogBuilder {
 
     }
 
-    public static Dialog sortProductsDialog(final Context context,
+    public static Dialog sortProductsDialog(final Context context, RequiredPresenterOps.ProductPresenterOps presenterOps,
+                                            Product.Sorting sorting,
                                           final DialogInteractionListener.OnSortProductsListener callback){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         @SuppressLint("InflateParams")
         final View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_sort_products, null);
-
-
+        final List<Department> allDepartments = presenterOps.getAllDepartments();
+        final Spinner spnDepartments = (Spinner)dialogView.findViewById(R.id.spn_department);
+        if (allDepartments != null && allDepartments.size() > 0)
+            spnDepartments.setAdapter(new DropDownDepartmentAdapter(context, R.layout.dropdown_department_item,
+                    allDepartments));
+        else
+            spnDepartments.setVisibility(View.GONE);
+        final RadioButton rbNone = (RadioButton)dialogView.findViewById(R.id.rd_none);
+        if (sorting == Product.Sorting.NONE)
+            rbNone.setChecked(true);
+        final RadioButton rbAlphabetically =(RadioButton)dialogView.findViewById(R.id.rd_alphabetically);
+        if (sorting == Product.Sorting.ALPHABETICAL)
+            rbAlphabetically.setChecked(true);
+        final RadioButton rbPrice = (RadioButton)dialogView.findViewById(R.id.rd_price);
+        if (sorting == Product.Sorting.PRICE)
+            rbPrice.setChecked(true);
         ImageButton positiveButton = (ImageButton)dialogView.findViewById(R.id.btn_ok);
         positiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Product.Sorting sorting = Product.Sorting.NONE;
+                if (rbNone.isChecked())
+                    sorting = Product.Sorting.NONE;
+                if (rbPrice.isChecked())
+                    sorting = Product.Sorting.PRICE;
+                if (rbAlphabetically.isChecked())
+                    sorting = Product.Sorting.ALPHABETICAL;
                 if (instance != null)
                     instance.dismiss();
-                //callback.onSortProducts();
+                callback.onSortProducts(-1, sorting);
             }
         });
         builder.setView(dialogView);
@@ -96,6 +121,8 @@ public class DialogBuilder {
         final EditText etProductName = (EditText) dialogView.findViewById(R.id.et_product_name);
         final EditText etProductPrice = (EditText) dialogView.findViewById(R.id.et_product_price);
         final Spinner spnDepartments = (Spinner) dialogView.findViewById(R.id.spn_product_department);
+        final ImageButton btnDelete = (ImageButton)dialogView.findViewById(R.id.btn_delete);
+        final ImageButton positiveButton = (ImageButton) dialogView.findViewById(R.id.btn_ok);
         spnProductMeasure.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item,
                 MeasurePicker.getEntries(context.getResources())));
         List<Department>deps = presenterOps.getAllDepartments();
@@ -115,7 +142,20 @@ public class DialogBuilder {
         etProductPrice.setText(Conversor.asCurrency(product.getProductSellPrice()));
         spnProductMeasure.setSelection(product.getProductMeasureUnit());
 
-        ImageButton positiveButton = (ImageButton) dialogView.findViewById(R.id.btn_ok);
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                positiveButton.setBackgroundResource(R.drawable.selector_button_delete);
+                positiveButton.setImageResource(R.drawable.ic_delete_big);
+                positiveButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        callback.onDeleteProduct(product.getId());
+                    }
+                });
+            }
+        });
+
         positiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -139,6 +179,7 @@ public class DialogBuilder {
         }
         public interface OnSaveProductListener{
             void onSaveProduct(Product product);
+            void onDeleteProduct(long productId);
         }
         public interface OnSortProductsListener{
             void onSortProducts(long departmentId, Product.Sorting sorting);

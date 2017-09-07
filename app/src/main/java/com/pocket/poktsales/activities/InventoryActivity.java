@@ -69,10 +69,11 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
     }
 
     private void openSelectionDialog() {
-        DialogBuilder.sortProductsDialog(InventoryActivity.this, new DialogBuilder.DialogInteractionListener.OnSortProductsListener() {
+        DialogBuilder.sortProductsDialog(InventoryActivity.this, presenter, sessionSorting, new DialogBuilder.DialogInteractionListener.OnSortProductsListener() {
             @Override
             public void onSortProducts(long departmentId, Product.Sorting sorting) {
-
+                sessionSorting = sorting;
+                start();
             }
         }).show();
     }
@@ -169,6 +170,11 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
                         @Override
                         public void onSaveProduct(Product product) {
                             presenter.updateProduct(product);
+                        }
+
+                        @Override
+                        public void onDeleteProduct(long productId) {
+                            presenter.deactivateProduct(productId);
                         }
                     }).show();
         }else{

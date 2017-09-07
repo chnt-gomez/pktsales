@@ -41,7 +41,7 @@
        <RadioButton
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
-           android:id="@+id/rd_nonce"
+           android:id="@+id/rd_none"
            android:text="@string/none"/>
        <RadioButton
            android:layout_width="match_parent"

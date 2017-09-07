@@ -92,7 +92,7 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps 
 
     @Override
     public Product updateProduct(Product newProductArgs) {
-        if (isProductNameInUse(newProductArgs.getProductName())){
+        if (isProductNameInUse(newProductArgs.getProductName(), newProductArgs.getId())){
             view.onError("Name in use");
         }else{
             newProductArgs.save();
@@ -147,6 +147,14 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps 
         return Product.find(Product.class, "product_name = ?", productName).size() >= 1;
     }
 
+    private boolean isProductNameInUse(String productName, long productId){
+        for (Product p : Product.find(Product.class, "product_name = ?", productName)){
+            if (p.getId() != productId)
+                return true;
+        }
+        return false;
+    }
+
     private Product findProductByName(String name){
         try {
             return Product.find(Product.class, "product_name = ?", name).get(0);
@@ -166,10 +174,11 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps 
     }
 
     private List<Product> findAllProducts(Product.Sorting sorting) {
+        String args[] = {String.valueOf(Product.ACTIVE)};
         if (sorting == Product.Sorting.ALPHABETICAL)
-            return Product.find(Product.class, "product_status = ?", String.valueOf(Product.ACTIVE), null, "product_name", null);
+            return Product.find(Product.class, "product_status = ?", args, null, "product_name", null);
         if (sorting == Product.Sorting.PRICE)
-            return Product.find(Product.class, "product_status = ?", String.valueOf(Product.ACTIVE), null, "product_sell_price", null);
+            return Product.find(Product.class, "product_status = ?", args, null, "product_sell_price", null);
         return Product.find(Product.class, "product_status = ?", String.valueOf(Product.ACTIVE));
     }
 
