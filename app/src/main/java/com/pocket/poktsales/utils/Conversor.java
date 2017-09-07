@@ -28,4 +28,14 @@ public class Conversor {
         }
     }
 
+    public static String asFloat(float argument){
+        try{
+            return String.format(Locale.US, "%.2f", argument);
+        }catch (NumberFormatException e){
+            Log.w("Conversor", String.format("%d can't be converted to a currency String", argument));
+            return String.valueOf(argument);
+        }
+    }
+
+
 }

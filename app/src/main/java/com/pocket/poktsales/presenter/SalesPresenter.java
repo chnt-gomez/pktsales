@@ -144,11 +144,13 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps 
      */
 
     private boolean isProductNameInUse(String productName){
-        return Product.find(Product.class, "product_name = ?", productName).size() >= 1;
+        String args[] = {productName, String.valueOf(Product.ACTIVE)};
+        return Product.find(Product.class, "product_name = ? AND product_status = ?", args).size() >= 1;
     }
 
     private boolean isProductNameInUse(String productName, long productId){
-        for (Product p : Product.find(Product.class, "product_name = ?", productName)){
+        String args[] = {productName, String.valueOf(Product.ACTIVE)};
+        for (Product p : Product.find(Product.class, "product_name = ? AND product_status = ?", args)){
             if (p.getId() != productId)
                 return true;
         }

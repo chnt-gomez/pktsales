@@ -123,6 +123,7 @@ public class DialogBuilder {
         final Spinner spnDepartments = (Spinner) dialogView.findViewById(R.id.spn_product_department);
         final ImageButton btnDelete = (ImageButton)dialogView.findViewById(R.id.btn_delete);
         final ImageButton positiveButton = (ImageButton) dialogView.findViewById(R.id.btn_ok);
+        final ImageButton btnNoDelete = (ImageButton)dialogView.findViewById(R.id.btn_cancel_delete);
         spnProductMeasure.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item,
                 MeasurePicker.getEntries(context.getResources())));
         List<Department>deps = presenterOps.getAllDepartments();
@@ -139,18 +140,45 @@ public class DialogBuilder {
          */
         tvProductName.setText(product.getProductName());
         etProductName.setText(product.getProductName());
-        etProductPrice.setText(Conversor.asCurrency(product.getProductSellPrice()));
+        etProductPrice.setText(Conversor.asFloat(product.getProductSellPrice()));
         spnProductMeasure.setSelection(product.getProductMeasureUnit());
-
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 positiveButton.setBackgroundResource(R.drawable.selector_button_delete);
                 positiveButton.setImageResource(R.drawable.ic_delete_big);
+                tvProductName.setText(product.getProductName()+" "+context.getString(R.string.will_be_deleted));
+                btnDelete.setVisibility(View.GONE);
+                btnNoDelete.setVisibility(View.VISIBLE);
                 positiveButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if (instance != null)
+                            instance.dismiss();
                         callback.onDeleteProduct(product.getId());
+                    }
+                });
+            }
+        });
+
+        btnNoDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                positiveButton.setBackgroundResource(R.drawable.selector_button_gray);
+                positiveButton.setImageResource(R.drawable.ic_save);
+                tvProductName.setText(product.getProductName());
+                btnNoDelete.setVisibility(View.GONE);
+                btnDelete.setVisibility(View.VISIBLE);
+                positiveButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        product.setProductName(etProductName.getText().toString());
+                        product.setProductMeasureUnit(spnProductMeasure.getSelectedItemPosition());
+                        product.setProductSellPrice(Conversor.toFloat(etProductPrice.getText().toString()));
+                        if (instance != null)
+                            instance.dismiss();
+
+                        callback.onSaveProduct(product);
                     }
                 });
             }

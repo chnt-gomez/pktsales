@@ -21,6 +21,16 @@
             android:layout_gravity="end"
             android:background="@null"
             android:src="@drawable/ic_delete"/>
+        <ImageButton
+            android:contentDescription="@string/delete_product"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_cancel_delete"
+            android:layout_marginEnd="@dimen/margin_big"
+            android:layout_gravity="end"
+            android:background="@null"
+            android:visibility="gone"
+            android:src="@drawable/ic_delete_empty"/>
         <ImageView
             android:contentDescription="@string/desc_product"
             android:layout_width="wrap_content"
@@ -70,24 +80,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/spn_product_department"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/padding_small"
-        android:orientation="horizontal"
-        android:weightSum="2">
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/inventory_product" />
-        <Switch
-            android:layout_width="0dp"
-            android:layout_marginRight="@dimen/padding_medium"
-            android:id="@+id/sch_product_inventory"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
-    </LinearLayout>
 
     <LinearLayout
         android:layout_marginTop="@dimen/margin_big"
