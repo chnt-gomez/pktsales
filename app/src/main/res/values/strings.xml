@@ -35,4 +35,5 @@
     <string name="none">None</string>
     <string name="delete_product">Delete product</string>
     <string name="will_be_deleted">will be deleted!</string>
+    <string name="title_activity_sell">SellActivity</string>
 </resources>

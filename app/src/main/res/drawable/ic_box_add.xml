@@ -10,7 +10,7 @@
         android:pathData="M9,0H5C4.666,0 4.354,0.168 4.168,0.446L0.465,6H9V0z"
         android:fillColor="#FFFFFFFF"/>
     <path
-        android:pathData="M20,8H0v11c0,0.552 0.448,1 1,1h13c0,0 0,-0.001 0,-0.002c0,-3.314 2.687,-6 6,-6V8z"
+        android:pathData="M20,8H0v11c0,0.552 0.448,1 1,1h13c0,0 0,-0.001 0,-0.002c0,-3.314 2.67,-6 6,-6V8z"
         android:fillColor="#FFFFFFFF"/>
     <path
         android:pathData="M21,18.998l0,-3l-2,0l0,3l-3,0l0,2l3,0l0,3l2,0l0,-3l3,0l0,-2z"
