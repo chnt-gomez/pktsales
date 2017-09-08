@@ -38,6 +38,9 @@ public class DropDownDepartmentAdapter extends ArrayAdapter<Department> {
         return convertView;
     }
 
+    
+    @SuppressLint("InflateParams")
+    @NonNull
     @Override
     public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         if (convertView == null)

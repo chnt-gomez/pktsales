@@ -1,7 +1,5 @@
 package com.pocket.poktsales.utils;
-
 import android.content.res.Resources;
-
 import com.pocket.poktsales.R;
 
 /**
