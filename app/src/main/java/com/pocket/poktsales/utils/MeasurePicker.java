@@ -42,7 +42,7 @@ public class MeasurePicker {
         return res.getString(ref);
     }
 
-    static String[] getEntries(Resources res){
+    public static String[] getEntries(Resources res){
         String[] entries = new String[6];
         for (int i=0; i<6; i++){
             entries[i] = getString(res, i);

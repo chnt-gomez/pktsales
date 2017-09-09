@@ -3,7 +3,6 @@ package com.pocket.poktsales.utils;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,11 +18,8 @@ import com.pocket.poktsales.adapters.DropDownDepartmentAdapter;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.model.Department;
 import com.pocket.poktsales.model.Product;
-import com.pocket.poktsales.presenter.SalesPresenter;
 
 import java.util.List;
-
-import butterknife.internal.ListenerClass;
 
 /**
  * Created by MAV1GA on 04/09/2017.
@@ -107,93 +103,22 @@ public class DialogBuilder {
     }
 
 
-    public static Dialog seeProductDialog(final Context context, final Product product,
-                                          RequiredPresenterOps.ProductPresenterOps presenterOps,
-                                          final DialogInteractionListener.OnSaveProductListener callback) {
+    public static Dialog confirmDeleteProductDialog(final Context context, final Product product,
+                                          final DialogInteractionListener.OnDeleteProductListener callback) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         @SuppressLint("InflateParams")
-        final View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_see_product, null);
+        final View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_confirm_delete, null);
         /*
         Init widgets
          */
         final TextView tvProductName = (TextView) dialogView.findViewById(R.id.tv_product_name);
-        final Spinner spnProductMeasure = (Spinner) dialogView.findViewById(R.id.spn_product_measure);
-        final EditText etProductName = (EditText) dialogView.findViewById(R.id.et_product_name);
-        final EditText etProductPrice = (EditText) dialogView.findViewById(R.id.et_product_price);
-        final Spinner spnDepartments = (Spinner) dialogView.findViewById(R.id.spn_product_department);
-        final ImageButton btnDelete = (ImageButton)dialogView.findViewById(R.id.btn_delete);
-        final ImageButton positiveButton = (ImageButton) dialogView.findViewById(R.id.btn_ok);
-        final ImageButton btnNoDelete = (ImageButton)dialogView.findViewById(R.id.btn_cancel_delete);
-        spnProductMeasure.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item,
-                MeasurePicker.getEntries(context.getResources())));
-        List<Department>deps = presenterOps.getAllDepartments();
-        if (deps != null && deps.size() > 0){
-            spnDepartments.setAdapter(new DropDownDepartmentAdapter(context, R.layout.dropdown_department_item,
-                    presenterOps.getAllDepartments()));
-        }else{
-            spnDepartments.setVisibility(View.GONE);
-        }
-
-
-        /*
-        Set values
-         */
-        tvProductName.setText(product.getProductName());
-        etProductName.setText(product.getProductName());
-        etProductPrice.setText(Conversor.asFloat(product.getProductSellPrice()));
-        spnProductMeasure.setSelection(product.getProductMeasureUnit());
+        final ImageButton btnDelete = (ImageButton)dialogView.findViewById(R.id.btn_confirm_delete);
+        tvProductName.setText(product.getProductName()+" "+context.getString(R.string.will_be_deleted));
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                positiveButton.setBackgroundResource(R.drawable.selector_button_delete);
-                positiveButton.setImageResource(R.drawable.ic_delete_big);
-                tvProductName.setText(product.getProductName()+" "+context.getString(R.string.will_be_deleted));
-                btnDelete.setVisibility(View.GONE);
-                btnNoDelete.setVisibility(View.VISIBLE);
-                positiveButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (instance != null)
-                            instance.dismiss();
-                        callback.onDeleteProduct(product.getId());
-                    }
-                });
-            }
-        });
-
-        btnNoDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                positiveButton.setBackgroundResource(R.drawable.selector_button_gray);
-                positiveButton.setImageResource(R.drawable.ic_save);
-                tvProductName.setText(product.getProductName());
-                btnNoDelete.setVisibility(View.GONE);
-                btnDelete.setVisibility(View.VISIBLE);
-                positiveButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        product.setProductName(etProductName.getText().toString());
-                        product.setProductMeasureUnit(spnProductMeasure.getSelectedItemPosition());
-                        product.setProductSellPrice(Conversor.toFloat(etProductPrice.getText().toString()));
-                        if (instance != null)
-                            instance.dismiss();
-
-                        callback.onSaveProduct(product);
-                    }
-                });
-            }
-        });
-
-        positiveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                product.setProductName(etProductName.getText().toString());
-                product.setProductMeasureUnit(spnProductMeasure.getSelectedItemPosition());
-                product.setProductSellPrice(Conversor.toFloat(etProductPrice.getText().toString()));
-                if (instance != null)
-                    instance.dismiss();
-
-                callback.onSaveProduct(product);
+                callback.onDeleteProduct(product.getId());
+                instance.dismiss();
             }
         });
         builder.setView(dialogView);
@@ -205,8 +130,7 @@ public class DialogBuilder {
         public interface OnNewProductListener{
             void onNewProduct(Product product);
         }
-        public interface OnSaveProductListener{
-            void onSaveProduct(Product product);
+        public interface OnDeleteProductListener{
             void onDeleteProduct(long productId);
         }
         public interface OnSortProductsListener{
