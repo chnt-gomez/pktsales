@@ -6,6 +6,7 @@ import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
 import com.pocket.poktsales.model.Department;
 import com.pocket.poktsales.model.Product;
+import com.pocket.poktsales.model.Ticket;
 
 import java.util.List;
 
@@ -13,7 +14,8 @@ import java.util.List;
  * Created by MAV1GA on 04/09/2017.
  */
 
-public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps {
+public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps, RequiredPresenterOps.TabPresenterOps,
+        RequiredPresenterOps.SalePresenterOps{
 
     private static SalesPresenter instance;
     private RequiredViewOps view;
@@ -140,12 +142,57 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps 
     }
 
     /*
+    TAB OPERATIONS ---------------------------------------------------------------------------------------
+     */
+
+    @Override
+    public List<Ticket> getAllOpenTabs() {
+        return getAllTickets();
+    }
+
+    @Override
+    public void openTab(Ticket tabReference) {
+        Ticket ticket = new Ticket();
+        if (!isTicketInUse(ticket.getTicketReference())) {
+            ticket.save();
+            view.onSuccess();
+        }else{
+            view.onError();
+        }
+    }
+
+    /*
+    Sales Operations --------------------------------------------------------------------------------
+     */
+
+    @Override
+    public void addToSale(long ticketId, long productId) {
+
+    }
+
+    @Override
+    public void applyTicket(long ticketId) {
+
+    }
+
+    @Override
+    public List<Product> getProductsFromSearch(String args) {
+        if (args.equals(""))
+            return getAllProducts(Product.Sorting.NONE);
+        return searchProducts(args);
+    }
+
+    /*
     Internal Methods
      */
 
+    private boolean isTicketInUse(String ticketReference){
+        return Ticket.find(Ticket.class, "ticket_reference LIKE ?", ticketReference ).size() >= 1;
+    }
+
     private boolean isProductNameInUse(String productName){
         String args[] = {productName, String.valueOf(Product.ACTIVE)};
-        return Product.find(Product.class, "product_name = ? AND product_status = ?", args).size() >= 1;
+        return Product.find(Product.class, "product_name LIKE ? AND product_status = ?", args).size() >= 1;
     }
 
     private boolean isProductNameInUse(String productName, long productId){
@@ -197,4 +244,11 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps 
         return Product.find(Product.class, "department = ? AND product_status = ?", String.valueOf(id)
         , String.valueOf(Product.ACTIVE));
     }
+
+    private List<Ticket> getAllTickets(){
+        return Ticket.listAll(Ticket.class);
+    }
+
+
+
 }

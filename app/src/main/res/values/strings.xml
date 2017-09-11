@@ -36,4 +36,8 @@
     <string name="delete_product">Delete product</string>
     <string name="will_be_deleted">will be deleted!</string>
     <string name="title_activity_sell">SellActivity</string>
+    <string name="open_new_tab">Open new tab...</string>
+    <string name="hint_tab_reference">Tab name or reference...</string>
+    <string name="title_activity_add_to_sale">AddToSaleActivity</string>
+    <string name="apply">Apply</string>
 </resources>

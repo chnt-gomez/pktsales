@@ -28,6 +28,16 @@ public class Product extends SugarRecord {
     private float productSellPrice;
     private int productStatus;
     private int productInventory;
+
+    public String getCodeBar() {
+        return codeBar;
+    }
+
+    public void setCodeBar(String codeBar) {
+        this.codeBar = codeBar;
+    }
+
+    private String codeBar;
     private Department department;
 
     public Product (){}

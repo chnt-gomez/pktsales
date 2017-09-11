@@ -54,6 +54,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.pocket.poktsales.activities.HomeScreenActivity" />
         </activity>
+        <activity
+            android:name=".activities.AddToSaleActivity"
+            android:label="@string/title_activity_add_to_sale"
+            android:parentActivityName=".activities.SellActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.pocket.poktsales.activities.SellActivity" />
+        </activity>
     </application>
 
 </manifest>

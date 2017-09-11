@@ -18,6 +18,7 @@ import com.pocket.poktsales.adapters.DropDownDepartmentAdapter;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.model.Department;
 import com.pocket.poktsales.model.Product;
+import com.pocket.poktsales.model.Ticket;
 
 import java.util.List;
 
@@ -56,6 +57,29 @@ public class DialogBuilder {
         instance = builder.create();
         return instance;
 
+    }
+
+    public static Dialog newTabDialog(final Context context, final DialogInteractionListener.OnNewTabListener callback){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        @SuppressLint("InflateParams")
+        final View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_new_tab, null);
+        /*
+        Init widgets
+         */
+        final EditText etTabName = (EditText) dialogView.findViewById(R.id.et_tab_name);
+        final ImageButton btnOk = (ImageButton) dialogView.findViewById(R.id.btn_ok);
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Ticket ticket = new Ticket();
+                ticket.setTicketReference(etTabName.getText().toString());
+                callback.onNewTab(ticket);
+                instance.dismiss();
+            }
+        });
+        builder.setView(dialogView);
+        instance = builder.create();
+        return instance;
     }
 
     public static Dialog sortProductsDialog(final Context context, RequiredPresenterOps.ProductPresenterOps presenterOps,
@@ -135,6 +159,9 @@ public class DialogBuilder {
         }
         public interface OnSortProductsListener{
             void onSortProducts(long departmentId, Product.Sorting sorting);
+        }
+        public interface OnNewTabListener{
+            void onNewTab(Ticket ticket);
         }
     }
 

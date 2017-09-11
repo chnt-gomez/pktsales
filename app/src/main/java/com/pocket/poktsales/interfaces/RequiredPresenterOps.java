@@ -2,6 +2,7 @@ package com.pocket.poktsales.interfaces;
 
 import com.pocket.poktsales.model.Department;
 import com.pocket.poktsales.model.Product;
+import com.pocket.poktsales.model.Ticket;
 
 import java.util.List;
 
@@ -24,5 +25,16 @@ public interface RequiredPresenterOps {
         void deactivateProduct(long productId);
         long reActivateProduct(long productId);
         List<Department> getAllDepartments();
+    }
+
+    interface TabPresenterOps{
+        List<Ticket> getAllOpenTabs();
+        void openTab(Ticket tabReference);
+    }
+
+    interface SalePresenterOps{
+        void addToSale(long ticketId, long productId);
+        void applyTicket(long ticketId);
+        List<Product> getProductsFromSearch(String args);
     }
 }

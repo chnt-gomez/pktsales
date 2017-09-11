@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:id="@+id/ll_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/margin_big"
+        android:background="@color/colorPrimary"
+        android:orientation="vertical">
+        <ImageView
+            android:contentDescription="@string/desc_product"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/padding_title"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_receipt_big"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textAlignment="center"
+            android:id="@+id/tv_tab_reference"
+            android:layout_gravity="center_vertical"
+            android:padding="@dimen/padding_title"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="3">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:id="@+id/tv_total"
+                android:textColor="@android:color/white"/>
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/apply"
+                android:textColor="@android:color/white"
+                android:paddingEnd="@dimen/padding_medium"
+                android:id="@+id/btn_apply"
+                android:background="@drawable/selector_button_gray"
+                android:drawableEnd="@drawable/ic_check"/>
+            </LinearLayout>
+    </LinearLayout>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/lv_products_in_sale">
+    </ListView>
+</LinearLayout>
