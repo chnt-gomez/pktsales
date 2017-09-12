@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/coordinator_layout"
-    tools:context="com.pocket.poktsales.activities.SellActivity">
+    tools:context="com.pocket.poktsales.activities.OpenTabsActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"

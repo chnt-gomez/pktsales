@@ -81,7 +81,7 @@ public class HomeScreenActivity extends BaseActivity
             goTo(InventoryActivity.class);
         }
         if (id== R.id.nav_sales){
-            goTo(SellActivity.class);
+            goTo(OpenTabsActivity.class);
         }
 
         drawer.closeDrawer(GravityCompat.START);

@@ -32,13 +32,7 @@ public class DataSearchLoader extends AsyncTask<String, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                callback.onLoadingComplete();
-            }
-        }, 1500);
+        callback.onLoadingComplete();
     }
 
     @Override

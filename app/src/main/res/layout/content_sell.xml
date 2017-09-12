@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.pocket.poktsales.activities.SellActivity"
+    tools:context="com.pocket.poktsales.activities.OpenTabsActivity"
     tools:showIn="@layout/activity_sell">
     <GridView
         android:layout_marginBottom="@dimen/margin_big"

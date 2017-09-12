@@ -36,5 +36,7 @@ public interface RequiredPresenterOps {
         void addToSale(long ticketId, long productId);
         void applyTicket(long ticketId);
         List<Product> getProductsFromSearch(String args);
+        Ticket getTicket(long ticketId);
+        List<Product> getProductsFromTab(long ticketId);
     }
 }

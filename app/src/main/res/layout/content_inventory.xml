@@ -8,12 +8,12 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.pocket.poktsales.activities.InventoryActivity"
+    android:layout_marginTop="?attr/actionBarSize"
     tools:showIn="@layout/activity_inventory">
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        android:layout_marginTop="?attr/actionBarSize"
         android:background="@color/colorAccent"
         android:orientation="horizontal"
         android:weightSum="5">

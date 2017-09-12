@@ -1,6 +1,7 @@
 package com.pocket.poktsales.model;
 
 import com.orm.SugarRecord;
+import com.orm.dsl.Ignore;
 import com.pocket.poktsales.R;
 
 /**
@@ -12,6 +13,23 @@ public class Ticket extends SugarRecord {
     private long dateTime;
     private float saleTotal;
     private String ticketReference;
+
+    public int getTicketStatus() {
+        return ticketStatus;
+    }
+
+    public void setTicketStatus(int ticketStatus) {
+        this.ticketStatus = ticketStatus;
+    }
+
+    private int ticketStatus;
+
+    @Ignore
+    public static final int TICKET_APPLIED = 1;
+    @Ignore
+    public static final int TICKET_PENDING = 0;
+    @Ignore
+    public static final int TICKET_CANCELED = 0;
 
     public int getImageRes() {
         if (imageRes == 0)

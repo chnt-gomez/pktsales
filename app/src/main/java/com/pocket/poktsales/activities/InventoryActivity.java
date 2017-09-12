@@ -1,6 +1,5 @@
 package com.pocket.poktsales.activities;
 
-import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;

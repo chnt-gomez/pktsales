@@ -6,6 +6,7 @@ import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
 import com.pocket.poktsales.model.Department;
 import com.pocket.poktsales.model.Product;
+import com.pocket.poktsales.model.Sale;
 import com.pocket.poktsales.model.Ticket;
 
 import java.util.List;
@@ -152,9 +153,9 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps,
 
     @Override
     public void openTab(Ticket tabReference) {
-        Ticket ticket = new Ticket();
-        if (!isTicketInUse(ticket.getTicketReference())) {
-            ticket.save();
+        if (!isTicketInUse(tabReference.getTicketReference())) {
+            tabReference.setTicketStatus(Ticket.TICKET_PENDING);
+            tabReference.save();
             view.onSuccess();
         }else{
             view.onError();
@@ -167,12 +168,26 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps,
 
     @Override
     public void addToSale(long ticketId, long productId) {
-
+        Product product = Product.findById(Product.class, productId);
+        Ticket ticket = Ticket.findById(Ticket.class, ticketId);
+        Sale sale = new Sale();
+        sale.setProduct(product);
+        sale.setTicket(ticket);
+        sale.setProductAmount(1F);
+        sale.setSaleConcept(product.getProductName());
+        sale.setSaleTotal(product.getProductSellPrice()*sale.getProductAmount());
+        sale.save();
+        float newTotal = ticket.getSaleTotal() + sale.getSaleTotal();
+        ticket.setSaleTotal(newTotal);
+        ticket.save();
+        view.onSuccess();
     }
 
     @Override
     public void applyTicket(long ticketId) {
-
+        Ticket ticket = Ticket.findById(Ticket.class, ticketId);
+        ticket.setTicketStatus(Ticket.TICKET_APPLIED);
+        ticket.save();
     }
 
     @Override
@@ -180,6 +195,17 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps,
         if (args.equals(""))
             return getAllProducts(Product.Sorting.NONE);
         return searchProducts(args);
+    }
+
+    @Override
+    public Ticket getTicket(long ticketId) {
+        return Ticket.findById(Ticket.class, ticketId);
+    }
+
+    @Override
+    public List<Product> getProductsFromTab(long ticketId) {
+        return Product.findWithQuery(Product.class, "SELECT * FROM Product p, Sale s, Ticket t where " +
+                "s.product = p.id AND s.ticket = t.id and t.id = "+String.valueOf(ticketId));
     }
 
     /*
@@ -246,9 +272,7 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps,
     }
 
     private List<Ticket> getAllTickets(){
-        return Ticket.listAll(Ticket.class);
+        return Ticket.find(Ticket.class, "ticket_status = ?",
+                String.valueOf(Ticket.TICKET_PENDING));
     }
-
-
-
 }

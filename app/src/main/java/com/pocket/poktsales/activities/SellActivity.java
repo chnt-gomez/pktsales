@@ -1,100 +1,208 @@
 package com.pocket.poktsales.activities;
 
-import android.content.Intent;
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
-import android.widget.GridView;
-
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
 import com.pocket.poktsales.R;
-import com.pocket.poktsales.adapters.TabAdapter;
+import com.pocket.poktsales.adapters.SimpleProductAdapter;
+import com.pocket.poktsales.interfaces.OnLoadingEventListener;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.model.Ticket;
 import com.pocket.poktsales.presenter.SalesPresenter;
+import com.pocket.poktsales.utils.Conversor;
 import com.pocket.poktsales.utils.DataLoader;
-import com.pocket.poktsales.utils.DialogBuilder;
+import com.pocket.poktsales.utils.DataSearchLoader;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import butterknife.BindView;
 
-public class SellActivity extends BaseActivity implements AdapterView.OnItemClickListener{
+public class SellActivity extends BaseActivity implements SearchView.OnQueryTextListener {
 
-    @BindView(R.id.grid)
-    GridView gridView;
+    @BindView(R.id.sliding_up_panel)
+    SlidingUpPanelLayout panel;
 
-    TabAdapter adapter;
+    @BindView(R.id.lv_products_in_sale)
+    ListView lvSale;
 
-    @BindView(R.id.fab)
-    FloatingActionButton btnAdd;
+    @BindView(R.id.lv_products)
+    ListView lvProducts;
 
-    RequiredPresenterOps.TabPresenterOps presenter;
+    @BindView(R.id.btn_apply)
+    Button btnApply;
 
+    @BindView(R.id.tv_tab_reference)
+    TextView tvTabReference;
+
+    @BindView(R.id.tv_total)
+    TextView tvTabTotal;
+
+    SimpleProductAdapter productAdapter;
+    SimpleProductAdapter tabListProductAdapter;
+
+
+    long ticketId;
+
+    RequiredPresenterOps.SalePresenterOps presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        layoutResourceId = R.layout.activity_sell;
+        layoutResourceId = R.layout.activity_add_to_sale;
         super.onCreate(savedInstanceState);
+
     }
 
-    @Override
-    protected void init() {
-        super.init();
-        presenter = SalesPresenter.getInstance(this);
-
-        btnAdd.setOnClickListener(new View.OnClickListener() {
+    private void setTabData(){
+        DataLoader loader = new DataLoader(new OnLoadingEventListener() {
             @Override
-            public void onClick(View v) {
-                DialogBuilder.newTabDialog(SellActivity.this, new DialogBuilder.DialogInteractionListener.OnNewTabListener() {
-                    @Override
-                    public void onNewTab(Ticket ticket) {
-                        presenter.openTab(ticket);
-                    }
-                }).show();
+            public void onLoadingPrepare() {
+
+            }
+
+            @Override
+            public void onLoading() {
+                tabListProductAdapter = new SimpleProductAdapter(getApplicationContext(),
+                        R.layout.row_simple_product, presenter.getProductsFromTab(ticketId));
+            }
+
+            @Override
+            public void onLoading(String searchArgs) {
+
+            }
+
+            @Override
+            public void onLoadingComplete() {
+                lvSale.setAdapter(tabListProductAdapter);
+                Ticket ticket = presenter.getTicket(ticketId);
+                tvTabReference.setText(ticket.getTicketReference());
+                tvTabTotal.setText(Conversor.asCurrency(ticket.getSaleTotal()));
+            }
+
+            @Override
+            public void onLoadingError() {
+
             }
         });
-        gridView.setOnItemClickListener(this);
-        if (getSupportActionBar()!= null)
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        start();
+        loader.execute();
+    }
+
+    private void searchProducts(String args){
+        DataSearchLoader productLoader = new DataSearchLoader(this);
+        productLoader.execute(args);
     }
 
     @Override
-    public void onLoading() {
-        super.onLoading();
-        adapter = new TabAdapter(getApplicationContext(), R.layout.grid_layout_tab,
-                presenter.getAllOpenTabs());
+    public void onLoading(String searchArgs) {
+        super.onLoading(searchArgs);
+        productAdapter = new SimpleProductAdapter(getApplicationContext(), R.layout.row_simple_product,
+                presenter.getProductsFromSearch(searchArgs));
     }
 
     @Override
     public void onLoadingComplete() {
         super.onLoadingComplete();
-        gridView.setAdapter(adapter);
-    }
-
-    private void start(){
-        DataLoader loader = new DataLoader(this);
-        loader.execute();
+        lvProducts.setAdapter(productAdapter);
     }
 
     @Override
     public void onSuccess() {
-        super.onSuccess();
-        start();
-    }
+        setTabData();
 
-    private void openTicket(long ticketId){
-        if (ticketId != -1){
-            Intent saleIntent = new Intent(SellActivity.this, AddToSaleActivity.class);
-            saleIntent.putExtra("ticketId", ticketId);
-            startActivity(saleIntent);
-        }
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        openTicket(id);
+    protected void init() {
+        super.init();
+
+        presenter = SalesPresenter.getInstance(this);
+        if (getSupportActionBar()!= null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        final LinearLayout layout = (LinearLayout)findViewById(R.id.ll_header);
+        ViewTreeObserver vto = layout.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                layout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                panel.setPanelHeight(layout.getMeasuredHeight());
+            }
+        });
+
+
+        if (getIntent().getExtras().containsKey("ticketId")) {
+            ticketId = getIntent().getExtras().getLong("ticketId");
+            Ticket ticket = presenter.getTicket(ticketId);
+            tvTabReference.setText(ticket.getTicketReference());
+            tvTabTotal.setText(Conversor.asCurrency(ticket.getSaleTotal()));
+            btnApply.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    presenter.applyTicket(ticketId);
+                    finish();
+                }
+            });
+        }
+        else
+            onError();
+        presenter = SalesPresenter.getInstance(this);
+        lvProducts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                presenter.addToSale(ticketId, id);
+            }
+        });
+        searchProducts("");
+        setTabData();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (panel.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED)
+            panel.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        else
+            super.onBackPressed();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_products, menu);
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView =
+                (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
+        searchView.setSubmitButtonEnabled(true);
+        searchView.setOnQueryTextListener(this);
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        searchProducts(query);
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if (newText.length() >= 3 || newText.length() % 3 == 0){
+            searchProducts(newText);
+        }
+
+        if(newText.length() == 0){
+            searchProducts(newText);
+        }
+        return true;
     }
 }
