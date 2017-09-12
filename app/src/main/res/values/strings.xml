@@ -41,4 +41,7 @@
     <string name="title_activity_add_to_sale">AddToSaleActivity</string>
     <string name="apply">Apply</string>
     <string name="title_activity_categories">CategoriesActivity</string>
+    <string name="todays_income">Today\'s income</string>
+    <string name="see_more">See more</string>
+    <string name="zero_currency">$ 0.00 MXN</string>
 </resources>

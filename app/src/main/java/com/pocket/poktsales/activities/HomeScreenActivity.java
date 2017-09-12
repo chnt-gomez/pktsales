@@ -23,7 +23,7 @@ public class HomeScreenActivity extends BaseActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        layoutResourceId = R.layout.activity_new_sale;
+        layoutResourceId = R.layout.activity_home;
         super.onCreate(savedInstanceState);
     }
 
