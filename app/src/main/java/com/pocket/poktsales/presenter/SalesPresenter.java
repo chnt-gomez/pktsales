@@ -204,8 +204,14 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps,
 
     @Override
     public List<Product> getProductsFromTab(long ticketId) {
-        return Product.findWithQuery(Product.class, "SELECT * FROM Product p, Sale s, Ticket t where " +
-                "s.product = p.id AND s.ticket = t.id and t.id = "+String.valueOf(ticketId));
+
+        List <Product> products = Ticket.findWithQuery(Product.class,
+                "SELECT * FROM Product, Sale, Ticket  where " +
+                "Sale.product = Product.id AND Sale.ticket = Ticket.id and Ticket.id = ?",String.valueOf(ticketId));
+        for (Product p : products){
+            Log.d(getClass().getSimpleName(), ""+p.getId()+", "+p.getProductName());
+        }
+        return products;
     }
 
     @Override
@@ -213,6 +219,16 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps,
         Ticket ticket = Ticket.findById(Ticket.class, ticketId);
         ticket.setTicketStatus(Ticket.TICKET_CANCELED);
         ticket.save();
+        view.onSuccess();
+    }
+
+    @Override
+    public void removeFromSale(long ticketId, long productId) {
+        for (Sale s : Sale.find(Sale.class, "product = ? AND ticket = ?", String.valueOf(ticketId),
+                String.valueOf(productId))){
+            s.delete();
+            s.save();
+        }
         view.onSuccess();
     }
 

@@ -39,5 +39,6 @@ public interface RequiredPresenterOps {
         Ticket getTicket(long ticketId);
         List<Product> getProductsFromTab(long ticketId);
         void cancelTab(long ticketId);
+        void removeFromSale(long ticketId, long id);
     }
 }

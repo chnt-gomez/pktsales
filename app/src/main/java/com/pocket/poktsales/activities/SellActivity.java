@@ -4,9 +4,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.view.menu.MenuItemImpl;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,8 +26,6 @@ import com.pocket.poktsales.utils.DataLoader;
 import com.pocket.poktsales.utils.DataSearchLoader;
 import com.pocket.poktsales.utils.DialogBuilder;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
-
-import butterknife.BindFloat;
 import butterknife.BindView;
 
 public class SellActivity extends BaseActivity implements SearchView.OnQueryTextListener, View.OnClickListener{
@@ -148,7 +144,6 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
             }
         });
 
-
         if (getIntent().getExtras().containsKey("ticketId")) {
             ticketId = getIntent().getExtras().getLong("ticketId");
             Ticket ticket = presenter.getTicket(ticketId);
@@ -172,6 +167,12 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
                 if (searchView.isIconified()){
                     panel.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                 }
+            }
+        });
+        lvSale.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                presenter.removeFromSale(ticketId, id);
             }
         });
         btnDelete.setOnClickListener(this);
@@ -244,6 +245,7 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
                         @Override
                         public void onDeleteTab(long ticketId) {
                             presenter.cancelTab(ticketId);
+                            finish();
                         }
                     }).show();
     }
