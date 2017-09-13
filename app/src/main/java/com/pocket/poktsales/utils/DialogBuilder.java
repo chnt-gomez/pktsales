@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -29,6 +30,31 @@ import java.util.List;
 public class DialogBuilder {
 
     static Dialog instance;
+
+    public static Dialog confirmDeleteTabDialog(final Context context, final Ticket ticketReference,
+                                                final DialogInteractionListener.OnDeleteTabListener callback){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        @SuppressLint("InflateParams")
+        final View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_confirm_delete, null);
+        /*
+        Init widgets
+         */
+        final TextView tvTabName = (TextView) dialogView.findViewById(R.id.tv_product_name);
+        final ImageView image = (ImageView)dialogView.findViewById(R.id.img_reference);
+        final ImageButton btnDelete = (ImageButton)dialogView.findViewById(R.id.btn_confirm_delete);
+        tvTabName.setText(ticketReference.getTicketReference()+" "+context.getString(R.string.will_be_deleted));
+        image.setImageResource(R.drawable.ic_receipt_big);
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback.onDeleteTab(ticketReference.getId());
+                instance.dismiss();
+            }
+        });
+        builder.setView(dialogView);
+        instance = builder.create();
+        return instance;
+    }
 
     public static Dialog newProductDialog(final Context context,
                                           final DialogInteractionListener.OnNewProductListener callback){
@@ -137,6 +163,8 @@ public class DialogBuilder {
          */
         final TextView tvProductName = (TextView) dialogView.findViewById(R.id.tv_product_name);
         final ImageButton btnDelete = (ImageButton)dialogView.findViewById(R.id.btn_confirm_delete);
+        final ImageView image = (ImageView)dialogView.findViewById(R.id.img_reference);
+        image.setImageResource(R.drawable.ic_box_big);
         tvProductName.setText(product.getProductName()+" "+context.getString(R.string.will_be_deleted));
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,6 +190,9 @@ public class DialogBuilder {
         }
         public interface OnNewTabListener{
             void onNewTab(Ticket ticket);
+        }
+        public interface OnDeleteTabListener{
+            void onDeleteTab(long ticketId);
         }
     }
 

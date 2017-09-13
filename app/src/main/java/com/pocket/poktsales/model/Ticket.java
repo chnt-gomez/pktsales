@@ -29,7 +29,7 @@ public class Ticket extends SugarRecord {
     @Ignore
     public static final int TICKET_PENDING = 0;
     @Ignore
-    public static final int TICKET_CANCELED = 0;
+    public static final int TICKET_CANCELED = 2;
 
     public int getImageRes() {
         if (imageRes == 0)

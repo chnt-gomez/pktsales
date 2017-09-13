@@ -1,5 +1,6 @@
 package com.pocket.poktsales.activities;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.animation.AccelerateInterpolator;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.pocket.poktsales.R;
@@ -44,6 +46,15 @@ public class BaseActivity extends AppCompatActivity implements RequiredViewOps, 
         }finally{
             init();
         }
+    }
+
+    protected boolean forceHideKeyboard(){
+        InputMethodManager inputManager = (InputMethodManager)
+                getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
+        return true;
     }
 
     protected void init() {

@@ -9,6 +9,15 @@
         android:paddingTop="@dimen/margin_big"
         android:background="@color/colorPrimary"
         android:orientation="vertical">
+        <ImageButton
+            android:contentDescription="@string/delete_product"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_delete"
+            android:layout_marginEnd="@dimen/margin_big"
+            android:layout_gravity="end"
+            android:background="@null"
+            android:src="@drawable/ic_delete"/>
         <ImageView
             android:contentDescription="@string/desc_product"
             android:layout_width="wrap_content"

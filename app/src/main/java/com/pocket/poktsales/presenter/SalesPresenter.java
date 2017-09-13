@@ -208,6 +208,14 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps,
                 "s.product = p.id AND s.ticket = t.id and t.id = "+String.valueOf(ticketId));
     }
 
+    @Override
+    public void cancelTab(long ticketId) {
+        Ticket ticket = Ticket.findById(Ticket.class, ticketId);
+        ticket.setTicketStatus(Ticket.TICKET_CANCELED);
+        ticket.save();
+        view.onSuccess();
+    }
+
     /*
     Internal Methods
      */

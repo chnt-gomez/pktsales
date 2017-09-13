@@ -38,5 +38,6 @@ public interface RequiredPresenterOps {
         List<Product> getProductsFromSearch(String args);
         Ticket getTicket(long ticketId);
         List<Product> getProductsFromTab(long ticketId);
+        void cancelTab(long ticketId);
     }
 }

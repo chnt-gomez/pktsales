@@ -15,9 +15,9 @@
             android:contentDescription="@string/desc_product"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/img_reference"
             android:layout_margin="@dimen/padding_title"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/ic_box_big"/>
+            android:layout_gravity="center_horizontal"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

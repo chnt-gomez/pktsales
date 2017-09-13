@@ -4,13 +4,16 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.view.menu.MenuItemImpl;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -23,11 +26,13 @@ import com.pocket.poktsales.presenter.SalesPresenter;
 import com.pocket.poktsales.utils.Conversor;
 import com.pocket.poktsales.utils.DataLoader;
 import com.pocket.poktsales.utils.DataSearchLoader;
+import com.pocket.poktsales.utils.DialogBuilder;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import butterknife.BindFloat;
 import butterknife.BindView;
 
-public class SellActivity extends BaseActivity implements SearchView.OnQueryTextListener {
+public class SellActivity extends BaseActivity implements SearchView.OnQueryTextListener, View.OnClickListener{
 
     @BindView(R.id.sliding_up_panel)
     SlidingUpPanelLayout panel;
@@ -47,8 +52,13 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
     @BindView(R.id.tv_total)
     TextView tvTabTotal;
 
+    @BindView(R.id.btn_delete)
+    ImageButton btnDelete;
+
     SimpleProductAdapter productAdapter;
     SimpleProductAdapter tabListProductAdapter;
+
+    private SearchView searchView;
 
 
     long ticketId;
@@ -159,11 +169,17 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 presenter.addToSale(ticketId, id);
+                if (searchView.isIconified()){
+                    panel.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                }
             }
         });
+        btnDelete.setOnClickListener(this);
         searchProducts("");
         setTabData();
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -179,12 +195,25 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
         SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         MenuItem searchItem = menu.findItem(R.id.action_search);
-        SearchView searchView =
-                (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView =
+                (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
         searchView.setSubmitButtonEnabled(true);
         searchView.setOnQueryTextListener(this);
+
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                panel.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                return true;
+            }
+        });
         return true;
     }
 
@@ -204,5 +233,18 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
             searchProducts(newText);
         }
         return true;
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.btn_delete)
+            DialogBuilder.confirmDeleteTabDialog(SellActivity.this, presenter.getTicket(ticketId),
+                    new DialogBuilder.DialogInteractionListener.OnDeleteTabListener() {
+                        @Override
+                        public void onDeleteTab(long ticketId) {
+                            presenter.cancelTab(ticketId);
+                        }
+                    }).show();
     }
 }
