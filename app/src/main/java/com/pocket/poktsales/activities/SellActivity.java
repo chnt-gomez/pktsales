@@ -169,10 +169,11 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
                 }
             }
         });
-        lvSale.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lvSale.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 presenter.removeFromSale(ticketId, id);
+                return true;
             }
         });
         btnDelete.setOnClickListener(this);

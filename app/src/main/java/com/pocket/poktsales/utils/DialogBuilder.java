@@ -149,9 +149,7 @@ public class DialogBuilder {
         builder.setView(dialogView);
         instance = builder.create();
         return instance;
-
     }
-
 
     public static Dialog confirmDeleteProductDialog(final Context context, final Product product,
                                           final DialogInteractionListener.OnDeleteProductListener callback) {

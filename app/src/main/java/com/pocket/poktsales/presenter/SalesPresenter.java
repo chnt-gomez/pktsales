@@ -9,6 +9,7 @@ import com.pocket.poktsales.model.Product;
 import com.pocket.poktsales.model.Sale;
 import com.pocket.poktsales.model.Ticket;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -205,11 +206,10 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps,
     @Override
     public List<Product> getProductsFromTab(long ticketId) {
 
-        List <Product> products = Ticket.findWithQuery(Product.class,
-                "SELECT * FROM Product, Sale, Ticket  where " +
-                "Sale.product = Product.id AND Sale.ticket = Ticket.id and Ticket.id = ?",String.valueOf(ticketId));
-        for (Product p : products){
-            Log.d(getClass().getSimpleName(), ""+p.getId()+", "+p.getProductName());
+        List<Sale> sales = Sale.find(Sale.class, "ticket = ?", String.valueOf(ticketId));
+        List <Product> products = new ArrayList<>();
+        for (Sale s : sales){
+            products.add(s.getProduct());
         }
         return products;
     }
@@ -224,10 +224,15 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps,
 
     @Override
     public void removeFromSale(long ticketId, long productId) {
-        for (Sale s : Sale.find(Sale.class, "product = ? AND ticket = ?", String.valueOf(ticketId),
-                String.valueOf(productId))){
+        Ticket ticket = Ticket.findById(Ticket.class, ticketId);
+        String args[] = {String.valueOf(productId), String.valueOf(ticketId)};
+        for (Sale s : Sale.find(Sale.class, "product = ? AND ticket = ?", args,
+                null, null, String.valueOf(1))){
+            float saleTotal = s.getSaleTotal();
+            float ticketTotal = ticket.getSaleTotal()-saleTotal;
+            ticket.setSaleTotal(ticketTotal);
             s.delete();
-            s.save();
+            ticket.save();
         }
         view.onSuccess();
     }
