@@ -122,10 +122,17 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        presenter = SalesPresenter.getInstance(this);
+    }
+
+    @Override
     protected void init() {
         super.init();
+        if (presenter == null)
+            presenter = SalesPresenter.getInstance(this);
         loadingBar = (ProgressBar)findViewById(R.id.progressBar);
-        presenter = SalesPresenter.getInstance(this);
         if (getSupportActionBar()!= null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         btnAdd.setOnClickListener(new View.OnClickListener() {

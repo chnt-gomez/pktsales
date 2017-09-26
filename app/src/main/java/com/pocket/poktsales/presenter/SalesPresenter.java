@@ -185,10 +185,22 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps,
     }
 
     @Override
+    public void addToSale(long ticketId, Product product) {
+        product.setProductStatus(Product.TEMPORARY);
+        product.save();
+        addToSale(ticketId, product.getId());
+    }
+
+    @Override
     public void applyTicket(long ticketId) {
         Ticket ticket = Ticket.findById(Ticket.class, ticketId);
         ticket.setTicketStatus(Ticket.TICKET_APPLIED);
         ticket.save();
+        for (Product p : getProductsFromTab(ticketId)){
+            if (p.getProductStatus() == Product.TEMPORARY){
+
+            }
+        }
     }
 
     @Override
@@ -242,7 +254,8 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps,
      */
 
     private boolean isTicketInUse(String ticketReference){
-        return Ticket.find(Ticket.class, "ticket_reference LIKE ?", ticketReference ).size() >= 1;
+        return Ticket.find(Ticket.class, "ticket_reference LIKE ? AND ticket_status = ?", ticketReference,
+                String.valueOf(Ticket.TICKET_PENDING)).size() >= 1;
     }
 
     private boolean isProductNameInUse(String productName){

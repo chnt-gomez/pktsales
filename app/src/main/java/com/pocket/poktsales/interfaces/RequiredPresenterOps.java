@@ -40,5 +40,6 @@ public interface RequiredPresenterOps {
         List<Product> getProductsFromTab(long ticketId);
         void cancelTab(long ticketId);
         void removeFromSale(long ticketId, long id);
+        void addToSale(long ticketId, Product product);
     }
 }

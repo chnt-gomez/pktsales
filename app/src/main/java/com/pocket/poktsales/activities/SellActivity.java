@@ -3,6 +3,7 @@ package com.pocket.poktsales.activities;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
@@ -19,6 +20,7 @@ import com.pocket.poktsales.R;
 import com.pocket.poktsales.adapters.SimpleProductAdapter;
 import com.pocket.poktsales.interfaces.OnLoadingEventListener;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
+import com.pocket.poktsales.model.Product;
 import com.pocket.poktsales.model.Ticket;
 import com.pocket.poktsales.presenter.SalesPresenter;
 import com.pocket.poktsales.utils.Conversor;
@@ -30,7 +32,7 @@ import butterknife.BindView;
 
 public class SellActivity extends BaseActivity implements SearchView.OnQueryTextListener, View.OnClickListener{
 
-    @BindView(R.id.sliding_up_panel)
+    @BindView(R.id.include)
     SlidingUpPanelLayout panel;
 
     @BindView(R.id.lv_products_in_sale)
@@ -65,8 +67,9 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
     protected void onCreate(Bundle savedInstanceState) {
         layoutResourceId = R.layout.activity_add_to_sale;
         super.onCreate(savedInstanceState);
-
     }
+
+
 
     private void setTabData(){
         DataLoader loader = new DataLoader(new OnLoadingEventListener() {
@@ -123,14 +126,16 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
     @Override
     public void onSuccess() {
         setTabData();
-
     }
 
     @Override
     protected void init() {
         super.init();
 
-        presenter = SalesPresenter.getInstance(this);
+        lvSale.setEmptyView(findViewById(android.R.id.empty));
+        if (presenter == null)
+            presenter = SalesPresenter.getInstance(this);
+
         if (getSupportActionBar()!= null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -143,6 +148,7 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
                 panel.setPanelHeight(layout.getMeasuredHeight());
             }
         });
+        panel.setScrollableView(lvSale);
 
         if (getIntent().getExtras().containsKey("ticketId")) {
             ticketId = getIntent().getExtras().getLong("ticketId");
@@ -181,7 +187,12 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
         setTabData();
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (presenter == null)
+            presenter = SalesPresenter.getInstance(this);
+    }
 
     @Override
     public void onBackPressed() {
@@ -193,7 +204,7 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_products, menu);
+        getMenuInflater().inflate(R.menu.menu_sale, menu);
         SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         MenuItem searchItem = menu.findItem(R.id.action_search);
@@ -213,10 +224,32 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        panel.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                    }
+                }, 500);
                 return true;
             }
         });
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_temp_product){
+            DialogBuilder.newTempDialog(SellActivity.this,
+                    new DialogBuilder.DialogInteractionListener.OnNewTempDialogListener() {
+                        @Override
+                        public void onNewTempProductDialog(Product product) {
+                            presenter.addToSale(ticketId, product);
+                        }
+                    }).show();
+            return true;
+        }
+        return false;
     }
 
     @Override

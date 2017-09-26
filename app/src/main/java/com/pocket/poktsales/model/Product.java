@@ -21,6 +21,8 @@ public class Product extends SugarRecord {
     public static final int INVENTORY_YES = 1;
     @Ignore
     public static final int INVENTORY_NO = 0;
+    @Ignore
+    public static final int TEMPORARY = 3;
 
     private String productName;
     private float productExistences;
@@ -100,9 +102,11 @@ public class Product extends SugarRecord {
             this.productStatus = productStatus;
         }else if (productStatus == INACTIVE) {
             this.productStatus = productStatus;
-        }else {
+        }else if(productStatus == TEMPORARY) {
+            this.productStatus = productStatus;
+        }else{
             Log.w(getClass().getSimpleName(), String.format(Locale.getDefault(),
-                    "Product status was expected to be 1 or 0. Setting 0 instead of %d", productStatus));
+                    "Product status was expected to be 3, 1 or 0. Setting 0 instead of %d", productStatus));
         }
     }
 

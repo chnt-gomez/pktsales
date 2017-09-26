@@ -1,17 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:sothree="http://schemas.android.com/tools"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/content_inventory"
+    android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.pocket.poktsales.activities.SellActivity"
-    tools:showIn="@layout/activity_add_to_sale">
-    <ListView
+    android:id="@+id/sliding_up_panel"
+    sothree:umanoDragView="@+id/panel_content"
+    sothree:umanoPanelState="hidden"
+    android:gravity="bottom"
+    sothree:overlay="false"
+    sothree:umanoParalaxOffset="100dp"
+    sothree:umanoShadowHeight="4dp">
+    <LinearLayout
+        android:id="@+id/content_inventory"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:id="@+id/lv_products"/>
-</LinearLayout>
+        android:orientation="vertical"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context="com.pocket.poktsales.activities.SellActivity"
+        tools:showIn="@layout/activity_add_to_sale">
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="?attr/actionBarSize"
+            android:id="@+id/lv_products"/>
+
+    </LinearLayout>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/ll_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/margin_big"
+            android:background="@color/colorPrimary"
+            android:orientation="vertical">
+            <ImageButton
+                android:contentDescription="@string/delete_product"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_delete"
+                android:layout_marginEnd="@dimen/margin_big"
+                android:layout_gravity="end"
+                android:background="@null"
+                android:src="@drawable/ic_delete"/>
+            <ImageView
+                android:contentDescription="@string/desc_product"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/padding_title"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/ic_receipt_big"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textAlignment="center"
+                android:id="@+id/tv_tab_reference"
+                android:layout_gravity="center_vertical"
+                android:padding="@dimen/padding_title"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="3">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:id="@+id/tv_total"
+                    android:textSize="22sp"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/white"/>
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/apply"
+                    android:textColor="@android:color/white"
+                    android:paddingEnd="@dimen/padding_medium"
+                    android:id="@+id/btn_apply"
+                    android:background="@drawable/selector_button_gray"
+                    android:drawableEnd="@drawable/ic_check"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lv_products_in_sale"/>
+        <TextView
+            android:id="@android:id/empty"
+            android:padding="@dimen/margin_big"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/empty_sale"/>
+    </LinearLayout>
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>

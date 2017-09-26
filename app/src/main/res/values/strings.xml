@@ -44,4 +44,8 @@
     <string name="todays_income">Today\'s income</string>
     <string name="see_more">See more</string>
     <string name="zero_currency">$ 0.00 MXN</string>
+    <string name="empty_sale">No products in sale.</string>
+    <string name="quick_sale">Quick sale</string>
+    <string name="new_sale">New sale</string>
+    <string name="new_temp_product">Add temporary product...</string>
 </resources>

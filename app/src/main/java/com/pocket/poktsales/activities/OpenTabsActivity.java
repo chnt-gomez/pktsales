@@ -1,8 +1,11 @@
 package com.pocket.poktsales.activities;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -10,6 +13,7 @@ import android.widget.GridView;
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.adapters.TabAdapter;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
+import com.pocket.poktsales.model.Product;
 import com.pocket.poktsales.model.Ticket;
 import com.pocket.poktsales.presenter.SalesPresenter;
 import com.pocket.poktsales.utils.DataLoader;
@@ -37,10 +41,30 @@ public class OpenTabsActivity extends BaseActivity implements AdapterView.OnItem
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_tabs, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_quick_tab){
+            Ticket ticket = new Ticket();
+            ticket.setTicketReference(getString(R.string.new_sale));
+            presenter.openTab(ticket);
+            if (ticket.getId() != null)
+                openTicket(ticket.getId());
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
     protected void init() {
         super.init();
-        presenter = SalesPresenter.getInstance(this);
-
+        if (presenter == null)
+            presenter = SalesPresenter.getInstance(this);
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,6 +85,7 @@ public class OpenTabsActivity extends BaseActivity implements AdapterView.OnItem
     @Override
     protected void onResume() {
         super.onResume();
+        presenter = SalesPresenter.getInstance(this);
         start();
     }
 
@@ -89,11 +114,9 @@ public class OpenTabsActivity extends BaseActivity implements AdapterView.OnItem
     }
 
     private void openTicket(long ticketId){
-        if (ticketId != -1){
-            Intent saleIntent = new Intent(OpenTabsActivity.this, SellActivity.class);
-            saleIntent.putExtra("ticketId", ticketId);
-            startActivity(saleIntent);
-        }
+        Intent saleIntent = new Intent(OpenTabsActivity.this, SellActivity.class);
+        saleIntent.putExtra("ticketId", ticketId);
+        startActivity(saleIntent);
     }
 
     @Override
