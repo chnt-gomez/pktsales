@@ -48,4 +48,5 @@
     <string name="quick_sale">Quick sale</string>
     <string name="new_sale">New sale</string>
     <string name="new_temp_product">Add temporary product...</string>
+    <string name="departments">Categories</string>
 </resources>
