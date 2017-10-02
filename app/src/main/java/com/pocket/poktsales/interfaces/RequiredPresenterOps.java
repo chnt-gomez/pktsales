@@ -42,4 +42,10 @@ public interface RequiredPresenterOps {
         void removeFromSale(long ticketId, long id);
         void addToSale(long ticketId, Product product);
     }
+
+    interface DepartmentPresenterOps{
+        void addNewDepartment(Department department);
+        List<Department> getAllDepartments();
+        void removeDepartment(long departmentId, long moveProductsToDepartmentId);
+    }
 }

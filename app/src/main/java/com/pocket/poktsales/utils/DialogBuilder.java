@@ -56,6 +56,29 @@ public class DialogBuilder {
         return instance;
     }
 
+    public static Dialog newDepartmentDialog(final Context context, final DialogInteractionListener.OnNewDepartmentListener
+                                            callback){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        final View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_new_department, null);
+
+        final EditText etDepartmentName = (EditText) dialogView.findViewById(R.id.et_department_name);
+        final ImageButton btnOk = (ImageButton) dialogView.findViewById(R.id.btn_ok);
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Department department = new Department();
+                department.setDepartmentName(etDepartmentName.getText().toString());
+                callback.onNewDepartment(department);
+                instance.dismiss();
+            }
+        });
+        builder.setView(dialogView);
+        instance = builder.create();
+        return instance;
+
+
+    }
+
     public static Dialog newProductDialog(final Context context,
                                           final DialogInteractionListener.OnNewProductListener callback){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -221,6 +244,10 @@ public class DialogBuilder {
         }
         public interface OnNewTempDialogListener {
             void onNewTempProductDialog(Product product);
+        }
+
+        public interface OnNewDepartmentListener{
+            void onNewDepartment(Department department);
         }
     }
 

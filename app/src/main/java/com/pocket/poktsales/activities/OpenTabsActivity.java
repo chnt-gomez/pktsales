@@ -1,6 +1,5 @@
 package com.pocket.poktsales.activities;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -9,11 +8,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.adapters.TabAdapter;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
-import com.pocket.poktsales.model.Product;
 import com.pocket.poktsales.model.Ticket;
 import com.pocket.poktsales.presenter.SalesPresenter;
 import com.pocket.poktsales.utils.DataLoader;

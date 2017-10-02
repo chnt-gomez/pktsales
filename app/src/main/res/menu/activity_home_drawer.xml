@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+    <group android:title="@string/menu">
         <item
             android:id="@+id/nav_sales"
             android:icon="@drawable/ic_menu_sales"
@@ -11,26 +11,10 @@
             android:icon="@drawable/ic_menu_box"
             android:title="@string/menu_inventory" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav_categories"
             android:icon="@drawable/ic_view_module"
             android:title="@string/departments" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
     </group>
 
-    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
-        </menu>
-    </item>
 
 </menu>

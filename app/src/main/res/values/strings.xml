@@ -49,4 +49,7 @@
     <string name="new_sale">New sale</string>
     <string name="new_temp_product">Add temporary product...</string>
     <string name="departments">Categories</string>
+    <string name="menu">Menu</string>
+    <string name="products_in_category">Products in category:</string>
+    <string name="new_department_name">New category...</string>
 </resources>

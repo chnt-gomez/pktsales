@@ -17,7 +17,7 @@ import java.util.List;
  */
 
 public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps, RequiredPresenterOps.TabPresenterOps,
-        RequiredPresenterOps.SalePresenterOps{
+        RequiredPresenterOps.SalePresenterOps, RequiredPresenterOps.DepartmentPresenterOps{
 
     private static SalesPresenter instance;
     private RequiredViewOps view;
@@ -138,10 +138,7 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps,
         }
     }
 
-    @Override
-    public List<Department> getAllDepartments() {
-        return Department.listAll(Department.class);
-    }
+
 
     /*
     TAB OPERATIONS ---------------------------------------------------------------------------------------
@@ -250,6 +247,32 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps,
     }
 
     /*
+    Department Operations
+     */
+
+    @Override
+    public void addNewDepartment(Department department) {
+        if (!isDepartmentNameInUse(department.getDepartmentName())) {
+            if (department.getDepartmentName().equals("")){
+                //TODO: add a custom name
+            }
+            department.save();
+            view.onSuccess();
+        }else{
+            view.onError();
+        }
+    }
+
+    @Override
+    public List<Department> getAllDepartments() {
+        return Department.listAll(Department.class);
+    }
+
+    @Override
+    public void removeDepartment(long departmentId, long moveProductsToDepartmentId) {
+
+    }
+    /*
     Internal Methods
      */
 
@@ -288,6 +311,10 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps,
             Log.w("findProductById()", String.format("Can't find product with id: %d", id));
             return null;
         }
+    }
+
+    private boolean isDepartmentNameInUse(String departmentName) {
+        return Department.find(Department.class, "department_name LIKE ?", departmentName).size() >= 1;
     }
 
     private List<Product> findAllProducts(Product.Sorting sorting) {
