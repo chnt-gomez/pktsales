@@ -2,6 +2,7 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:sothree="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/coordinator_layout"
@@ -21,7 +22,21 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_categories" />
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:id="@+id/sliding_up_panel"
+        sothree:umanoDragView="@+id/panel_content"
+        sothree:umanoPanelState="hidden"
+        android:gravity="bottom"
+        sothree:overlay="false"
+        sothree:umanoPanelHeight="0dp"
+        sothree:umanoParalaxOffset="100dp"
+        sothree:umanoShadowHeight="4dp">
+        <include layout="@layout/content_categories" />
+        <include android:id="@+id/panel_content"
+            layout="@layout/content_department_detail"/>
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

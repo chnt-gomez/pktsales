@@ -47,5 +47,6 @@ public interface RequiredPresenterOps {
         void addNewDepartment(Department department);
         List<Department> getAllDepartments();
         void removeDepartment(long departmentId, long moveProductsToDepartmentId);
+        Department getDepartment(long id);
     }
 }

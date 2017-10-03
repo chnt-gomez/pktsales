@@ -272,6 +272,12 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps,
     public void removeDepartment(long departmentId, long moveProductsToDepartmentId) {
 
     }
+
+    @Override
+    public Department getDepartment(long id) {
+        return Department.findById(Department.class, id);
+    }
+
     /*
     Internal Methods
      */

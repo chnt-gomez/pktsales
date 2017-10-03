@@ -3,8 +3,10 @@ package com.pocket.poktsales.activities;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
-
+import android.widget.TextView;
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.adapters.SimpleCategoryAdapter;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
@@ -12,11 +14,12 @@ import com.pocket.poktsales.model.Department;
 import com.pocket.poktsales.presenter.SalesPresenter;
 import com.pocket.poktsales.utils.DataLoader;
 import com.pocket.poktsales.utils.DialogBuilder;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import butterknife.BindView;
 
 
-public class CategoriesActivity extends BaseActivity {
+public class CategoriesActivity extends BaseActivity implements AdapterView.OnItemClickListener{
 
     RequiredPresenterOps.DepartmentPresenterOps presenter;
 
@@ -28,11 +31,19 @@ public class CategoriesActivity extends BaseActivity {
     @BindView(R.id.fab)
     FloatingActionButton btnAdd;
 
+    @BindView(R.id.sliding_up_panel)
+    SlidingUpPanelLayout panel;
+
+    @BindView(R.id.et_department_name)
+    EditText etDepartmentName;
+
+    @BindView(R.id.tv_department_name)
+    TextView tvDepartmentName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         this.layoutResourceId = R.layout.activity_categories;
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -63,6 +74,28 @@ public class CategoriesActivity extends BaseActivity {
                 }).show();
             }
         });
+        panel.setPanelHeight(0);
+        panel.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View panel, float slideOffset) {
+                btnAdd.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+                if (newState == SlidingUpPanelLayout.PanelState.COLLAPSED || newState == SlidingUpPanelLayout.PanelState.HIDDEN)
+                    btnAdd.setVisibility(View.VISIBLE);
+                if (newState == SlidingUpPanelLayout.PanelState.EXPANDED)
+                    btnAdd.setVisibility(View.GONE);
+            }
+        });
+        panel.setFadeOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                panel.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            }
+        });
+        lvDepartments.setOnItemClickListener(this);
         start();
     }
 
@@ -77,6 +110,27 @@ public class CategoriesActivity extends BaseActivity {
     public void onLoadingComplete() {
         super.onLoadingComplete();
         lvDepartments.setAdapter(adapter);
+    }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        seeDepartmentDetail(id);
+    }
+
+    private void seeDepartmentDetail(long id) {
+        final Department department = presenter.getDepartment(id);
+        if (panel.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED
+                || panel.getPanelState() == SlidingUpPanelLayout.PanelState.HIDDEN)
+            panel.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+        etDepartmentName.setText(department.getDepartmentName());
+        tvDepartmentName.setText(department.getDepartmentName());
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (panel.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED)
+            panel.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+        else
+            super.onBackPressed();
     }
 }

@@ -68,6 +68,7 @@
         </activity>
         <activity
             android:name=".activities.CategoriesActivity"
+            android:windowSoftInputMode="stateHidden"
             android:label="@string/title_activity_categories"
             android:parentActivityName=".activities.HomeScreenActivity"
             android:theme="@style/AppTheme.NoActionBar">

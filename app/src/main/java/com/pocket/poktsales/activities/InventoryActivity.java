@@ -18,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import com.pocket.poktsales.R;
+import com.pocket.poktsales.adapters.DropDownDepartmentAdapter;
 import com.pocket.poktsales.adapters.SimpleProductAdapter;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.model.Product;
@@ -64,6 +65,9 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
 
     @BindView(R.id.btn_delete)
     ImageButton btnDelete;
+
+    @BindView(R.id.spn_department)
+    Spinner spnPickDepartment;
 
     Product.Sorting sessionSorting = Product.Sorting.NONE;
 
@@ -199,6 +203,8 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
     @Override
     public void onLoadingComplete() {
         lvProducts.setAdapter(adapter);
+        spnPickDepartment.setAdapter(new DropDownDepartmentAdapter(getApplicationContext(), R.layout.dropdown_department_item,
+                presenter.getAllDepartments()));
         super.onLoadingComplete();
     }
 
@@ -276,6 +282,11 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
                 }).show();
             }
         });
+
+        for (int i=0; i<spnPickDepartment.getAdapter().getCount(); i++){
+            if (spnPickDepartment.getItemAtPosition(i).equals(product.getDepartment()))
+                spnPickDepartment.setSelection(i);
+        }
     }
 
 }

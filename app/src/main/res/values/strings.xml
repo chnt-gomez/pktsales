@@ -52,4 +52,5 @@
     <string name="menu">Menu</string>
     <string name="products_in_category">Products in category:</string>
     <string name="new_department_name">New category...</string>
+    <string name="hint_department_name">Category name...</string>
 </resources>
