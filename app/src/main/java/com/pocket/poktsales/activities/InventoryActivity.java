@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +22,7 @@ import com.pocket.poktsales.R;
 import com.pocket.poktsales.adapters.DropDownDepartmentAdapter;
 import com.pocket.poktsales.adapters.SimpleProductAdapter;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
+import com.pocket.poktsales.model.Department;
 import com.pocket.poktsales.model.Product;
 import com.pocket.poktsales.presenter.SalesPresenter;
 import com.pocket.poktsales.utils.Conversor;
@@ -66,8 +68,11 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
     @BindView(R.id.btn_delete)
     ImageButton btnDelete;
 
-    @BindView(R.id.spn_department)
-    Spinner spnPickDepartment;
+    @BindView(R.id.btn_category)
+    ImageButton btnCategory;
+
+    @BindView(R.id.tv_product_category)
+    TextView tvProductCategory;
 
     Product.Sorting sessionSorting = Product.Sorting.NONE;
 
@@ -151,8 +156,6 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
                 }).show();
             }
         });
-
-
         spnProductMeasure.setAdapter(new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item,
                 MeasurePicker.getEntries(getApplicationContext().getResources())));
 
@@ -203,8 +206,6 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
     @Override
     public void onLoadingComplete() {
         lvProducts.setAdapter(adapter);
-        spnPickDepartment.setAdapter(new DropDownDepartmentAdapter(getApplicationContext(), R.layout.dropdown_department_item,
-                presenter.getAllDepartments()));
         super.onLoadingComplete();
     }
 
@@ -256,6 +257,9 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
             etProductName.setText(product.getProductName());
             etProductPrice.setText(Conversor.asFloat(product.getProductSellPrice()));
             spnProductMeasure.setSelection(product.getProductMeasureUnit());
+            if (product.getDepartment() != null){
+                tvProductCategory.setText(product.getDepartment().getDepartmentName());
+            }
         }
         if (panel.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED
                 || panel.getPanelState() == SlidingUpPanelLayout.PanelState.HIDDEN)
@@ -282,11 +286,18 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
                 }).show();
             }
         });
+        btnCategory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogBuilder.addToCategoryDialog(InventoryActivity.this, new DialogBuilder.DialogInteractionListener.OnCategoryPickedListener() {
+                    @Override
+                    public void onCategorySelected(long categoryId) {
+                        presenter.addProductToCategory(product.getId(), categoryId);
+                    }
+                }, presenter).show();
+            }
+        });
 
-        for (int i=0; i<spnPickDepartment.getAdapter().getCount(); i++){
-            if (spnPickDepartment.getItemAtPosition(i).equals(product.getDepartment()))
-                spnPickDepartment.setSelection(i);
-        }
     }
 
 }

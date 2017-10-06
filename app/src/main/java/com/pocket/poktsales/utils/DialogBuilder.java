@@ -6,16 +6,20 @@ import android.content.Context;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.adapters.DropDownDepartmentAdapter;
+import com.pocket.poktsales.adapters.SimpleCategoryAdapter;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.model.Department;
 import com.pocket.poktsales.model.Product;
@@ -77,6 +81,33 @@ public class DialogBuilder {
         return instance;
 
 
+    }
+
+    public static Dialog addToCategoryDialog(final Context context,
+                                             final DialogInteractionListener.OnCategoryPickedListener callback,
+                                             RequiredPresenterOps.ProductPresenterOps presenter){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        final View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_pick_category, null);
+        final ListView lvCategories = (ListView) dialogView.findViewById(R.id.lv_categories);
+        final Button btnRemoveFromCategory = (Button) dialogView.findViewById(R.id.btn_remove_from_category);
+        lvCategories.setAdapter(new SimpleCategoryAdapter(context, R.layout.row_department_item, presenter.getAllDepartments()));
+        lvCategories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                callback.onCategorySelected(id);
+                instance.dismiss();
+            }
+        });
+        btnRemoveFromCategory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback.onCategorySelected(0L);
+                instance.dismiss();
+            }
+        });
+        builder.setView(dialogView);
+        instance = builder.create();
+        return instance;
     }
 
     public static Dialog newProductDialog(final Context context,
@@ -248,6 +279,9 @@ public class DialogBuilder {
 
         public interface OnNewDepartmentListener{
             void onNewDepartment(Department department);
+        }
+        public interface OnCategoryPickedListener{
+            void onCategorySelected(long categoryId);
         }
     }
 

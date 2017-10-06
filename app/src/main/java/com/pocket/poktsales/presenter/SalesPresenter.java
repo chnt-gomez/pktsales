@@ -53,6 +53,15 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps,
     }
 
     @Override
+    public void addProductToCategory(long productId, long categoryId) {
+        Product product = Product.findById(Product.class, productId);
+        product.setDepartment(Department.findById(Department.class, categoryId));
+        product.save();
+        view.onSuccess();
+
+    }
+
+    @Override
     public Product getProduct(String productName) {
         Product product = findProductByName(productName);
         if (product == null) {

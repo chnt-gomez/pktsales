@@ -1,20 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:title="@string/menu">
-        <item
-            android:id="@+id/nav_sales"
-            android:icon="@drawable/ic_menu_sales"
-            android:title="@string/menu_sales" />
-        <item
-            android:id="@+id/nav_inventory"
-            android:icon="@drawable/ic_menu_box"
-            android:title="@string/menu_inventory" />
-        <item
-            android:id="@+id/nav_categories"
-            android:icon="@drawable/ic_view_module"
-            android:title="@string/departments" />
-    </group>
+    <item android:title="@string/menu_cap">
+        <menu>
+            <group android:title="@string/menu">
+                <item
+                    android:id="@+id/nav_sales"
+                    android:icon="@drawable/ic_menu_sales"
+                    android:title="@string/menu_sales" />
+                <item
+                    android:id="@+id/nav_inventory"
+                    android:icon="@drawable/ic_menu_box"
+                    android:title="@string/menu_inventory" />
+                <item
+                    android:id="@+id/nav_categories"
+                    android:icon="@drawable/ic_view_module"
+                    android:title="@string/departments" />
+            </group>
+        </menu>
+    </item>
 
 
 </menu>

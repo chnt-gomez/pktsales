@@ -47,10 +47,16 @@
     <string name="empty_sale">No products in sale.</string>
     <string name="quick_sale">Quick sale</string>
     <string name="new_sale">New sale</string>
-    <string name="new_temp_product">Add temporary product...</string>
+    <string name="new_temp_product">Add temporary product…</string>
     <string name="departments">Categories</string>
+    <string name="w_o_category">W/O Category</string>
     <string name="menu">Menu</string>
     <string name="products_in_category">Products in category:</string>
-    <string name="new_department_name">New category...</string>
-    <string name="hint_department_name">Category name...</string>
+    <string name="new_department_name">New category…</string>
+    <string name="hint_department_name">Category name…</string>
+    <string name="menu_cap">MENU</string>
+    <string name="assign_to_category">Assign to category…</string>
+    <string name="prompt_department">Assign to category...</string>
+    <string name="no_category">without category</string>
+    <string name="remove_from_category">Remove from category</string>
 </resources>

@@ -25,6 +25,7 @@ public interface RequiredPresenterOps {
         void deactivateProduct(long productId);
         long reActivateProduct(long productId);
         List<Department> getAllDepartments();
+        void addProductToCategory(long productId, long categoryId);
     }
 
     interface TabPresenterOps{
