@@ -59,6 +59,7 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
     private SearchView searchView;
 
 
+    boolean isQuickSale = false;
     long ticketId;
 
     RequiredPresenterOps.SalePresenterOps presenter;
@@ -162,9 +163,14 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
                     finish();
                 }
             });
-        }
-        else
+        }else{
             onError();
+            finish();
+        }
+
+        if (getIntent().getExtras().containsKey("isQuickSale")){
+            this.isQuickSale = true;
+        }
         presenter = SalesPresenter.getInstance(this);
         lvProducts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -199,6 +205,9 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
         if (panel.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED)
             panel.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         else
+            if (isQuickSale){
+                presenter.cancelTab(ticketId);
+            }
             super.onBackPressed();
     }
 

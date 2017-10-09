@@ -50,7 +50,7 @@ public class OpenTabsActivity extends BaseActivity implements AdapterView.OnItem
             ticket.setTicketReference(getString(R.string.new_sale));
             presenter.openTab(ticket);
             if (ticket.getId() != null)
-                openTicket(ticket.getId());
+                openTicket(ticket.getId(), true);
             return true;
         }
 
@@ -113,6 +113,13 @@ public class OpenTabsActivity extends BaseActivity implements AdapterView.OnItem
     private void openTicket(long ticketId){
         Intent saleIntent = new Intent(OpenTabsActivity.this, SellActivity.class);
         saleIntent.putExtra("ticketId", ticketId);
+        startActivity(saleIntent);
+    }
+
+    private void openTicket(long ticketId, boolean isQuickSale){
+        Intent saleIntent = new Intent(OpenTabsActivity.this, SellActivity.class);
+        saleIntent.putExtra("ticketId", ticketId);
+        saleIntent.putExtra("isQuickSale", isQuickSale);
         startActivity(saleIntent);
     }
 

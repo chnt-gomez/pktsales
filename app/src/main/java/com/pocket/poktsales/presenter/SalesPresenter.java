@@ -9,6 +9,8 @@ import com.pocket.poktsales.model.Product;
 import com.pocket.poktsales.model.Sale;
 import com.pocket.poktsales.model.Ticket;
 
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +19,8 @@ import java.util.List;
  */
 
 public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps, RequiredPresenterOps.TabPresenterOps,
-        RequiredPresenterOps.SalePresenterOps, RequiredPresenterOps.DepartmentPresenterOps{
+        RequiredPresenterOps.SalePresenterOps, RequiredPresenterOps.DepartmentPresenterOps,
+        RequiredPresenterOps.HomePresenterOps{
 
     private static SalesPresenter instance;
     private RequiredViewOps view;
@@ -58,7 +61,6 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps,
         product.setDepartment(Department.findById(Department.class, categoryId));
         product.save();
         view.onSuccess();
-
     }
 
     @Override
@@ -201,6 +203,7 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps,
     public void applyTicket(long ticketId) {
         Ticket ticket = Ticket.findById(Ticket.class, ticketId);
         ticket.setTicketStatus(Ticket.TICKET_APPLIED);
+        ticket.setDateTime(DateTime.now().getMillis());
         ticket.save();
         for (Product p : getProductsFromTab(ticketId)){
             if (p.getProductStatus() == Product.TEMPORARY){
@@ -285,6 +288,41 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps,
     @Override
     public Department getDepartment(long id) {
         return Department.findById(Department.class, id);
+    }
+
+    /*
+    Home Methods
+     */
+
+    @Override
+    public float getDaySales() {
+        String todayStart  = String.valueOf(new DateTime().withTimeAtStartOfDay().getMillis());
+        String todayEnd = String.valueOf(new DateTime().withTime(23,59,59,999));
+        float total = 0F;
+        for (Ticket t : Ticket.find(Ticket.class, "date_time >= ? AND date_time < ?",
+                todayStart, todayEnd)) {
+            total += t.getSaleTotal();
+        }
+        return total;
+    }
+
+    @Override
+    public float getYesterdaySales() {
+        String yesterdayStart  = String.valueOf(new DateTime().minusDays(1).withTimeAtStartOfDay().getMillis());
+        String yesterdayEnd = String.valueOf(new DateTime().minusDays(1).withTime(23,59,59,999));
+        float total = 0F;
+        for (Ticket t : Ticket.find(Ticket.class, "date_time >= ? AND date_time < ?",
+                yesterdayStart, yesterdayEnd)) {
+            total += t.getSaleTotal();
+        }
+        return total;
+    }
+
+    @Override
+    public float getImprovement() {
+        float overHand =  getDaySales() - getYesterdaySales();
+        float demiHand = overHand / getYesterdaySales();
+        return demiHand * 100;
     }
 
     /*

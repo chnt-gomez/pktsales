@@ -50,4 +50,10 @@ public interface RequiredPresenterOps {
         void removeDepartment(long departmentId, long moveProductsToDepartmentId);
         Department getDepartment(long id);
     }
+
+    interface HomePresenterOps{
+        float getDaySales();
+        float getYesterdaySales();
+        float getImprovement();
+    }
 }

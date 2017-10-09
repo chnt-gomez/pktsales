@@ -8,7 +8,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
 import com.pocket.poktsales.R;
+import com.pocket.poktsales.interfaces.RequiredPresenterOps;
+import com.pocket.poktsales.presenter.SalesPresenter;
+import com.pocket.poktsales.utils.Conversor;
+import com.pocket.poktsales.utils.DataLoader;
 
 import butterknife.BindView;
 
@@ -20,6 +26,15 @@ public class HomeScreenActivity extends BaseActivity
     @BindView(R.id.nav_view)
     NavigationView navigationView;
 
+    @BindView(R.id.tv_today_income)
+    TextView tvTodayIncome;
+
+    @BindView(R.id.tv_performance)
+    TextView tvPerformance;
+
+    CardsAdapter adapter;
+
+    RequiredPresenterOps.HomePresenterOps presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,24 +44,43 @@ public class HomeScreenActivity extends BaseActivity
 
     @Override
     protected void onResume() {
+
         super.onResume();
+
     }
 
     @Override
     protected void onDestroy() {
-
         super.onDestroy();
+    }
+
+    @Override
+    public void onLoading() {
+        super.onLoading();
+        adapter = new CardsAdapter();
+        adapter.setTodayIncome(Conversor.asCurrency(presenter.getDaySales()));
+        adapter.setPerfomance(Conversor.asFloat(presenter.getImprovement()));
+    }
+
+    @Override
+    public void onLoadingComplete() {
+        super.onLoadingComplete();
+        tvTodayIncome.setText(adapter.getTodayIncome());
+        tvPerformance.setText(adapter.getPerfomance());
     }
 
     @Override
     protected void init() {
         super.init();
+        presenter = SalesPresenter.getInstance(this);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setItemIconTintList(null);
+        DataLoader loader = new DataLoader(this);
+        loader.execute();
     }
 
     @Override
@@ -93,5 +127,27 @@ public class HomeScreenActivity extends BaseActivity
 
     private void goTo(Class activity) {
         startActivity(new Intent(HomeScreenActivity.this, activity));
+    }
+
+    private class CardsAdapter {
+        String todayIncome;
+
+        public String getTodayIncome() {
+            return todayIncome;
+        }
+
+        public void setTodayIncome(String todayIncome) {
+            this.todayIncome = todayIncome;
+        }
+
+        public String getPerfomance() {
+            return perfomance;
+        }
+
+        public void setPerfomance(String perfomance) {
+            this.perfomance = perfomance;
+        }
+
+        String perfomance;
     }
 }

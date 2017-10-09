@@ -158,9 +158,7 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
         });
         spnProductMeasure.setAdapter(new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item,
                 MeasurePicker.getEntries(getApplicationContext().getResources())));
-
         panel.setPanelHeight(0);
-
         panel.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
@@ -173,7 +171,6 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
                     btnAdd.setVisibility(View.VISIBLE);
                 if (newState == SlidingUpPanelLayout.PanelState.EXPANDED)
                     btnAdd.setVisibility(View.GONE);
-
             }
         });
 
@@ -259,6 +256,8 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
             spnProductMeasure.setSelection(product.getProductMeasureUnit());
             if (product.getDepartment() != null){
                 tvProductCategory.setText(product.getDepartment().getDepartmentName());
+            }else{
+                tvProductCategory.setText(getString(R.string.no_category));
             }
         }
         if (panel.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED
@@ -297,7 +296,5 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
                 }, presenter).show();
             }
         });
-
     }
-
 }
