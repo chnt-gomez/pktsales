@@ -64,25 +64,24 @@ public class BaseActivity extends AppCompatActivity implements RequiredViewOps, 
 
     @Override
     public void onSuccess() {
-        Snackbar.make(coordinatorLayout, R.string.success, Snackbar.LENGTH_SHORT).show();
+
     }
 
     @Override
     public void onSuccess(int messageRes) {
         Snackbar.make(coordinatorLayout, messageRes, Snackbar.LENGTH_SHORT).show();
+        onSuccess();
     }
 
     @Override
     public void onSuccess(String message) {
         Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_SHORT).show();
+        onSuccess();
     }
 
     @Override
     public void onError() {
-        Snackbar snack = Snackbar.make(coordinatorLayout, R.string.error, Snackbar.LENGTH_SHORT);
-        TextView tv = (TextView)snack.getView().findViewById((android.support.design.R.id.snackbar_text));
-        tv.setTextColor(Color.parseColor("#ff7f7f"));
-        snack.show();
+
     }
 
     @Override
@@ -91,6 +90,7 @@ public class BaseActivity extends AppCompatActivity implements RequiredViewOps, 
         TextView tv = (TextView)snack.getView().findViewById((android.support.design.R.id.snackbar_text));
         tv.setTextColor(Color.parseColor("#ff7f7f"));
         snack.show();
+        onError();
     }
 
     @Override
@@ -99,6 +99,7 @@ public class BaseActivity extends AppCompatActivity implements RequiredViewOps, 
         TextView tv = (TextView)snack.getView().findViewById((android.support.design.R.id.snackbar_text));
         tv.setTextColor(Color.parseColor("#ff7f7f"));
         snack.show();
+        onError();
     }
 
     @Override

@@ -174,6 +174,8 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
             }
         });
 
+
+
         panel.setFadeOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -292,6 +294,10 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
                     @Override
                     public void onCategorySelected(long categoryId) {
                         presenter.addProductToCategory(product.getId(), categoryId);
+                        if (categoryId != 0)
+                            tvProductCategory.setText(presenter.getCategoryName(categoryId));
+                        else
+                            tvProductCategory.setText(getString(R.string.no_category));
                     }
                 }, presenter).show();
             }

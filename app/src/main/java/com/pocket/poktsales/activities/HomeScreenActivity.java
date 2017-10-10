@@ -9,13 +9,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.presenter.SalesPresenter;
 import com.pocket.poktsales.utils.Conversor;
 import com.pocket.poktsales.utils.DataLoader;
-
 import butterknife.BindView;
 
 public class HomeScreenActivity extends BaseActivity
@@ -46,7 +44,8 @@ public class HomeScreenActivity extends BaseActivity
     protected void onResume() {
 
         super.onResume();
-
+        DataLoader loader = new DataLoader(this);
+        loader.execute();
     }
 
     @Override
@@ -59,14 +58,14 @@ public class HomeScreenActivity extends BaseActivity
         super.onLoading();
         adapter = new CardsAdapter();
         adapter.setTodayIncome(Conversor.asCurrency(presenter.getDaySales()));
-        adapter.setPerfomance(Conversor.asFloat(presenter.getImprovement()));
+        adapter.setPerformance(presenter.getImprovement(getApplicationContext()));
     }
 
     @Override
     public void onLoadingComplete() {
         super.onLoadingComplete();
         tvTodayIncome.setText(adapter.getTodayIncome());
-        tvPerformance.setText(adapter.getPerfomance());
+        tvPerformance.setText(adapter.getPerformance());
     }
 
     @Override
@@ -79,8 +78,6 @@ public class HomeScreenActivity extends BaseActivity
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setItemIconTintList(null);
-        DataLoader loader = new DataLoader(this);
-        loader.execute();
     }
 
     @Override
@@ -130,24 +127,24 @@ public class HomeScreenActivity extends BaseActivity
     }
 
     private class CardsAdapter {
-        String todayIncome;
 
-        public String getTodayIncome() {
+        String todayIncome;
+        String performance;
+
+        String getTodayIncome() {
             return todayIncome;
         }
 
-        public void setTodayIncome(String todayIncome) {
+        void setTodayIncome(String todayIncome) {
             this.todayIncome = todayIncome;
         }
 
-        public String getPerfomance() {
-            return perfomance;
+        String getPerformance() {
+            return performance;
         }
 
-        public void setPerfomance(String perfomance) {
-            this.perfomance = perfomance;
+        void setPerformance(String performance) {
+            this.performance = performance;
         }
-
-        String perfomance;
     }
 }

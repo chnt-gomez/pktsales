@@ -16,6 +16,8 @@ import com.pocket.poktsales.utils.DataLoader;
 import com.pocket.poktsales.utils.DialogBuilder;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import java.util.List;
+
 import butterknife.BindView;
 
 
@@ -102,8 +104,12 @@ public class CategoriesActivity extends BaseActivity implements AdapterView.OnIt
     @Override
     public void onLoading() {
         super.onLoading();
+        final List<Department> departments = presenter.getAllDepartments();
+        for (Department d : departments){
+            d.setProductCount(presenter.getProductCountFromDepartment(d.getId()));
+        }
         adapter = new SimpleCategoryAdapter(getApplicationContext(), R.layout.row_department_item,
-                presenter.getAllDepartments());
+                departments);
     }
 
     @Override

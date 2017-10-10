@@ -1,7 +1,9 @@
 package com.pocket.poktsales.presenter;
 
+import android.content.Context;
 import android.util.Log;
 
+import com.pocket.poktsales.R;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
 import com.pocket.poktsales.model.Department;
@@ -13,6 +15,7 @@ import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by MAV1GA on 04/09/2017.
@@ -53,6 +56,11 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps,
             view.onError();
         }
         return -1;
+    }
+
+    @Override
+    public String getCategoryName(long categoryId) {
+        return Department.findById(Department.class, categoryId).getDepartmentName();
     }
 
     @Override
@@ -290,6 +298,12 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps,
         return Department.findById(Department.class, id);
     }
 
+    @Override
+    public int getProductCountFromDepartment(long departmentId) {
+        String args[] = {String.valueOf(departmentId)};
+        return (int) Product.count(Product.class, "department = ?", args);
+    }
+
     /*
     Home Methods
      */
@@ -306,10 +320,12 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps,
         return total;
     }
 
+
+
     @Override
     public float getYesterdaySales() {
         String yesterdayStart  = String.valueOf(new DateTime().minusDays(1).withTimeAtStartOfDay().getMillis());
-        String yesterdayEnd = String.valueOf(new DateTime().minusDays(1).withTime(23,59,59,999));
+        String yesterdayEnd = String.valueOf(new DateTime().minusDays(1).withTime(23,59,59,999).getMillis());
         float total = 0F;
         for (Ticket t : Ticket.find(Ticket.class, "date_time >= ? AND date_time < ?",
                 yesterdayStart, yesterdayEnd)) {
@@ -319,10 +335,15 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps,
     }
 
     @Override
-    public float getImprovement() {
+    public String getImprovement(Context context) {
         float overHand =  getDaySales() - getYesterdaySales();
-        float demiHand = overHand / getYesterdaySales();
-        return demiHand * 100;
+        if (overHand > 0){
+            float demiHand = overHand / getYesterdaySales();
+            demiHand *= 100;
+            return String.format(Locale.getDefault(), context.getString(R.string.improvement_positive), demiHand);
+        }else{
+            return String.format(Locale.getDefault(), context.getString(R.string.improvement_negative), overHand);
+        }
     }
 
     /*

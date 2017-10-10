@@ -18,6 +18,13 @@ public class Department extends SugarRecord {
     @Ignore
     public static final int INACTIVE = 1;
 
+    public void setProductCount(int productCOunt) {
+        this.productCount = productCOunt;
+    }
+
+    @Ignore
+    private int productCount;
+
     private String departmentName;
     private int departmentStatus;
     private int iconResource;
@@ -64,5 +71,9 @@ public class Department extends SugarRecord {
 
     public void setColorResource(int colorResource) {
         this.colorResource = colorResource;
+    }
+
+    public int getProductCount() {
+        return productCount;
     }
 }

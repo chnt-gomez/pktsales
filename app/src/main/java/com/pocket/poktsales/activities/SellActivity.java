@@ -205,10 +205,14 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
         if (panel.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED)
             panel.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         else
-            if (isQuickSale){
-                presenter.cancelTab(ticketId);
-            }
             super.onBackPressed();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (isQuickSale)
+            presenter.cancelTab(ticketId);
+        super.onDestroy();
     }
 
     @Override

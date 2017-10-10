@@ -90,7 +90,11 @@ public class DialogBuilder {
         final View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_pick_category, null);
         final ListView lvCategories = (ListView) dialogView.findViewById(R.id.lv_categories);
         final Button btnRemoveFromCategory = (Button) dialogView.findViewById(R.id.btn_remove_from_category);
-        lvCategories.setAdapter(new SimpleCategoryAdapter(context, R.layout.row_department_item, presenter.getAllDepartments()));
+        List<Department> departments = presenter.getAllDepartments();
+        for (Department d : departments){
+            d.setProductCount(presenter.getProductsInDepartment(d.getId()).size());
+        }
+        lvCategories.setAdapter(new SimpleCategoryAdapter(context, R.layout.row_department_item, departments));
         lvCategories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

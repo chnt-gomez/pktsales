@@ -1,5 +1,7 @@
 package com.pocket.poktsales.interfaces;
 
+import android.content.Context;
+
 import com.pocket.poktsales.model.Department;
 import com.pocket.poktsales.model.Product;
 import com.pocket.poktsales.model.Ticket;
@@ -26,6 +28,7 @@ public interface RequiredPresenterOps {
         long reActivateProduct(long productId);
         List<Department> getAllDepartments();
         void addProductToCategory(long productId, long categoryId);
+        String getCategoryName(long categoryId);
     }
 
     interface TabPresenterOps{
@@ -49,11 +52,12 @@ public interface RequiredPresenterOps {
         List<Department> getAllDepartments();
         void removeDepartment(long departmentId, long moveProductsToDepartmentId);
         Department getDepartment(long id);
+        int getProductCountFromDepartment(long departmentId);
     }
 
     interface HomePresenterOps{
         float getDaySales();
         float getYesterdaySales();
-        float getImprovement();
+        String getImprovement(Context context);
     }
 }
