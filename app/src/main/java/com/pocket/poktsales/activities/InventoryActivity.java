@@ -249,7 +249,7 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
         }
     }
 
-    private void showProduct(long productId){
+    private void showProduct(final long productId){
         final Product product = presenter.getProduct(productId);
         if (product != null){
             tvProductName.setText(product.getProductName());
@@ -268,10 +268,8 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                product.setProductMeasureUnit(spnProductMeasure.getSelectedItemPosition());
-                product.setProductName(etProductName.getText().toString());
-                product.setProductSellPrice(Conversor.toFloat(etProductPrice.getText().toString()));
-                presenter.updateProduct(product);
+                presenter.updateProduct(productId, etProductName.getText().toString(), Conversor.toFloat(etProductPrice.getText().toString()),
+                        spnProductMeasure.getSelectedItemPosition());
                 panel.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
             }
         });

@@ -22,7 +22,7 @@ public interface RequiredPresenterOps {
         List<Product> searchProducts(String searchArg);
         List<Product> getProductsInDepartment(Department department);
         List<Product> getProductsInDepartment(long departmentId);
-        Product updateProduct(Product newProductArgs);
+        Product updateProduct(long productId, String newProductName, float newProductPrice, int newMeasureUnit);
         void deactivateProduct(Product product);
         void deactivateProduct(long productId);
         long reActivateProduct(long productId);
@@ -59,5 +59,8 @@ public interface RequiredPresenterOps {
         float getDaySales();
         float getYesterdaySales();
         String getImprovement(Context context);
+        List<Department> getAllDepartments();
+        float getSaleFromDepartment(long departmentId);
+        float getSalesFromDay(int dayOfMonth);
     }
 }

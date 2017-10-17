@@ -9,4 +9,13 @@
     <color name="colorSubtleError">#ff7f7f</color>
     <color name="colorSubtleErrorDark">#d84141</color>
     <color name="defaultText">#757575</color>
+
+    <color name="chart_red">#f44242</color>
+    <color name="chart_red_dark">#872727</color>
+    <color name="chart_purple">#582787</color>
+    <color name="chart_blue">#282cff</color>
+    <color name="chart_blue_light">#00b29d</color>
+    <color name="chart_green">#00602e</color>
+    <color name="chart_green_light">#00b23b</color>
+
 </resources>

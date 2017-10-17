@@ -1,6 +1,7 @@
 package com.pocket.poktsales.activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -8,12 +9,35 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
+
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.data.DataSet;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
+import com.pocket.poktsales.model.Department;
 import com.pocket.poktsales.presenter.SalesPresenter;
+import com.pocket.poktsales.utils.ChartValueFormatter;
 import com.pocket.poktsales.utils.Conversor;
 import com.pocket.poktsales.utils.DataLoader;
+
+import org.joda.time.DateTime;
+
+import java.util.AbstractList;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
 import butterknife.BindView;
 
 public class HomeScreenActivity extends BaseActivity
@@ -29,6 +53,12 @@ public class HomeScreenActivity extends BaseActivity
 
     @BindView(R.id.tv_performance)
     TextView tvPerformance;
+
+    @BindView(R.id.chart_cat_sales)
+    PieChart chartCatSales;
+
+    @BindView(R.id.chart_performance)
+    LineChart chartPerformance;
 
     CardsAdapter adapter;
 
@@ -78,6 +108,48 @@ public class HomeScreenActivity extends BaseActivity
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setItemIconTintList(null);
+        setPerformanceChart();
+        setCategorySalesChart();
+    }
+
+    private void setPerformanceChart(){
+        List<Entry> entries = new ArrayList<>();
+
+        for (int i = 1; i<= DateTime.now().getDayOfMonth(); i++){
+            entries.add(new Entry(i, presenter.getSalesFromDay(i)));
+        }
+        LineDataSet dataSet = new LineDataSet(entries, null);
+        dataSet.setColors(new int[]{R.color.colorAccent}, getApplicationContext());
+        dataSet.setLineWidth(2);
+        LineData lineData = new LineData(dataSet);
+        chartPerformance.getLegend().setEnabled(false);
+        chartPerformance.setDescription(null);
+        chartPerformance.setData(lineData);
+        chartPerformance.getData().setValueFormatter(new ChartValueFormatter());
+        chartPerformance.getData().setDrawValues(false);
+        chartPerformance.invalidate();
+    }
+
+    private void setCategorySalesChart(){
+        List<PieEntry> entries = new ArrayList<>();
+        for (Department d : presenter.getAllDepartments()){
+            entries.add(new PieEntry(presenter.getSaleFromDepartment(d.getId()),
+                    d.getDepartmentName()));
+        }
+        PieDataSet set = new PieDataSet(entries, null);
+
+        set.setColors(new int[]{R.color.chart_red, R.color.chart_red_dark,
+                R.color.chart_purple, R.color.chart_blue, R.color.chart_blue_light,
+                R.color.chart_green, R.color.chart_green_light}, getApplicationContext());
+
+        PieData data = new PieData(set);
+        data.setValueFormatter(new ChartValueFormatter());
+        chartCatSales.setData(data);
+        chartCatSales.getLegend().setEnabled(false);
+        chartCatSales.setDescription(null);
+        chartCatSales.getData().setValueTextColor(Color.WHITE);
+        chartCatSales.getData().setValueTextSize(16);
+        chartCatSales.invalidate();
     }
 
     @Override

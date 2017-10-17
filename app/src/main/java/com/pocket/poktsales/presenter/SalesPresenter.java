@@ -14,6 +14,7 @@ import com.pocket.poktsales.model.Ticket;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -114,14 +115,20 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps,
     }
 
     @Override
-    public Product updateProduct(Product newProductArgs) {
-        if (isProductNameInUse(newProductArgs.getProductName(), newProductArgs.getId())){
+    public Product updateProduct(long productId, String newProductArgs, float newPriceArgs, int newMeasure) {
+        if (isProductNameInUse(newProductArgs, productId)){
             view.onError("Name in use");
         }else{
-            newProductArgs.save();
+            Product product = findProductById(productId);
+            product.setProductName(newProductArgs);
+            product.setProductMeasureUnit(newMeasure);
+            product.setProductSellPrice(newPriceArgs);
+            product.save();
             view.onSuccess();
+            return product;
         }
-        return newProductArgs;
+        return null;
+
     }
 
     @Override
@@ -320,7 +327,31 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps,
         return total;
     }
 
+    @Override
+    public float getSalesFromDay(int dayOfMonth) {
+        float total = 0;
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+        int month = Calendar.getInstance().get(Calendar.MONTH)+1;
+        long start = new DateTime(year, month, dayOfMonth, 0,0,0).getMillis();
+        long end = new DateTime(year, month, dayOfMonth, 23,59,59).getMillis();
+        String args[] = {String.valueOf(start), String.valueOf(end)};
+        for (Ticket t : Ticket.find(Ticket.class, "date_time >= ? and date_time <= ?", args, null, null, null)){
+            total += t.getSaleTotal();
+        }
+        return total;
+    }
 
+    @Override
+    public float getSaleFromDepartment(long departmentId) {
+        float total = 0;
+        for (Sale s : Sale.findWithQuery(
+                Sale.class, "SELECT * from Sale s, Product p, Department d WHERE " +
+                        "p.department = d.id AND d.id = ? AND s.product = p.id", String.valueOf(departmentId)
+        )){
+            total += s.getSaleTotal();
+        }
+        return total;
+    }
 
     @Override
     public float getYesterdaySales() {

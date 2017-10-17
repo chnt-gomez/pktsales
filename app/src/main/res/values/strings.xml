@@ -59,4 +59,6 @@
     <string name="remove_from_category">Remove from category</string>
     <string name="improvement_positive">%f better than yesterday.</string>
     <string name="improvement_negative">%f remaining to catch up with yesterday sales.</string>
+    <string name="sales_by_category">Sales by category</string>
+    <string name="month_sales">Month\'s performance</string>
 </resources>
