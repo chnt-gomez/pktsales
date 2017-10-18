@@ -15,8 +15,10 @@ import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Stack;
 
 /**
  * Created by MAV1GA on 04/09/2017.
@@ -328,6 +330,15 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps,
     }
 
     @Override
+    public String getBestSellerOfTheDay() {
+        List <Product> results =
+        Product.findWithQuery(Product.class, "SELECT *, COUNT(*) as products FROM Product p JOIN Sale s ON s.product = p.id JOIN " +
+                        "Ticket t on t.id = s.ticket AND t.date_time >= ? AND t.date_time < ? GROUP BY product_name ORDER BY products DESC, product_name DESC", String.valueOf(getTodayStart()),
+                String.valueOf(getTodayEnd()));
+        return (results.size() >= 1 ? results.get(0).getProductName() : "N/A");
+    }
+
+    @Override
     public float getSalesFromDay(int dayOfMonth) {
         float total = 0;
         int year = Calendar.getInstance().get(Calendar.YEAR);
@@ -448,5 +459,14 @@ public class SalesPresenter implements RequiredPresenterOps.ProductPresenterOps,
     private List<Ticket> getAllTickets(){
         return Ticket.find(Ticket.class, "ticket_status = ?",
                 String.valueOf(Ticket.TICKET_PENDING));
+    }
+
+    private long getTodayStart(){
+        return new DateTime().withTimeAtStartOfDay().getMillis();
+
+    }
+
+    private long getTodayEnd(){
+        return new DateTime().withTime(23,59,59,999).getMillis();
     }
 }

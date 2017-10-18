@@ -60,9 +60,13 @@ public class HomeScreenActivity extends BaseActivity
     @BindView(R.id.chart_performance)
     LineChart chartPerformance;
 
+    @BindView(R.id.tv_star_product)
+    TextView tvStartProduct;
+
     CardsAdapter adapter;
 
     RequiredPresenterOps.HomePresenterOps presenter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +114,7 @@ public class HomeScreenActivity extends BaseActivity
         navigationView.setItemIconTintList(null);
         setPerformanceChart();
         setCategorySalesChart();
+        setBestProductChart();
     }
 
     private void setPerformanceChart(){
@@ -150,6 +155,10 @@ public class HomeScreenActivity extends BaseActivity
         chartCatSales.getData().setValueTextColor(Color.WHITE);
         chartCatSales.getData().setValueTextSize(16);
         chartCatSales.invalidate();
+    }
+
+    private void setBestProductChart(){
+        tvStartProduct.setText(presenter.getBestSellerOfTheDay());
     }
 
     @Override

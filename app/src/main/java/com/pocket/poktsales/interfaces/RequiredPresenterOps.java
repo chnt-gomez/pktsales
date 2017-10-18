@@ -62,5 +62,6 @@ public interface RequiredPresenterOps {
         List<Department> getAllDepartments();
         float getSaleFromDepartment(long departmentId);
         float getSalesFromDay(int dayOfMonth);
+        String getBestSellerOfTheDay();
     }
 }
