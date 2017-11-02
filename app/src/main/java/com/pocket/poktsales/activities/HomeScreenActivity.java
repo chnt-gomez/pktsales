@@ -9,35 +9,26 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
-
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.model.Department;
-import com.pocket.poktsales.presenter.SalesPresenter;
+import com.pocket.poktsales.presenter.HomePresenter;
 import com.pocket.poktsales.utils.ChartValueFormatter;
 import com.pocket.poktsales.utils.Conversor;
 import com.pocket.poktsales.utils.DataLoader;
 
 import org.joda.time.DateTime;
-
-import java.util.AbstractList;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-
 import butterknife.BindView;
 
 public class HomeScreenActivity extends BaseActivity
@@ -76,10 +67,7 @@ public class HomeScreenActivity extends BaseActivity
 
     @Override
     protected void onResume() {
-
         super.onResume();
-        DataLoader loader = new DataLoader(this);
-        loader.execute();
     }
 
     @Override
@@ -93,6 +81,7 @@ public class HomeScreenActivity extends BaseActivity
         adapter = new CardsAdapter();
         adapter.setTodayIncome(Conversor.asCurrency(presenter.getDaySales()));
         adapter.setPerformance(presenter.getImprovement(getApplicationContext()));
+
     }
 
     @Override
@@ -100,21 +89,24 @@ public class HomeScreenActivity extends BaseActivity
         super.onLoadingComplete();
         tvTodayIncome.setText(adapter.getTodayIncome());
         tvPerformance.setText(adapter.getPerformance());
+        setPerformanceChart();
+        setCategorySalesChart();
+        setBestProductChart();
     }
 
     @Override
     protected void init() {
         super.init();
-        presenter = SalesPresenter.getInstance(this);
+        presenter = new HomePresenter(this);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setItemIconTintList(null);
-        setPerformanceChart();
-        setCategorySalesChart();
-        setBestProductChart();
+        DataLoader loader = new DataLoader(this);
+        loader.execute();
+
     }
 
     private void setPerformanceChart(){

@@ -24,6 +24,7 @@ import com.pocket.poktsales.adapters.SimpleProductAdapter;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.model.Department;
 import com.pocket.poktsales.model.Product;
+import com.pocket.poktsales.presenter.InventoryPresenter;
 import com.pocket.poktsales.presenter.SalesPresenter;
 import com.pocket.poktsales.utils.Conversor;
 import com.pocket.poktsales.utils.DataLoader;
@@ -32,7 +33,14 @@ import com.pocket.poktsales.utils.DialogBuilder;
 import com.pocket.poktsales.utils.MeasurePicker;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import java.util.List;
+import java.util.concurrent.Callable;
+
 import butterknife.BindView;
+import rx.Observer;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.subjects.PublishSubject;
 
 public class InventoryActivity extends BaseActivity implements SearchView.OnQueryTextListener,
         AdapterView.OnItemClickListener{
@@ -41,7 +49,7 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
     FloatingActionButton btnAdd;
 
     DataLoader loader;
-    RequiredPresenterOps.ProductPresenterOps presenter;
+    InventoryPresenter presenter;
     private SimpleProductAdapter adapter;
 
     @BindView(R.id.lv_products)
@@ -133,14 +141,13 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
     @Override
     protected void onResume() {
         super.onResume();
-        presenter = SalesPresenter.getInstance(this);
     }
 
     @Override
     protected void init() {
         super.init();
         if (presenter == null)
-            presenter = SalesPresenter.getInstance(this);
+            presenter = new InventoryPresenter(this);
         loadingBar = (ProgressBar)findViewById(R.id.progressBar);
         if (getSupportActionBar()!= null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -192,19 +199,40 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
 
     @Override
     public void onLoading() {
-        adapter = new SimpleProductAdapter(getApplicationContext(), R.layout.row_simple_product,
-                presenter.getAllProducts(sessionSorting));
+        presenter.getRxProducts().subscribe(new Observer<List<Product>>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(List<Product> products) {
+                if (adapter == null)
+                    adapter = new SimpleProductAdapter(getApplicationContext(), R.layout.row_simple_product,
+                        products);
+                lvProducts.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+
     }
 
     @Override
     public void onLoading(String searchArgs) {
-        adapter = new SimpleProductAdapter(getApplicationContext(), R.layout.row_simple_product,
-                presenter.searchProducts(searchArgs));
+        //adapter = new SimpleProductAdapter(getApplicationContext(), R.layout.row_simple_product,
+                //presenter.searchProducts(searchArgs));
+
     }
 
     @Override
     public void onLoadingComplete() {
-        lvProducts.setAdapter(adapter);
+        //lvProducts.setAdapter(adapter);
         super.onLoadingComplete();
     }
 
@@ -233,7 +261,7 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
 
     @Override
     public void onSuccess() {
-        start();
+        //start();
     }
 
     @Override

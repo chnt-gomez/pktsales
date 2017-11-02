@@ -18,8 +18,8 @@ public class Department extends SugarRecord {
     @Ignore
     public static final int INACTIVE = 1;
 
-    public void setProductCount(int productCOunt) {
-        this.productCount = productCOunt;
+    public void setProductCount(int productCount) {
+        this.productCount = productCount;
     }
 
     @Ignore

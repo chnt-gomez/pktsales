@@ -1,8 +1,6 @@
 package com.pocket.poktsales;
 
 import android.app.Application;
-
-import com.facebook.stetho.Stetho;
 import com.orm.SugarContext;
 
 /**
@@ -15,6 +13,5 @@ public class PktApp extends Application {
     public void onCreate() {
         super.onCreate();
         SugarContext.init(this);
-        Stetho.initializeWithDefaults(this);
     }
 }

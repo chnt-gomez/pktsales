@@ -3,6 +3,7 @@ package com.pocket.poktsales.utils;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import com.pocket.poktsales.interfaces.OnLoadingEventListener;
 
@@ -13,6 +14,8 @@ import com.pocket.poktsales.interfaces.OnLoadingEventListener;
 public class DataLoader extends AsyncTask<Void, Void, Void> {
 
     private final OnLoadingEventListener callback;
+
+    private static final String TAG = "DataLoader";
 
     public DataLoader (OnLoadingEventListener callback){
         this.callback = callback;
@@ -26,12 +29,14 @@ public class DataLoader extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected void onPreExecute() {
+        Log.i(TAG, "onPreExecute: is executing!");
         super.onPreExecute();
         callback.onLoadingPrepare();
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
+        Log.i(TAG, "onPostExecute: is called. Loading is finished");
         super.onPostExecute(aVoid);
         callback.onLoadingComplete();
     }

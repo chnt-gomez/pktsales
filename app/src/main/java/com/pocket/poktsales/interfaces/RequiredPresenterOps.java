@@ -8,6 +8,9 @@ import com.pocket.poktsales.model.Ticket;
 
 import java.util.List;
 
+import rx.Observable;
+
+
 /**
  * Created by MAV1GA on 04/09/2017.
  */
@@ -16,7 +19,6 @@ public interface RequiredPresenterOps {
 
     interface ProductPresenterOps{
         long createProduct(Product product);
-        Product getProduct(String productName);
         Product getProduct(long productId);
         List<Product> getAllProducts(Product.Sorting sorting);
         List<Product> searchProducts(String searchArg);
@@ -63,5 +65,8 @@ public interface RequiredPresenterOps {
         float getSaleFromDepartment(long departmentId);
         float getSalesFromDay(int dayOfMonth);
         String getBestSellerOfTheDay();
+
+        /* Rx Methods now */
+        Observable<List<Department>> getDepartments();
     }
 }
