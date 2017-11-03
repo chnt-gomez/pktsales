@@ -6,9 +6,7 @@ import com.pocket.poktsales.model.Department;
 import com.pocket.poktsales.model.Product;
 
 import java.util.List;
-import java.util.concurrent.Callable;
 
-import rx.Observable;
 
 /**
  * Created by MAV1GA on 02/11/2017.
@@ -28,6 +26,7 @@ public class InventoryPresenter extends BasePresenter implements RequiredPresent
             if (product.getProductName().equals("")){}
             //TODO: Name it with a custom label.
             product.save();
+            view.onSuccess();
             return product.getId();
         }else{
             view.onError();
@@ -127,14 +126,5 @@ public class InventoryPresenter extends BasePresenter implements RequiredPresent
             view.onError("Can't find product");
             return -1;
         }
-    }
-
-    public Observable<List<Product>> getRxProducts(){
-        return Observable.fromCallable(new Callable<List<Product>>(){
-            @Override
-            public List<Product> call() throws Exception {
-                return getAllProducts(Product.Sorting.NONE);
-            }
-        });
     }
 }

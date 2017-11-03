@@ -19,13 +19,10 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import com.pocket.poktsales.R;
-import com.pocket.poktsales.adapters.DropDownDepartmentAdapter;
 import com.pocket.poktsales.adapters.SimpleProductAdapter;
-import com.pocket.poktsales.interfaces.RequiredPresenterOps;
-import com.pocket.poktsales.model.Department;
+import com.pocket.poktsales.interfaces.RequiredViewOps;
 import com.pocket.poktsales.model.Product;
 import com.pocket.poktsales.presenter.InventoryPresenter;
-import com.pocket.poktsales.presenter.SalesPresenter;
 import com.pocket.poktsales.utils.Conversor;
 import com.pocket.poktsales.utils.DataLoader;
 import com.pocket.poktsales.utils.DataSearchLoader;
@@ -33,22 +30,22 @@ import com.pocket.poktsales.utils.DialogBuilder;
 import com.pocket.poktsales.utils.MeasurePicker;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
-
 import butterknife.BindView;
+import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
-import rx.Subscription;
-import rx.subjects.PublishSubject;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class InventoryActivity extends BaseActivity implements SearchView.OnQueryTextListener,
         AdapterView.OnItemClickListener{
 
+    private static final String TAG = "InventoryActivity";
+
     @BindView(R.id.fab)
     FloatingActionButton btnAdd;
-
-    DataLoader loader;
     InventoryPresenter presenter;
     private SimpleProductAdapter adapter;
 
@@ -82,8 +79,6 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
     @BindView(R.id.tv_product_category)
     TextView tvProductCategory;
 
-    Product.Sorting sessionSorting = Product.Sorting.NONE;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         layoutResourceId = R.layout.activity_inventory;
@@ -114,33 +109,9 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_sort){
-            openSelectionDialog();
-            return true;
-        }
-        return false;
-    }
-
-    private void openSelectionDialog() {
-        DialogBuilder.sortProductsDialog(InventoryActivity.this, presenter, sessionSorting, new DialogBuilder.DialogInteractionListener.OnSortProductsListener() {
-            @Override
-            public void onSortProducts(long departmentId, Product.Sorting sorting) {
-                sessionSorting = sorting;
-                start();
-            }
-        }).show();
-    }
-
-    @Override
     public void onPostResume() {
         super.onPostResume();
         start();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 
     @Override
@@ -192,14 +163,24 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
         lvProducts.setOnItemClickListener(this);
     }
 
-    private void start() {
-        loader = new DataLoader(this);
-        loader.execute();
-    }
-
     @Override
-    public void onLoading() {
-        presenter.getRxProducts().subscribe(new Observer<List<Product>>() {
+    public void onLoadingPrepare() {
+        super.onLoadingPrepare();
+
+        adapter = new SimpleProductAdapter(getApplicationContext(), R.layout.row_simple_product,
+                new ArrayList<Product>());
+        lvProducts.setAdapter(adapter);
+
+        /*
+        observable = Observable.create(new Observable.OnSubscribe<List<Product>>() {
+            @Override
+            public void call(Subscriber<? super List<Product>> subscriber) {
+                subscriber.onNext(presenter.getAllProducts(Product.Sorting.NONE));
+                subscriber.onCompleted();
+            }
+        });
+
+        observer = new Observer<List<Product>>() {
             @Override
             public void onCompleted() {
 
@@ -212,28 +193,49 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
 
             @Override
             public void onNext(List<Product> products) {
-                if (adapter == null)
-                    adapter = new SimpleProductAdapter(getApplicationContext(), R.layout.row_simple_product,
+                Log.d(TAG, "onNext: has been called");
+                adapter = new SimpleProductAdapter(getApplicationContext(), R.layout.row_simple_product,
                         products);
-                lvProducts.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
             }
-        });
+        };
 
+        observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+                */
 
     }
 
     @Override
-    public void onLoading(String searchArgs) {
-        //adapter = new SimpleProductAdapter(getApplicationContext(), R.layout.row_simple_product,
-                //presenter.searchProducts(searchArgs));
+    public void onSuccess(int messageRes) {
+        super.onSuccess(messageRes);
+    }
 
+    @Override
+    public void onLoading() {
+        Observable<List<Product>> initProductsObservable = Observable.just(presenter.getAllProducts(Product.Sorting.NONE));
+        initProductsObservable.subscribe(new Observer<List<Product>>() {
+            @Override
+            public void onCompleted() {
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(List<Product> products) {
+                adapter.addAll(products);
+            }
+        });
     }
 
     @Override
     public void onLoadingComplete() {
-        //lvProducts.setAdapter(adapter);
         super.onLoadingComplete();
+
     }
 
     @Override
@@ -261,7 +263,7 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
 
     @Override
     public void onSuccess() {
-        //start();
+
     }
 
     @Override

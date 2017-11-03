@@ -99,11 +99,6 @@ public class OpenTabsActivity extends BaseActivity implements AdapterView.OnItem
         gridView.setAdapter(adapter);
     }
 
-    private void start(){
-        DataLoader loader = new DataLoader(this);
-        loader.execute();
-    }
-
     @Override
     public void onSuccess() {
         super.onSuccess();

@@ -13,4 +13,5 @@ public interface RequiredViewOps {
     void onError();
     void onError(int messageRes);
     void onError(String message);
+
 }

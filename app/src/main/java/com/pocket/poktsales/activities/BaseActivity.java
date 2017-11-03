@@ -14,6 +14,8 @@ import android.widget.TextView;
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.interfaces.OnLoadingEventListener;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
+import com.pocket.poktsales.utils.DataLoader;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -21,7 +23,7 @@ import butterknife.ButterKnife;
  * Created by vicente on 30/08/17.
  */
 
-public class BaseActivity extends AppCompatActivity implements RequiredViewOps, OnLoadingEventListener {
+public abstract class BaseActivity extends AppCompatActivity implements RequiredViewOps, OnLoadingEventListener {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -33,6 +35,8 @@ public class BaseActivity extends AppCompatActivity implements RequiredViewOps, 
 
     protected int layoutResourceId;
 
+    protected DataLoader loader;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +47,11 @@ public class BaseActivity extends AppCompatActivity implements RequiredViewOps, 
         }finally{
             init();
         }
+    }
+
+    protected void start(){
+        loader = new DataLoader(this);
+        loader.execute();
     }
 
     protected void init() {

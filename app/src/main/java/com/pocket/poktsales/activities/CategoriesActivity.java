@@ -54,11 +54,6 @@ public class CategoriesActivity extends BaseActivity implements AdapterView.OnIt
         start();
     }
 
-    private void start() {
-        DataLoader loader = new DataLoader(this);
-        loader.execute();
-    }
-
     @Override
     protected void init() {
         super.init();
