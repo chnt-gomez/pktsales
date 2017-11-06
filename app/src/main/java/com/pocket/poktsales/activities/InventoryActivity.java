@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,24 +19,18 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.adapters.SimpleProductAdapter;
-import com.pocket.poktsales.interfaces.RequiredViewOps;
 import com.pocket.poktsales.model.Product;
 import com.pocket.poktsales.presenter.InventoryPresenter;
 import com.pocket.poktsales.utils.Conversor;
 import com.pocket.poktsales.utils.DataLoader;
-import com.pocket.poktsales.utils.DataSearchLoader;
 import com.pocket.poktsales.utils.DialogBuilder;
 import com.pocket.poktsales.utils.MeasurePicker;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import butterknife.BindView;
-import rx.Observable;
-import rx.Observer;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class InventoryActivity extends BaseActivity implements SearchView.OnQueryTextListener,
         AdapterView.OnItemClickListener{
@@ -47,7 +40,8 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
     @BindView(R.id.fab)
     FloatingActionButton btnAdd;
     InventoryPresenter presenter;
-    private SimpleProductAdapter adapter;
+    private SimpleProductAdapter listAdapter;
+    private InventoryActivityAdapter activityAdapter;
 
     @BindView(R.id.lv_products)
     ListView lvProducts;
@@ -151,9 +145,6 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
                     btnAdd.setVisibility(View.GONE);
             }
         });
-
-
-
         panel.setFadeOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -161,49 +152,15 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
             }
         });
         lvProducts.setOnItemClickListener(this);
+        activityAdapter = new InventoryActivityAdapter();
+        listAdapter = new SimpleProductAdapter(getApplicationContext(), R.layout.row_simple_product, new ArrayList<Product>());
+        lvProducts.setAdapter(listAdapter);
     }
 
     @Override
     public void onLoadingPrepare() {
         super.onLoadingPrepare();
-
-        adapter = new SimpleProductAdapter(getApplicationContext(), R.layout.row_simple_product,
-                new ArrayList<Product>());
-        lvProducts.setAdapter(adapter);
-
-        /*
-        observable = Observable.create(new Observable.OnSubscribe<List<Product>>() {
-            @Override
-            public void call(Subscriber<? super List<Product>> subscriber) {
-                subscriber.onNext(presenter.getAllProducts(Product.Sorting.NONE));
-                subscriber.onCompleted();
-            }
-        });
-
-        observer = new Observer<List<Product>>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onNext(List<Product> products) {
-                Log.d(TAG, "onNext: has been called");
-                adapter = new SimpleProductAdapter(getApplicationContext(), R.layout.row_simple_product,
-                        products);
-                adapter.notifyDataSetChanged();
-            }
-        };
-
-        observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(observer);
-                */
-
+        listAdapter.clear();
     }
 
     @Override
@@ -213,29 +170,16 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
 
     @Override
     public void onLoading() {
-        Observable<List<Product>> initProductsObservable = Observable.just(presenter.getAllProducts(Product.Sorting.NONE));
-        initProductsObservable.subscribe(new Observer<List<Product>>() {
-            @Override
-            public void onCompleted() {
-                adapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onNext(List<Product> products) {
-                adapter.addAll(products);
-            }
-        });
+        activityAdapter.setList(presenter.getAllProducts(Product.Sorting.NONE));
     }
 
     @Override
     public void onLoadingComplete() {
         super.onLoadingComplete();
-
+        if (listAdapter.getCount() > 0)
+            listAdapter.clear();
+        listAdapter.addAll(activityAdapter.getProductList());
+        listAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -249,7 +193,6 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
         if (newText.length() >= 3 || newText.length() % 3 == 0){
             search(newText);
         }
-
         if(newText.length() == 0){
             search(newText);
         }
@@ -257,8 +200,13 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
     }
 
     private void search(String newText) {
-        DataSearchLoader loader = new DataSearchLoader(this);
+        loader = new DataLoader(this);
         loader.execute(newText);
+    }
+
+    @Override
+    public void onLoading(String searchArgs) {
+        activityAdapter.setList(presenter.searchProducts(searchArgs));
     }
 
     @Override
@@ -330,5 +278,17 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
                 }, presenter).show();
             }
         });
+    }
+
+    class InventoryActivityAdapter{
+        List<Product> productList;
+
+        public void setList(List<Product> products){
+            productList = products;
+        }
+
+        public List<Product> getProductList() {
+            return productList;
+        }
     }
 }

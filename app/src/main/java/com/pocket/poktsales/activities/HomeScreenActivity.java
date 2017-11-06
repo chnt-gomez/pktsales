@@ -53,11 +53,8 @@ public class HomeScreenActivity extends BaseActivity
 
     @BindView(R.id.tv_star_product)
     TextView tvStartProduct;
-
-    CardsAdapter adapter;
-
+    HomeActivityDataAdapter adapter;
     RequiredPresenterOps.HomePresenterOps presenter;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +65,7 @@ public class HomeScreenActivity extends BaseActivity
     @Override
     protected void onResume() {
         super.onResume();
+        start();
     }
 
     @Override
@@ -78,10 +76,17 @@ public class HomeScreenActivity extends BaseActivity
     @Override
     public void onLoading() {
         super.onLoading();
-        adapter = new CardsAdapter();
+        adapter = new HomeActivityDataAdapter();
         adapter.setTodayIncome(Conversor.asCurrency(presenter.getDaySales()));
         adapter.setPerformance(presenter.getImprovement(getApplicationContext()));
-
+        for (int i = 1; i<= DateTime.now().getDayOfMonth(); i++){
+            adapter.addToDaySales(new Entry(i, presenter.getSalesFromDay(i)));
+        }
+        for (Department d : presenter.getAllDepartments()){
+            adapter.addToDeparmentSales(new PieEntry(presenter.getSaleFromDepartment(d.getId()),
+                    d.getDepartmentName()));
+        }
+        adapter.setBestSeller(presenter.getBestSellerOfTheDay());
     }
 
     @Override
@@ -89,9 +94,9 @@ public class HomeScreenActivity extends BaseActivity
         super.onLoadingComplete();
         tvTodayIncome.setText(adapter.getTodayIncome());
         tvPerformance.setText(adapter.getPerformance());
-        setPerformanceChart();
-        setCategorySalesChart();
-        setBestProductChart();
+        setPerformanceChart(adapter.getDaySalesEntries());
+        setCategorySalesChart(adapter.getDepartmentSaleEntries());
+        setBestProductChart(adapter.getBestSeller());
     }
 
     @Override
@@ -104,17 +109,10 @@ public class HomeScreenActivity extends BaseActivity
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setItemIconTintList(null);
-        DataLoader loader = new DataLoader(this);
-        loader.execute();
 
     }
 
-    private void setPerformanceChart(){
-        List<Entry> entries = new ArrayList<>();
-
-        for (int i = 1; i<= DateTime.now().getDayOfMonth(); i++){
-            entries.add(new Entry(i, presenter.getSalesFromDay(i)));
-        }
+    private void setPerformanceChart( List<Entry> entries ){
         LineDataSet dataSet = new LineDataSet(entries, null);
         dataSet.setColors(new int[]{R.color.colorAccent}, getApplicationContext());
         dataSet.setLineWidth(2);
@@ -127,18 +125,11 @@ public class HomeScreenActivity extends BaseActivity
         chartPerformance.invalidate();
     }
 
-    private void setCategorySalesChart(){
-        List<PieEntry> entries = new ArrayList<>();
-        for (Department d : presenter.getAllDepartments()){
-            entries.add(new PieEntry(presenter.getSaleFromDepartment(d.getId()),
-                    d.getDepartmentName()));
-        }
+    private void setCategorySalesChart(List<PieEntry> entries){
         PieDataSet set = new PieDataSet(entries, null);
-
         set.setColors(new int[]{R.color.chart_red, R.color.chart_red_dark,
                 R.color.chart_purple, R.color.chart_blue, R.color.chart_blue_light,
                 R.color.chart_green, R.color.chart_green_light}, getApplicationContext());
-
         PieData data = new PieData(set);
         data.setValueFormatter(new ChartValueFormatter());
         chartCatSales.setData(data);
@@ -149,8 +140,8 @@ public class HomeScreenActivity extends BaseActivity
         chartCatSales.invalidate();
     }
 
-    private void setBestProductChart(){
-        tvStartProduct.setText(presenter.getBestSellerOfTheDay());
+    private void setBestProductChart(String data){
+        tvStartProduct.setText(data);
     }
 
     @Override
@@ -199,10 +190,22 @@ public class HomeScreenActivity extends BaseActivity
         startActivity(new Intent(HomeScreenActivity.this, activity));
     }
 
-    private class CardsAdapter {
+    private class HomeActivityDataAdapter {
 
         String todayIncome;
         String performance;
+        String bestSeller;
+
+        List<Entry> getDaySalesEntries() {
+            return daySalesEntries;
+        }
+
+        List<PieEntry> getDepartmentSaleEntries() {
+            return departmentSaleEntries;
+        }
+
+        List<Entry> daySalesEntries;
+        List<PieEntry> departmentSaleEntries = new ArrayList<>();
 
         String getTodayIncome() {
             return todayIncome;
@@ -218,6 +221,26 @@ public class HomeScreenActivity extends BaseActivity
 
         void setPerformance(String performance) {
             this.performance = performance;
+        }
+
+        void addToDaySales(Entry daySale){
+            if (daySalesEntries == null)
+                daySalesEntries = new ArrayList<>();
+            daySalesEntries.add(daySale);
+        }
+
+        void addToDeparmentSales(PieEntry departmentSale){
+            if (departmentSaleEntries == null)
+                departmentSaleEntries = new ArrayList<>();
+            departmentSaleEntries.add(departmentSale);
+        }
+
+        String getBestSeller() {
+            return bestSeller;
+        }
+
+        void setBestSeller(String bestSeller) {
+            this.bestSeller = bestSeller;
         }
     }
 }

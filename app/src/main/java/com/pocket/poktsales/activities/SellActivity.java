@@ -25,7 +25,6 @@ import com.pocket.poktsales.model.Ticket;
 import com.pocket.poktsales.presenter.SalesPresenter;
 import com.pocket.poktsales.utils.Conversor;
 import com.pocket.poktsales.utils.DataLoader;
-import com.pocket.poktsales.utils.DataSearchLoader;
 import com.pocket.poktsales.utils.DialogBuilder;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import butterknife.BindView;
@@ -107,8 +106,8 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
     }
 
     private void searchProducts(String args){
-        DataSearchLoader productLoader = new DataSearchLoader(this);
-        productLoader.execute(args);
+        loader = new DataLoader(this);
+        loader.execute(args);
     }
 
     @Override
