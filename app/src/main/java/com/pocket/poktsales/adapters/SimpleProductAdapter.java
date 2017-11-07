@@ -46,9 +46,23 @@ public class SimpleProductAdapter extends ArrayAdapter<Product> {
         return convertView;
     }
 
+    public void updateProduct(Product product){
+        for (int i=0; i<getCount(); i++)
+            if (getItemId(i) == product.getId())
+                remove(getItemId(i));
+
+    }
+
     @Override
     public long getItemId(int position) {
         Product product = getItem(position);
         return product != null ? product.getId(): -1;
     }
+
+    public void remove(long productId){
+        for (int i=0; i<getCount(); i++)
+            if (getItemId(i) == productId)
+                remove(getItem(i));
+    }
+
 }

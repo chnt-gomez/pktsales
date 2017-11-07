@@ -62,4 +62,7 @@
     <string name="sales_by_category">Sales by category</string>
     <string name="month_sales">Month\'s performance</string>
     <string name="product_of_the_day">Best seller of the day</string>
+    <string name="product_in_use">Product name in use</string>
+    <string name="new_product_no_name">Product without name</string>
+    <string name="product_without_name">Product without name</string>
 </resources>

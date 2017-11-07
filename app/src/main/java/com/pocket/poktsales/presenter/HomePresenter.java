@@ -106,15 +106,4 @@ public class HomePresenter extends BasePresenter implements RequiredPresenterOps
     public List<Department> getAllDepartments() {
         return Department.find(Department.class, "department_status = ?", String.valueOf(Department.ACTIVE));
     }
-
-    @Override
-    public Observable<List<Department>> getDepartments() {
-        Observable<List<Department>> listObservable = Observable.fromCallable(new Callable<List<Department>>() {
-            @Override
-            public List<Department> call() throws Exception {
-                return Department.find(Department.class, "department_status = ?", String.valueOf(Department.ACTIVE));
-            }
-        });
-        return listObservable;
-    }
 }

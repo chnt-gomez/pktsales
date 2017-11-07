@@ -8,8 +8,6 @@ import com.pocket.poktsales.model.Ticket;
 
 import java.util.List;
 
-import rx.Observable;
-
 
 /**
  * Created by MAV1GA on 04/09/2017.
@@ -18,13 +16,13 @@ import rx.Observable;
 public interface RequiredPresenterOps {
 
     interface ProductPresenterOps{
-        long createProduct(Product product);
+        void createProduct(Product product);
         Product getProduct(long productId);
         List<Product> getAllProducts(Product.Sorting sorting);
         List<Product> searchProducts(String searchArg);
         List<Product> getProductsInDepartment(Department department);
         List<Product> getProductsInDepartment(long departmentId);
-        Product updateProduct(long productId, String newProductName, float newProductPrice, int newMeasureUnit);
+        void updateProduct(long productId, String newProductName, float newProductPrice, int newMeasureUnit);
         void deactivateProduct(Product product);
         void deactivateProduct(long productId);
         long reActivateProduct(long productId);
@@ -55,6 +53,7 @@ public interface RequiredPresenterOps {
         void removeDepartment(long departmentId, long moveProductsToDepartmentId);
         Department getDepartment(long id);
         int getProductCountFromDepartment(long departmentId);
+        void updateDepartment(String newDepartmentArgs, long departmentId);
     }
 
     interface HomePresenterOps{
@@ -65,8 +64,5 @@ public interface RequiredPresenterOps {
         float getSaleFromDepartment(long departmentId);
         float getSalesFromDay(int dayOfMonth);
         String getBestSellerOfTheDay();
-
-        /* Rx Methods now */
-        Observable<List<Department>> getDepartments();
     }
 }

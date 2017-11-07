@@ -25,7 +25,7 @@ import java.util.Stack;
  */
 
 public class SalesPresenter implements RequiredPresenterOps.TabPresenterOps,
-        RequiredPresenterOps.SalePresenterOps, RequiredPresenterOps.DepartmentPresenterOps{
+        RequiredPresenterOps.SalePresenterOps{
 
     private static SalesPresenter instance;
     private RequiredViewOps view;
@@ -154,39 +154,6 @@ public class SalesPresenter implements RequiredPresenterOps.TabPresenterOps,
     Department Operations
      */
 
-    @Override
-    public void addNewDepartment(Department department) {
-        if (!isDepartmentNameInUse(department.getDepartmentName())) {
-            if (department.getDepartmentName().equals("")){
-                //TODO: add a custom name
-            }
-            department.save();
-            view.onSuccess();
-        }else{
-            view.onError();
-        }
-    }
-
-    @Override
-    public List<Department> getAllDepartments() {
-        return Department.listAll(Department.class);
-    }
-
-    @Override
-    public void removeDepartment(long departmentId, long moveProductsToDepartmentId) {
-
-    }
-
-    @Override
-    public Department getDepartment(long id) {
-        return Department.findById(Department.class, id);
-    }
-
-    @Override
-    public int getProductCountFromDepartment(long departmentId) {
-        String args[] = {String.valueOf(departmentId)};
-        return (int) Product.count(Product.class, "department = ?", args);
-    }
 
     /*
     Home Methods

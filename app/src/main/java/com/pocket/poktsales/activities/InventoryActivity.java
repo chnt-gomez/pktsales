@@ -19,6 +19,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.adapters.SimpleProductAdapter;
+import com.pocket.poktsales.interfaces.RequiredViewOps;
 import com.pocket.poktsales.model.Product;
 import com.pocket.poktsales.presenter.InventoryPresenter;
 import com.pocket.poktsales.utils.Conversor;
@@ -33,7 +34,7 @@ import java.util.List;
 import butterknife.BindView;
 
 public class InventoryActivity extends BaseActivity implements SearchView.OnQueryTextListener,
-        AdapterView.OnItemClickListener{
+        AdapterView.OnItemClickListener, RequiredViewOps.InventoryViewOps{
 
     private static final String TAG = "InventoryActivity";
 
@@ -280,6 +281,28 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
         });
     }
 
+    @Override
+    public void onProductAdded(Product product) {
+        listAdapter.add(product);
+        activityAdapter.addProduct(product);
+        listAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onProductUpdated(Product product) {
+        activityAdapter.updateProduct(product);
+        listAdapter.clear();
+        listAdapter.addAll(activityAdapter.getProductList());
+        listAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onProductDeleted(long productId) {
+        listAdapter.remove(productId);
+        activityAdapter.remove(productId);
+        listAdapter.notifyDataSetChanged();
+    }
+
     class InventoryActivityAdapter{
         List<Product> productList;
 
@@ -287,8 +310,32 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
             productList = products;
         }
 
-        public List<Product> getProductList() {
+        List<Product> getProductList() {
             return productList;
+        }
+
+        void addProduct(Product product){
+            if (productList== null)
+                productList = new ArrayList<>();
+            productList.add(productList.size(), product);
+        }
+
+        void remove(long productId){
+            for(int i=0; i<productList.size(); i++){
+                if (productList.get(i).getId() == productId) {
+                    productList.remove(i);
+                    return;
+                }
+            }
+        }
+
+        void updateProduct(Product product){
+           for (int i=0; i<productList.size(); i++){
+               if (productList.get(i).getId() == product.getId()) {
+                   productList.set(i, product);
+                   return;
+               }
+           }
         }
     }
 }

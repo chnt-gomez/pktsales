@@ -5,27 +5,33 @@ import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.adapters.SimpleCategoryAdapter;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
+import com.pocket.poktsales.interfaces.RequiredViewOps;
 import com.pocket.poktsales.model.Department;
+import com.pocket.poktsales.presenter.CategoryPresenter;
 import com.pocket.poktsales.presenter.SalesPresenter;
 import com.pocket.poktsales.utils.DataLoader;
 import com.pocket.poktsales.utils.DialogBuilder;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 
 
-public class CategoriesActivity extends BaseActivity implements AdapterView.OnItemClickListener{
+public class CategoriesActivity extends BaseActivity implements AdapterView.OnItemClickListener, RequiredViewOps.CategoryViewOps{
 
-    RequiredPresenterOps.DepartmentPresenterOps presenter;
+    CategoryPresenter presenter;
 
     SimpleCategoryAdapter adapter;
+
+    ActivityAdapter activityAdapter;
 
     @BindView(R.id.lv_categories)
     ListView lvDepartments;
@@ -42,6 +48,12 @@ public class CategoriesActivity extends BaseActivity implements AdapterView.OnIt
     @BindView(R.id.tv_department_name)
     TextView tvDepartmentName;
 
+    @BindView(R.id.btn_delete)
+    ImageButton btnDelete;
+
+    @BindView(R.id.btn_ok)
+    ImageButton btnSave;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         this.layoutResourceId = R.layout.activity_categories;
@@ -49,17 +61,11 @@ public class CategoriesActivity extends BaseActivity implements AdapterView.OnIt
     }
 
     @Override
-    public void onSuccess() {
-        super.onSuccess();
-        start();
-    }
-
-    @Override
     protected void init() {
         super.init();
         if (getSupportActionBar()!= null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        presenter = SalesPresenter.getInstance(this);
+        presenter = new CategoryPresenter(this);
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,13 +77,16 @@ public class CategoriesActivity extends BaseActivity implements AdapterView.OnIt
                 }).show();
             }
         });
+        activityAdapter = new ActivityAdapter();
+        adapter = new SimpleCategoryAdapter(getApplicationContext(), R.layout.row_department_item,
+                new ArrayList<Department>());
+        lvDepartments.setAdapter(adapter);
         panel.setPanelHeight(0);
         panel.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
                 btnAdd.setVisibility(View.GONE);
             }
-
             @Override
             public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
                 if (newState == SlidingUpPanelLayout.PanelState.COLLAPSED || newState == SlidingUpPanelLayout.PanelState.HIDDEN)
@@ -92,25 +101,30 @@ public class CategoriesActivity extends BaseActivity implements AdapterView.OnIt
                 panel.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
             }
         });
+
         lvDepartments.setOnItemClickListener(this);
         start();
     }
 
     @Override
+    public void onLoadingPrepare() {
+        super.onLoadingPrepare();
+        adapter.clear();
+    }
+
+    @Override
     public void onLoading() {
         super.onLoading();
-        final List<Department> departments = presenter.getAllDepartments();
-        for (Department d : departments){
-            d.setProductCount(presenter.getProductCountFromDepartment(d.getId()));
-        }
-        adapter = new SimpleCategoryAdapter(getApplicationContext(), R.layout.row_department_item,
-                departments);
+        activityAdapter.setDepartmentList(presenter.getAllDepartments());
     }
 
     @Override
     public void onLoadingComplete() {
         super.onLoadingComplete();
-        lvDepartments.setAdapter(adapter);
+        if (adapter.getCount() > 0)
+            adapter.clear();
+        adapter.addAll(activityAdapter.getDepartmentList());
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -118,13 +132,21 @@ public class CategoriesActivity extends BaseActivity implements AdapterView.OnIt
         seeDepartmentDetail(id);
     }
 
-    private void seeDepartmentDetail(long id) {
+    private void seeDepartmentDetail(final long id) {
         final Department department = presenter.getDepartment(id);
         if (panel.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED
                 || panel.getPanelState() == SlidingUpPanelLayout.PanelState.HIDDEN)
             panel.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
         etDepartmentName.setText(department.getDepartmentName());
         tvDepartmentName.setText(department.getDepartmentName());
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                presenter.updateDepartment(etDepartmentName.getText().toString(), id );
+                if (panel.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED)
+                    panel.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+            }
+        });
     }
 
     @Override
@@ -133,5 +155,50 @@ public class CategoriesActivity extends BaseActivity implements AdapterView.OnIt
             panel.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
         else
             super.onBackPressed();
+    }
+
+    @Override
+    public void onDepartmentUpdate(Department department) {
+        activityAdapter.updateDepartment(department);
+        adapter.clear();
+        adapter.addAll(activityAdapter.getDepartmentList());
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDepartmentAdded(Department department) {
+        activityAdapter.addDepartment(department);
+        adapter.add(department);
+        adapter.notifyDataSetChanged();
+    }
+
+    class ActivityAdapter {
+         List<Department> getDepartmentList() {
+            return departmentList;
+         }
+
+        void setDepartmentList(List<Department> departmentList) {
+            this.departmentList = departmentList;
+            for (Department d : departmentList){
+                d.setProductCount(presenter.getProductCountFromDepartment(d.getId()));
+            }
+        }
+
+        void addDepartment(Department department){
+             if (departmentList == null)
+                 departmentList = new ArrayList<>();
+            departmentList.add(department);
+        }
+
+        void updateDepartment(Department department){
+            for (int i=0; i<departmentList.size(); i++){
+                if (departmentList.get(i).getId() == department.getId()) {
+                    departmentList.set(i, department);
+                    return;
+                }
+            }
+        }
+
+        List<Department> departmentList;
     }
 }

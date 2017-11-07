@@ -2,6 +2,7 @@ package com.pocket.poktsales.presenter;
 
 import android.util.Log;
 
+import com.pocket.poktsales.model.Department;
 import com.pocket.poktsales.model.Product;
 
 import org.joda.time.DateTime;
@@ -64,6 +65,11 @@ class BasePresenter {
         }
         return false;
     }
+
+    boolean isDepartmentNameInUse(String departmentName) {
+        return Department.find(Department.class, "department_name LIKE ?", departmentName).size() >= 1;
+    }
+
 
     private static String formatForQuery(String rawQuery){
         return rawQuery.replace(" ", "%");

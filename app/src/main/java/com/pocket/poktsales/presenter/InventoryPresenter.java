@@ -1,5 +1,6 @@
 package com.pocket.poktsales.presenter;
 
+import com.pocket.poktsales.R;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
 import com.pocket.poktsales.model.Department;
@@ -14,24 +15,25 @@ import java.util.List;
 
 public class InventoryPresenter extends BasePresenter implements RequiredPresenterOps.ProductPresenterOps {
 
-    private RequiredViewOps view;
+    private RequiredViewOps.InventoryViewOps view;
 
-    public InventoryPresenter (RequiredViewOps view){
+    public InventoryPresenter (RequiredViewOps.InventoryViewOps view){
         this.view = view;
     }
 
     @Override
-    public long createProduct(Product product) {
+    public void createProduct(Product product) {
         if (!isProductNameInUse(product.getProductName())) {
-            if (product.getProductName().equals("")){}
-            //TODO: Name it with a custom label.
+            if (product.getProductName().equals("")) {
+                view.onError(R.string.product_without_name);
+                return;
+            }
             product.save();
             view.onSuccess();
-            return product.getId();
+            view.onProductAdded(product);
         }else{
             view.onError();
         }
-        return -1;
     }
 
     @Override
@@ -83,19 +85,17 @@ public class InventoryPresenter extends BasePresenter implements RequiredPresent
     }
 
     @Override
-    public Product updateProduct(long productId, String newProductArgs, float newPriceArgs, int newMeasure) {
+    public void updateProduct(long productId, String newProductArgs, float newPriceArgs, int newMeasure) {
         if (isProductNameInUse(newProductArgs, productId)){
-            view.onError("Name in use");
+            view.onError(R.string.product_in_use);
         }else{
             Product product = findProductById(productId);
             product.setProductName(newProductArgs);
             product.setProductMeasureUnit(newMeasure);
             product.setProductSellPrice(newPriceArgs);
             product.save();
-            return product;
+            view.onProductUpdated(product);
         }
-        return null;
-
     }
 
     @Override
@@ -110,6 +110,7 @@ public class InventoryPresenter extends BasePresenter implements RequiredPresent
         if (product != null){
             product.setProductStatus(Product.INACTIVE);
             product.save();
+            view.onProductDeleted(product.getId());
         }else{
             view.onError("Can't find product");
         }
