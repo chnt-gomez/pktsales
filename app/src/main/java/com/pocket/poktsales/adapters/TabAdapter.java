@@ -50,4 +50,11 @@ public class TabAdapter extends ArrayAdapter<Ticket> {
             return ticket.getId();
         return -1;
     }
+
+    public void remove(long tabId) {
+        for (int i = 0; i < getCount(); i++)
+            if (getItemId(i) == tabId)
+                remove(getItem(i));
+    }
+
 }

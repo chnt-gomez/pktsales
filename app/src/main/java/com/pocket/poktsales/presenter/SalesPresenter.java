@@ -24,7 +24,7 @@ import java.util.Stack;
  * Created by MAV1GA on 04/09/2017.
  */
 
-public class SalesPresenter implements RequiredPresenterOps.TabPresenterOps,
+public class SalesPresenter implements
         RequiredPresenterOps.SalePresenterOps{
 
     private static SalesPresenter instance;
@@ -54,21 +54,6 @@ public class SalesPresenter implements RequiredPresenterOps.TabPresenterOps,
     TAB OPERATIONS ---------------------------------------------------------------------------------------
      */
 
-    @Override
-    public List<Ticket> getAllOpenTabs() {
-        return getAllTickets();
-    }
-
-    @Override
-    public void openTab(Ticket tabReference) {
-        if (!isTicketInUse(tabReference.getTicketReference())) {
-            tabReference.setTicketStatus(Ticket.TICKET_PENDING);
-            tabReference.save();
-            view.onSuccess();
-        }else{
-            view.onError();
-        }
-    }
 
     /*
     Sales Operations --------------------------------------------------------------------------------

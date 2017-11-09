@@ -131,7 +131,6 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
     @Override
     protected void init() {
         super.init();
-
         lvSale.setEmptyView(findViewById(android.R.id.empty));
         if (presenter == null)
             presenter = SalesPresenter.getInstance(this);

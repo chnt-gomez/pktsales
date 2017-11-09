@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.pocket.poktsales.model.Department;
 import com.pocket.poktsales.model.Product;
+import com.pocket.poktsales.model.Ticket;
 
 import org.joda.time.DateTime;
 
@@ -70,6 +71,10 @@ class BasePresenter {
         return Department.find(Department.class, "department_name LIKE ?", departmentName).size() >= 1;
     }
 
+    boolean isTicketInUse(String ticketReference){
+        return Ticket.find(Ticket.class, "ticket_reference LIKE ? AND ticket_status = ?", ticketReference,
+                String.valueOf(Ticket.TICKET_PENDING)).size() >= 1;
+    }
 
     private static String formatForQuery(String rawQuery){
         return rawQuery.replace(" ", "%");

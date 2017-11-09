@@ -33,7 +33,7 @@ public interface RequiredPresenterOps {
 
     interface TabPresenterOps{
         List<Ticket> getAllOpenTabs();
-        void openTab(Ticket tabReference);
+        void openTab(String tabReference);
     }
 
     interface SalePresenterOps{

@@ -155,9 +155,7 @@ public class DialogBuilder {
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Ticket ticket = new Ticket();
-                ticket.setTicketReference(etTabName.getText().toString());
-                callback.onNewTab(ticket);
+                callback.onNewTab(etTabName.getText().toString());
                 instance.dismiss();
             }
         });
@@ -272,7 +270,7 @@ public class DialogBuilder {
             void onSortProducts(long departmentId, Product.Sorting sorting);
         }
         public interface OnNewTabListener{
-            void onNewTab(Ticket ticket);
+            void onNewTab(String ticketReference);
         }
         public interface OnDeleteTabListener{
             void onDeleteTab(long ticketId);
@@ -280,7 +278,6 @@ public class DialogBuilder {
         public interface OnNewTempDialogListener {
             void onNewTempProductDialog(Product product);
         }
-
         public interface OnNewDepartmentListener{
             void onNewDepartment(Department department);
         }
@@ -288,5 +285,4 @@ public class DialogBuilder {
             void onCategorySelected(long categoryId);
         }
     }
-
 }

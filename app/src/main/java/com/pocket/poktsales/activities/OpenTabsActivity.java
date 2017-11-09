@@ -11,14 +11,19 @@ import android.widget.GridView;
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.adapters.TabAdapter;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
+import com.pocket.poktsales.interfaces.RequiredViewOps;
 import com.pocket.poktsales.model.Ticket;
 import com.pocket.poktsales.presenter.SalesPresenter;
+import com.pocket.poktsales.presenter.TabPresenter;
 import com.pocket.poktsales.utils.DataLoader;
 import com.pocket.poktsales.utils.DialogBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 
-public class OpenTabsActivity extends BaseActivity implements AdapterView.OnItemClickListener{
+public class OpenTabsActivity extends BaseActivity implements AdapterView.OnItemClickListener, RequiredViewOps.TabViewOps{
 
     @BindView(R.id.grid)
     GridView gridView;
@@ -28,8 +33,9 @@ public class OpenTabsActivity extends BaseActivity implements AdapterView.OnItem
     @BindView(R.id.fab)
     FloatingActionButton btnAdd;
 
-    RequiredPresenterOps.TabPresenterOps presenter;
+    private TabPresenter presenter;
 
+    ActivityAdapter activityAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +52,7 @@ public class OpenTabsActivity extends BaseActivity implements AdapterView.OnItem
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_quick_tab){
-            Ticket ticket = new Ticket();
-            ticket.setTicketReference(getString(R.string.new_sale));
-            presenter.openTab(ticket);
-            if (ticket.getId() != null)
-                openTicket(ticket.getId(), true);
+            presenter.openTab(getString(R.string.new_sale));
             return true;
         }
 
@@ -61,14 +63,14 @@ public class OpenTabsActivity extends BaseActivity implements AdapterView.OnItem
     protected void init() {
         super.init();
         if (presenter == null)
-            presenter = SalesPresenter.getInstance(this);
+            presenter = new TabPresenter(this);
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogBuilder.newTabDialog(OpenTabsActivity.this, new DialogBuilder.DialogInteractionListener.OnNewTabListener() {
                     @Override
-                    public void onNewTab(Ticket ticket) {
-                        presenter.openTab(ticket);
+                    public void onNewTab(String ticketReference) {
+                        presenter.openTab(ticketReference);
                     }
                 }).show();
             }
@@ -76,33 +78,25 @@ public class OpenTabsActivity extends BaseActivity implements AdapterView.OnItem
         gridView.setOnItemClickListener(this);
         if (getSupportActionBar()!= null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        presenter = SalesPresenter.getInstance(this);
+        adapter = new TabAdapter(getApplicationContext(), R.layout.grid_layout_tab, new ArrayList<Ticket>());
+        gridView.setAdapter(adapter);
+        activityAdapter = new ActivityAdapter();
         start();
     }
 
     @Override
     public void onLoading() {
         super.onLoading();
-        adapter = new TabAdapter(getApplicationContext(), R.layout.grid_layout_tab,
-                presenter.getAllOpenTabs());
+        activityAdapter.setTabList(presenter.getAllOpenTabs());
     }
 
     @Override
     public void onLoadingComplete() {
         super.onLoadingComplete();
-        gridView.setAdapter(adapter);
-    }
-
-    @Override
-    public void onSuccess() {
-        super.onSuccess();
-        start();
+        if (adapter.getCount() > 0)
+            adapter.clear();
+        adapter.addAll(activityAdapter.getTabList());
+        adapter.notifyDataSetChanged();
     }
 
     private void openTicket(long ticketId){
@@ -121,5 +115,56 @@ public class OpenTabsActivity extends BaseActivity implements AdapterView.OnItem
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         openTicket(id);
+    }
+
+    @Override
+    public void onNewTab(Ticket ticket) {
+        activityAdapter.addTab(ticket);
+        adapter.add(ticket);
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onTabApplied(long tabId) {
+        activityAdapter.remove(tabId);
+        adapter.remove(tabId);
+        adapter.notifyDataSetChanged();
+
+    }
+
+    @Override
+    public void onTabCancelled(long tabId) {
+        activityAdapter.remove(tabId);
+        adapter.remove(tabId);
+        adapter.notifyDataSetChanged();
+    }
+
+    class ActivityAdapter {
+        List<Ticket> getTabList() {
+            return tabList;
+        }
+
+        void setTabList(List<Ticket> tabList) {
+            this.tabList = tabList;
+        }
+
+        List<Ticket> tabList;
+
+        void addTab(Ticket ticket) {
+            if (tabList == null)
+                tabList = new ArrayList<>();
+            tabList.add(ticket);
+        }
+
+        void remove(long ticketId){
+            if (tabList == null)
+                return;
+            for (int i=0; i<tabList.size(); i++){
+                if (tabList.get(i).getId() == ticketId) {
+                    tabList.remove(i);
+                    break;
+                }
+            }
+        }
     }
 }
