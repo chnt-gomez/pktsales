@@ -35,4 +35,8 @@ public interface RequiredViewOps {
         void onTabCancelled(long tabId);
     }
 
+    interface SaleViewOps extends RequiredViewOps{
+
+    }
+
 }

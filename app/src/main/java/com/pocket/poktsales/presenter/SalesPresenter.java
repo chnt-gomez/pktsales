@@ -1,63 +1,25 @@
 package com.pocket.poktsales.presenter;
 
-import android.content.Context;
-import android.util.Log;
-
-import com.pocket.poktsales.R;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
-import com.pocket.poktsales.model.Department;
 import com.pocket.poktsales.model.Product;
 import com.pocket.poktsales.model.Sale;
 import com.pocket.poktsales.model.Ticket;
-
 import org.joda.time.DateTime;
-
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.Stack;
 
 /**
  * Created by MAV1GA on 04/09/2017.
  */
 
-public class SalesPresenter implements
+public class SalesPresenter extends BasePresenter implements
         RequiredPresenterOps.SalePresenterOps{
 
-    private static SalesPresenter instance;
-    private RequiredViewOps view;
-    private SalesPresenter(){}
-
-    public synchronized static SalesPresenter getInstance(RequiredViewOps view){
-        if (instance == null)
-            instance = new SalesPresenter();
-        setViewOps(view);
-        return  instance;
+    private RequiredViewOps.SaleViewOps view;
+    public SalesPresenter(RequiredViewOps.SaleViewOps view){
+        this.view = view;
     }
-
-    private static void setViewOps(RequiredViewOps view){
-        instance.view = view;
-    }
-
-    /*
-    Methods available ony for Product-related activities
-     */
-
-
-
-
-
-    /*
-    TAB OPERATIONS ---------------------------------------------------------------------------------------
-     */
-
-
-    /*
-    Sales Operations --------------------------------------------------------------------------------
-     */
 
     @Override
     public void addToSale(long ticketId, long productId) {
@@ -134,62 +96,4 @@ public class SalesPresenter implements
         }
         view.onSuccess();
     }
-
-    /*
-    Department Operations
-     */
-
-
-    /*
-    Home Methods
-     */
-
-
-
-    /*
-    Internal Methods
-     */
-
-    private boolean isTicketInUse(String ticketReference){
-        return Ticket.find(Ticket.class, "ticket_reference LIKE ? AND ticket_status = ?", ticketReference,
-                String.valueOf(Ticket.TICKET_PENDING)).size() >= 1;
-    }
-
-
-    private Product findProductByName(String name){
-        try {
-            return Product.find(Product.class, "product_name = ?", name).get(0);
-        }catch (Exception e){
-            Log.w("findProductByName()", String.format("Can't find product with name: %s", name));
-            return null;
-        }
-    }
-
-
-    private boolean isDepartmentNameInUse(String departmentName) {
-        return Department.find(Department.class, "department_name LIKE ?", departmentName).size() >= 1;
-    }
-
-
-
-    private static String formatForQuery(String rawQuery){
-        return rawQuery.replace(" ", "%");
-    }
-
-    private List<Product> searchProductsWithQuery(String searchArg) {
-        return Product.find(Product.class, "product_name LIKE ? AND product_status = ?", "%"+formatForQuery(searchArg)+"%",
-                String.valueOf(Product.ACTIVE));
-    }
-
-    private List<Product> getProductsFromDepartment(long id) {
-        return Product.find(Product.class, "department = ? AND product_status = ?", String.valueOf(id)
-        , String.valueOf(Product.ACTIVE));
-    }
-
-    private List<Ticket> getAllTickets(){
-        return Ticket.find(Ticket.class, "ticket_status = ?",
-                String.valueOf(Ticket.TICKET_PENDING));
-    }
-
-
 }

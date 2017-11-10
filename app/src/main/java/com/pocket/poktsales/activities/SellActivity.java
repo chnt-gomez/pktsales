@@ -20,6 +20,7 @@ import com.pocket.poktsales.R;
 import com.pocket.poktsales.adapters.SimpleProductAdapter;
 import com.pocket.poktsales.interfaces.OnLoadingEventListener;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
+import com.pocket.poktsales.interfaces.RequiredViewOps;
 import com.pocket.poktsales.model.Product;
 import com.pocket.poktsales.model.Ticket;
 import com.pocket.poktsales.presenter.SalesPresenter;
@@ -27,9 +28,12 @@ import com.pocket.poktsales.utils.Conversor;
 import com.pocket.poktsales.utils.DataLoader;
 import com.pocket.poktsales.utils.DialogBuilder;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+
+import java.util.List;
+
 import butterknife.BindView;
 
-public class SellActivity extends BaseActivity implements SearchView.OnQueryTextListener, View.OnClickListener{
+public class SellActivity extends BaseActivity implements SearchView.OnQueryTextListener, View.OnClickListener, RequiredViewOps.SaleViewOps{
 
     @BindView(R.id.include)
     SlidingUpPanelLayout panel;
@@ -55,59 +59,16 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
     SimpleProductAdapter productAdapter;
     SimpleProductAdapter tabListProductAdapter;
 
+
     private SearchView searchView;
-
-
-    boolean isQuickSale = false;
     long ticketId;
 
-    RequiredPresenterOps.SalePresenterOps presenter;
+    private SalesPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         layoutResourceId = R.layout.activity_add_to_sale;
         super.onCreate(savedInstanceState);
-    }
-
-
-
-    private void setTabData(){
-        DataLoader loader = new DataLoader(new OnLoadingEventListener() {
-            @Override
-            public void onLoadingPrepare() {
-
-            }
-
-            @Override
-            public void onLoading() {
-                tabListProductAdapter = new SimpleProductAdapter(getApplicationContext(),
-                        R.layout.row_simple_product, presenter.getProductsFromTab(ticketId));
-            }
-
-            @Override
-            public void onLoading(String searchArgs) {
-
-            }
-
-            @Override
-            public void onLoadingComplete() {
-                lvSale.setAdapter(tabListProductAdapter);
-                Ticket ticket = presenter.getTicket(ticketId);
-                tvTabReference.setText(ticket.getTicketReference());
-                tvTabTotal.setText(Conversor.asCurrency(ticket.getSaleTotal()));
-            }
-
-            @Override
-            public void onLoadingError() {
-
-            }
-        });
-        loader.execute();
-    }
-
-    private void searchProducts(String args){
-        loader = new DataLoader(this);
-        loader.execute(args);
     }
 
     @Override
@@ -125,15 +86,14 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
 
     @Override
     public void onSuccess() {
-        setTabData();
+
     }
 
     @Override
     protected void init() {
         super.init();
+        presenter = new SalesPresenter(this);
         lvSale.setEmptyView(findViewById(android.R.id.empty));
-        if (presenter == null)
-            presenter = SalesPresenter.getInstance(this);
 
         if (getSupportActionBar()!= null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -161,15 +121,12 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
                     finish();
                 }
             });
+
         }else{
             onError();
             finish();
         }
 
-        if (getIntent().getExtras().containsKey("isQuickSale")){
-            this.isQuickSale = true;
-        }
-        presenter = SalesPresenter.getInstance(this);
         lvProducts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -187,15 +144,6 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
             }
         });
         btnDelete.setOnClickListener(this);
-        searchProducts("");
-        setTabData();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (presenter == null)
-            presenter = SalesPresenter.getInstance(this);
     }
 
     @Override
@@ -204,13 +152,6 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
             panel.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         else
             super.onBackPressed();
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (isQuickSale)
-            presenter.cancelTab(ticketId);
-        super.onDestroy();
     }
 
     @Override
@@ -269,6 +210,11 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
         return true;
     }
 
+    private void searchProducts(String query) {
+        loader = new DataLoader(this);
+        loader.execute(query);
+    }
+
     @Override
     public boolean onQueryTextChange(String newText) {
         if (newText.length() >= 3 || newText.length() % 3 == 0){
@@ -293,5 +239,44 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
                             finish();
                         }
                     }).show();
+    }
+
+    class ActivityAdapter{
+        List<Product> tabProducts;
+        String tabReference;
+        String tabTotal;
+        List<Product> products;
+
+        public List<Product> getTabProducts() {
+            return tabProducts;
+        }
+
+        public void setTabProducts(List<Product> tabProducts) {
+            this.tabProducts = tabProducts;
+        }
+
+        public String getTabReference() {
+            return tabReference;
+        }
+
+        public void setTabReference(String tabReference) {
+            this.tabReference = tabReference;
+        }
+
+        public String getTabTotal() {
+            return tabTotal;
+        }
+
+        public void setTabTotal(String tabTotal) {
+            this.tabTotal = tabTotal;
+        }
+
+        public List<Product> getProducts() {
+            return products;
+        }
+
+        public void setProducts(List<Product> products) {
+            this.products = products;
+        }
     }
 }
