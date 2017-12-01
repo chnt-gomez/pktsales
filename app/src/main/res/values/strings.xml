@@ -65,4 +65,5 @@
     <string name="product_in_use">Product name in use</string>
     <string name="new_product_no_name">Product without name</string>
     <string name="product_without_name">Product without name</string>
+    <string name="sale_applied">Sale applied</string>
 </resources>

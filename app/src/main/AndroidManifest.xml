@@ -76,6 +76,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.pocket.poktsales.activities.HomeScreenActivity" />
         </activity>
+        <activity android:name=".activities.QuickSellActivity"
+            android:label="@string/quick_sale"
+            android:parentActivityName=".activities.OpenTabsActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.pocket.poktsales.activities.OpenTabsActivity" />
+        </activity>
     </application>
 
 </manifest>

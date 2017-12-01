@@ -5,6 +5,8 @@ import com.pocket.poktsales.interfaces.RequiredViewOps;
 import com.pocket.poktsales.model.Product;
 import com.pocket.poktsales.model.Sale;
 import com.pocket.poktsales.model.Ticket;
+import com.pocket.poktsales.utils.Conversor;
+
 import org.joda.time.DateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +38,7 @@ public class SalesPresenter extends BasePresenter implements
         ticket.setSaleTotal(newTotal);
         ticket.save();
         view.onSuccess();
+        view.onProductAddToSale(product, Conversor.asCurrency(newTotal));
     }
 
     @Override
@@ -51,11 +54,17 @@ public class SalesPresenter extends BasePresenter implements
         ticket.setTicketStatus(Ticket.TICKET_APPLIED);
         ticket.setDateTime(DateTime.now().getMillis());
         ticket.save();
+        view.onApplySale();
     }
 
     @Override
     public List<Product> getProductsFromSearch(String args) {
-        return null;
+        return searchProductsWithQuery(args);
+    }
+
+    @Override
+    public List<Product> getProductsToSell() {
+        return Product.find(Product.class, "product_status = ?", String.valueOf(Product.ACTIVE));
     }
 
     @Override
@@ -80,20 +89,22 @@ public class SalesPresenter extends BasePresenter implements
         ticket.setTicketStatus(Ticket.TICKET_CANCELED);
         ticket.save();
         view.onSuccess();
+        view.onCancelSale();
     }
 
     @Override
     public void removeFromSale(long ticketId, long productId) {
         Ticket ticket = Ticket.findById(Ticket.class, ticketId);
+        float ticketTotal= 0;
         String args[] = {String.valueOf(productId), String.valueOf(ticketId)};
         for (Sale s : Sale.find(Sale.class, "product = ? AND ticket = ?", args,
                 null, null, String.valueOf(1))){
             float saleTotal = s.getSaleTotal();
-            float ticketTotal = ticket.getSaleTotal()-saleTotal;
+            ticketTotal = ticket.getSaleTotal()-saleTotal;
             ticket.setSaleTotal(ticketTotal);
             s.delete();
             ticket.save();
         }
-        view.onSuccess();
+        view.onDeleteFromSale(productId, Conversor.asCurrency(ticketTotal));
     }
 }

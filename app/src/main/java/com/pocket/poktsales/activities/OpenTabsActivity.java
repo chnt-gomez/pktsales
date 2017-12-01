@@ -52,7 +52,7 @@ public class OpenTabsActivity extends BaseActivity implements AdapterView.OnItem
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_quick_tab){
-            presenter.openTab(getString(R.string.new_sale));
+            openTicket();
             return true;
         }
 
@@ -81,6 +81,12 @@ public class OpenTabsActivity extends BaseActivity implements AdapterView.OnItem
         adapter = new TabAdapter(getApplicationContext(), R.layout.grid_layout_tab, new ArrayList<Ticket>());
         gridView.setAdapter(adapter);
         activityAdapter = new ActivityAdapter();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         start();
     }
 
@@ -105,10 +111,8 @@ public class OpenTabsActivity extends BaseActivity implements AdapterView.OnItem
         startActivity(saleIntent);
     }
 
-    private void openTicket(long ticketId, boolean isQuickSale){
-        Intent saleIntent = new Intent(OpenTabsActivity.this, SellActivity.class);
-        saleIntent.putExtra("ticketId", ticketId);
-        saleIntent.putExtra("isQuickSale", isQuickSale);
+    private void openTicket(){
+        Intent saleIntent = new Intent(OpenTabsActivity.this, QuickSellActivity.class);
         startActivity(saleIntent);
     }
 

@@ -36,7 +36,10 @@ public interface RequiredViewOps {
     }
 
     interface SaleViewOps extends RequiredViewOps{
-
+        void onProductAddToSale(Product product, String newTotal);
+        void onDeleteFromSale(long productId, String newTotal);
+        void onApplySale();
+        void onCancelSale();
     }
 
 }

@@ -2,6 +2,7 @@ package com.pocket.poktsales.activities;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.MenuItemCompat;
@@ -29,6 +30,7 @@ import com.pocket.poktsales.utils.DataLoader;
 import com.pocket.poktsales.utils.DialogBuilder;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -58,6 +60,7 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
 
     SimpleProductAdapter productAdapter;
     SimpleProductAdapter tabListProductAdapter;
+    ActivityAdapter activityAdapter;
 
 
     private SearchView searchView;
@@ -72,6 +75,36 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
     }
 
     @Override
+    public void onLoadingPrepare() {
+        super.onLoadingPrepare();
+        if (activityAdapter == null)
+            activityAdapter = new ActivityAdapter();
+        if (productAdapter != null ){
+            productAdapter.clear();
+        }else{
+            productAdapter = new SimpleProductAdapter(this, R.layout.row_simple_product, new ArrayList<Product>());
+        }
+        if (tabListProductAdapter != null){
+            productAdapter.clear();
+        }else{
+            tabListProductAdapter = new SimpleProductAdapter(this, R.layout.row_simple_product, new ArrayList<Product>());
+        }
+    }
+
+    @Override
+    public void onLoading() {
+        super.onLoading();
+        activityAdapter.setProducts(presenter.getProductsToSell());
+        activityAdapter.setTabProducts(presenter.getProductsFromTab(ticketId));
+        activityAdapter.setTabReference(presenter.getTicket(ticketId).getTicketReference());
+        activityAdapter.setTabTotal(Conversor.asCurrency(presenter.getTicket(ticketId).getSaleTotal()));
+        tabListProductAdapter.addAll(activityAdapter.getTabProducts());
+        productAdapter.addAll(activityAdapter.getProducts());
+        tabListProductAdapter.notifyDataSetChanged();
+        productAdapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void onLoading(String searchArgs) {
         super.onLoading(searchArgs);
         productAdapter = new SimpleProductAdapter(getApplicationContext(), R.layout.row_simple_product,
@@ -82,11 +115,8 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
     public void onLoadingComplete() {
         super.onLoadingComplete();
         lvProducts.setAdapter(productAdapter);
-    }
-
-    @Override
-    public void onSuccess() {
-
+        tvTabReference.setText(activityAdapter.getTabReference());
+        tvTabTotal.setText(activityAdapter.getTabTotal());
     }
 
     @Override
@@ -109,24 +139,22 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
         });
         panel.setScrollableView(lvSale);
 
-        if (getIntent().getExtras().containsKey("ticketId")) {
-            ticketId = getIntent().getExtras().getLong("ticketId");
-            Ticket ticket = presenter.getTicket(ticketId);
-            tvTabReference.setText(ticket.getTicketReference());
-            tvTabTotal.setText(Conversor.asCurrency(ticket.getSaleTotal()));
-            btnApply.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    presenter.applyTicket(ticketId);
-                    finish();
-                }
-            });
+        Bundle bundle = getIntent().getExtras();
 
-        }else{
-            onError();
-            finish();
+        if (bundle != null) {
+            if (bundle.containsKey("ticketId")) {
+                ticketId = getIntent().getExtras().getLong("ticketId");
+                btnApply.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        presenter.applyTicket(ticketId);
+                    }
+                });
+            } else {
+                onError();
+                finish();
+            }
         }
-
         lvProducts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -144,6 +172,7 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
             }
         });
         btnDelete.setOnClickListener(this);
+        start();
     }
 
     @Override
@@ -152,6 +181,27 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
             panel.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         else
             super.onBackPressed();
+    }
+
+    @Override
+    public void onApplySale() {
+        finish();
+    }
+
+    @Override
+    public void onDeleteFromSale(long productId, String newTotal) {
+        activityAdapter.deleteFromSale(productId);
+        tabListProductAdapter.remove(productId);
+        tvTabTotal.setText(newTotal);
+        tabListProductAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onProductAddToSale(Product product, String newTotal) {
+        activityAdapter.addToSale(product);
+        tabListProductAdapter.add(product);
+        tvTabTotal.setText(newTotal);
+        tabListProductAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -166,6 +216,10 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
                 searchManager.getSearchableInfo(getComponentName()));
         searchView.setSubmitButtonEnabled(true);
         searchView.setOnQueryTextListener(this);
+        if (tabListProductAdapter != null)
+            lvSale.setAdapter(tabListProductAdapter);
+        if (productAdapter != null)
+            lvProducts.setAdapter(productAdapter);
 
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
@@ -173,7 +227,6 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
                 panel.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
                 return true;
             }
-
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 Handler handler = new Handler();
@@ -220,13 +273,16 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
         if (newText.length() >= 3 || newText.length() % 3 == 0){
             searchProducts(newText);
         }
-
         if(newText.length() == 0){
             searchProducts(newText);
         }
         return true;
     }
 
+    @Override
+    public void onCancelSale() {
+        finish();
+    }
 
     @Override
     public void onClick(View v) {
@@ -236,7 +292,6 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
                         @Override
                         public void onDeleteTab(long ticketId) {
                             presenter.cancelTab(ticketId);
-                            finish();
                         }
                     }).show();
     }
@@ -247,36 +302,49 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
         String tabTotal;
         List<Product> products;
 
-        public List<Product> getTabProducts() {
+        List<Product> getTabProducts() {
             return tabProducts;
         }
 
-        public void setTabProducts(List<Product> tabProducts) {
+        void setTabProducts(List<Product> tabProducts) {
             this.tabProducts = tabProducts;
         }
 
-        public String getTabReference() {
+        String getTabReference() {
             return tabReference;
         }
 
-        public void setTabReference(String tabReference) {
+        void setTabReference(String tabReference) {
             this.tabReference = tabReference;
         }
 
-        public String getTabTotal() {
+        String getTabTotal() {
             return tabTotal;
         }
 
-        public void setTabTotal(String tabTotal) {
+        void setTabTotal(String tabTotal) {
             this.tabTotal = tabTotal;
         }
 
-        public List<Product> getProducts() {
+        List<Product> getProducts() {
             return products;
         }
 
-        public void setProducts(List<Product> products) {
+        void setProducts(List<Product> products) {
             this.products = products;
+        }
+
+        void addToSale(Product product) {
+            tabProducts.add(product);
+        }
+        void deleteFromSale(long productId) {
+            for (Product p : tabProducts) {
+                if (p.getId() == productId){
+                    tabProducts.remove(p);
+                    break;
+                }
+            }
+
         }
     }
 }

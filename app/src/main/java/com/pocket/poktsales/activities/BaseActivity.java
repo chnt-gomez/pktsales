@@ -76,6 +76,14 @@ public abstract class BaseActivity extends AppCompatActivity implements Required
         onSuccess();
     }
 
+    public void showMessage(String message){
+
+    }
+
+    public void showMessage(int stringResource){
+        Snackbar.make(coordinatorLayout, getString(stringResource), Snackbar.LENGTH_SHORT).show();
+    }
+
     @Override
     public void onError() {
 
