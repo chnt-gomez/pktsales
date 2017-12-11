@@ -66,4 +66,10 @@ public interface RequiredPresenterOps {
         float getSalesFromDay(int dayOfMonth);
         String getBestSellerOfTheDay();
     }
+
+    interface QuickSalePresenterOps{
+
+        List<Product> getAllProducts();
+        List<Product> getProductsFromSearch(String searchArgs);
+    }
 }

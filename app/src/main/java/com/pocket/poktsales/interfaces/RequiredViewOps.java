@@ -42,4 +42,6 @@ public interface RequiredViewOps {
         void onCancelSale();
     }
 
+    interface QuickSaleOps {
+    }
 }

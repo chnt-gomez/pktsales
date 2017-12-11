@@ -2,7 +2,6 @@ package com.pocket.poktsales.activities;
 
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.MenuItemCompat;
@@ -19,11 +18,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.adapters.SimpleProductAdapter;
-import com.pocket.poktsales.interfaces.OnLoadingEventListener;
-import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
 import com.pocket.poktsales.model.Product;
-import com.pocket.poktsales.model.Ticket;
 import com.pocket.poktsales.presenter.SalesPresenter;
 import com.pocket.poktsales.utils.Conversor;
 import com.pocket.poktsales.utils.DataLoader;
@@ -63,8 +59,8 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
     ActivityAdapter activityAdapter;
 
 
-    private SearchView searchView;
-    long ticketId;
+    SearchView searchView;
+    private long ticketId;
 
     private SalesPresenter presenter;
 
@@ -98,25 +94,25 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
         activityAdapter.setTabProducts(presenter.getProductsFromTab(ticketId));
         activityAdapter.setTabReference(presenter.getTicket(ticketId).getTicketReference());
         activityAdapter.setTabTotal(Conversor.asCurrency(presenter.getTicket(ticketId).getSaleTotal()));
-        tabListProductAdapter.addAll(activityAdapter.getTabProducts());
-        productAdapter.addAll(activityAdapter.getProducts());
-        tabListProductAdapter.notifyDataSetChanged();
-        productAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onLoading(String searchArgs) {
         super.onLoading(searchArgs);
-        productAdapter = new SimpleProductAdapter(getApplicationContext(), R.layout.row_simple_product,
-                presenter.getProductsFromSearch(searchArgs));
+        activityAdapter.setProducts(presenter.getProductsFromSearch(searchArgs));
     }
 
     @Override
     public void onLoadingComplete() {
         super.onLoadingComplete();
-        lvProducts.setAdapter(productAdapter);
+        tabListProductAdapter.clear();
+        productAdapter.clear();
+        tabListProductAdapter.addAll(activityAdapter.getTabProducts());
+        productAdapter.addAll(activityAdapter.getProducts());
         tvTabReference.setText(activityAdapter.getTabReference());
         tvTabTotal.setText(activityAdapter.getTabTotal());
+        tabListProductAdapter.notifyDataSetChanged();
+        productAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -344,7 +340,6 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
                     break;
                 }
             }
-
         }
     }
 }
