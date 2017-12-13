@@ -23,6 +23,7 @@ import com.pocket.poktsales.model.Product;
 import com.pocket.poktsales.presenter.QuickSalePresenter;
 import com.pocket.poktsales.utils.Conversor;
 import com.pocket.poktsales.utils.DataLoader;
+import com.pocket.poktsales.utils.DialogBuilder;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import java.util.ArrayList;
 import java.util.List;
@@ -118,6 +119,8 @@ public class QuickSellActivity extends BaseActivity implements RequiredViewOps.Q
         tvTabTotal.setText(Conversor.asCurrency(activityAdapter.getSaleTotal()));
     }
 
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_sale, menu);
@@ -154,6 +157,21 @@ public class QuickSellActivity extends BaseActivity implements RequiredViewOps.Q
             }
         });
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_temp_product){
+            DialogBuilder.newTempDialog(QuickSellActivity.this,
+                    new DialogBuilder.DialogInteractionListener.OnNewTempDialogListener() {
+                        @Override
+                        public void onNewTempProductDialog(Product product) {
+                            addToSale(product.getId(), 1);
+                        }
+                    }).show();
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -241,6 +259,8 @@ public class QuickSellActivity extends BaseActivity implements RequiredViewOps.Q
                 saleTotal += product.getProductSellPrice();
             }
         }
+
+
 
         List<Product> getSaleProducts(){
             return saleProducts;
