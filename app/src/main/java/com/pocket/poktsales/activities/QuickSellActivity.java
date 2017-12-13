@@ -8,7 +8,9 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -19,6 +21,7 @@ import com.pocket.poktsales.adapters.SimpleProductAdapter;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
 import com.pocket.poktsales.model.Product;
 import com.pocket.poktsales.presenter.QuickSalePresenter;
+import com.pocket.poktsales.utils.Conversor;
 import com.pocket.poktsales.utils.DataLoader;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import java.util.ArrayList;
@@ -69,6 +72,13 @@ public class QuickSellActivity extends BaseActivity implements RequiredViewOps.Q
     @Override
     protected void init() {
         super.init();
+        btnApply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                applySale();
+            }
+        });
+        btnDelete.setVisibility(View.GONE);
         activityAdapter = new ActivityAdapter();
         presenter = new QuickSalePresenter(this);
         lvSale.setEmptyView(findViewById(android.R.id.empty));
@@ -77,12 +87,18 @@ public class QuickSellActivity extends BaseActivity implements RequiredViewOps.Q
         if (saleProductAdapter == null){
             saleProductAdapter = new SimpleProductAdapter(this, R.layout.row_simple_product, new ArrayList<Product>());
         }
+        tvTabTotal.setText(Conversor.asCurrency(0));
         tvTabReference.setText(R.string.quick_sale);
         lvSale.setAdapter(saleProductAdapter);
         lvProducts.setAdapter(productAdapter);
         if (getSupportActionBar()!= null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        lvProducts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                addToSale(id, 1);
+            }
+        });
         final LinearLayout layout = (LinearLayout)findViewById(R.id.ll_header);
         ViewTreeObserver vto = layout.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -96,6 +112,12 @@ public class QuickSellActivity extends BaseActivity implements RequiredViewOps.Q
         start();
     }
 
+    private void addToSale(long id, int i) {
+        activityAdapter.addToSale(presenter.getProductFromId(id), i);
+        saleProductAdapter.notifyDataSetChanged();
+        tvTabTotal.setText(Conversor.asCurrency(activityAdapter.getSaleTotal()));
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_sale, menu);
@@ -104,7 +126,8 @@ public class QuickSellActivity extends BaseActivity implements RequiredViewOps.Q
         MenuItem searchItem = menu.findItem(R.id.action_search);
         searchView =
                 (SearchView) menu.findItem(R.id.action_search).getActionView();
-        searchView.setSearchableInfo(
+        if (searchManager != null)
+            searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
         searchView.setSubmitButtonEnabled(true);
         searchView.setOnQueryTextListener(this);
@@ -112,7 +135,6 @@ public class QuickSellActivity extends BaseActivity implements RequiredViewOps.Q
             lvSale.setAdapter(saleProductAdapter);
         if (productAdapter != null)
             lvProducts.setAdapter(productAdapter);
-
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
@@ -142,6 +164,15 @@ public class QuickSellActivity extends BaseActivity implements RequiredViewOps.Q
         }else{
             productAdapter.clear();
         }
+    }
+
+    @Override
+    public void onApplySale() {
+        finish();
+    }
+
+    private void applySale(){
+        presenter.apply(activityAdapter.getSaleProducts());
     }
 
     @Override
@@ -192,12 +223,31 @@ public class QuickSellActivity extends BaseActivity implements RequiredViewOps.Q
 
     class ActivityAdapter{
         List<Product> allProducts;
+        List<Product> saleProducts;
+        float saleTotal = 0;
         List<Product> getAllProducts() {
             return allProducts;
         }
-
         void setAllProducts(List<Product> allProducts) {
             this.allProducts = allProducts;
+        }
+        void addToSale(Product product, int qty){
+            if (saleProducts == null){
+                saleProducts = new ArrayList<>();
+            }
+            for (int i=0; i<qty; i++){
+                saleProducts.add(product);
+                saleProductAdapter.add(product);
+                saleTotal += product.getProductSellPrice();
+            }
+        }
+
+        List<Product> getSaleProducts(){
+            return saleProducts;
+        }
+
+        float getSaleTotal() {
+            return saleTotal;
         }
     }
 }

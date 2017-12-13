@@ -71,5 +71,7 @@ public interface RequiredPresenterOps {
 
         List<Product> getAllProducts();
         List<Product> getProductsFromSearch(String searchArgs);
+        Product getProductFromId(long id);
+        void apply(List<Product> saleProducts);
     }
 }

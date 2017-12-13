@@ -43,5 +43,6 @@ public interface RequiredViewOps {
     }
 
     interface QuickSaleOps {
+        void onApplySale();
     }
 }

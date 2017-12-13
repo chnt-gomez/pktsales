@@ -1,8 +1,14 @@
 package com.pocket.poktsales.presenter;
 
+import android.text.method.DateTimeKeyListener;
+
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
 import com.pocket.poktsales.model.Product;
+import com.pocket.poktsales.model.Sale;
+import com.pocket.poktsales.model.Ticket;
+
+import org.joda.time.DateTime;
 
 import java.util.List;
 
@@ -22,9 +28,32 @@ public class QuickSalePresenter extends BasePresenter implements RequiredPresent
     public List<Product> getAllProducts() {
         return findAllProducts(Product.Sorting.NONE);
     }
-
     @Override
     public List<Product> getProductsFromSearch(String searchArgs) {
         return searchProductsWithQuery(searchArgs);
+    }
+    @Override
+    public Product getProductFromId(long id) {
+        return findProductById(id);
+    }
+
+    @Override
+    public void apply(List<Product> saleProducts) {
+        Ticket ticket = new Ticket();
+        ticket.save();
+        for (Product p : saleProducts){
+            Sale sale = new Sale();
+            sale.setProduct(p);
+            sale.setTicket(ticket);
+            sale.setProductAmount(1F);
+            sale.setSaleTotal(p.getProductSellPrice() * sale.getProductAmount());
+            sale.save();
+            ticket.setSaleTotal(ticket.getSaleTotal()+sale.getSaleTotal());
+            ticket.save();
+        }
+        ticket.setTicketStatus(Ticket.TICKET_APPLIED);
+        ticket.setDateTime(DateTime.now().getMillis());
+        ticket.save();
+        view.onApplySale();
     }
 }
