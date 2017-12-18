@@ -244,8 +244,9 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
             DialogBuilder.newTempDialog(SellActivity.this,
                     new DialogBuilder.DialogInteractionListener.OnNewTempDialogListener() {
                         @Override
-                        public void onNewTempProductDialog(Product product) {
-                            presenter.addToSale(ticketId, product);
+                        public void onNewTempProductDialog(String productName, float productPrice) {
+                            long id = presenter.saveAsTemp(productName, productPrice);
+                            presenter.addToSale(ticketId, id);
                         }
                     }).show();
             return true;

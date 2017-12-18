@@ -245,13 +245,11 @@ public class DialogBuilder {
         positiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Product product = new Product();
-                product.setProductName(etProductName.getText().toString());
-                product.setProductMeasureUnit(spnProductMeasure.getSelectedItemPosition());
-                product.setProductSellPrice(Conversor.toFloat(etProductPrice.getText().toString()));
+                String productName = etProductName.getText().toString();
+                float productPrice = Conversor.toFloat(etProductPrice.getText().toString());
                 if (instance != null)
                     instance.dismiss();
-                callback.onNewTempProductDialog(product);
+                callback.onNewTempProductDialog(productName, productPrice);
             }
         });
         builder.setView(dialogView);
@@ -276,7 +274,7 @@ public class DialogBuilder {
             void onDeleteTab(long ticketId);
         }
         public interface OnNewTempDialogListener {
-            void onNewTempProductDialog(Product product);
+            void onNewTempProductDialog(String productName, float productPrice);
         }
         public interface OnNewDepartmentListener{
             void onNewDepartment(Department department);

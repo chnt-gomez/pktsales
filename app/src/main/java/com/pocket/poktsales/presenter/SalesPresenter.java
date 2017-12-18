@@ -1,5 +1,6 @@
 package com.pocket.poktsales.presenter;
 
+import com.pocket.poktsales.R;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
 import com.pocket.poktsales.model.Product;
@@ -25,7 +26,12 @@ public class SalesPresenter extends BasePresenter implements
 
     @Override
     public void addToSale(long ticketId, long productId) {
-        Product product = Product.findById(Product.class, productId);
+        Product product;
+        try{
+            product = Product.findById(Product.class, productId);
+        }catch (NullPointerException e){
+            product = Product.findById(Product.class, 1000L);
+        }
         Ticket ticket = Ticket.findById(Ticket.class, ticketId);
         Sale sale = new Sale();
         sale.setProduct(product);
@@ -43,14 +49,17 @@ public class SalesPresenter extends BasePresenter implements
 
     @Override
     public void addToSale(long ticketId, Product product) {
-        product.setProductStatus(Product.TEMPORARY);
-        product.save();
         addToSale(ticketId, product.getId());
     }
 
     @Override
     public void applyTicket(long ticketId) {
         Ticket ticket = Ticket.findById(Ticket.class, ticketId);
+        List<Sale> sales = Sale.find(Sale.class, "ticket = ?", String.valueOf(ticket.getId()));
+        if (sales == null || sales.size() <= 0){
+            view.onError(R.string.cant_apply_empty_sale);
+            return;
+        }
         ticket.setTicketStatus(Ticket.TICKET_APPLIED);
         ticket.setDateTime(DateTime.now().getMillis());
         ticket.save();
@@ -106,5 +115,15 @@ public class SalesPresenter extends BasePresenter implements
             ticket.save();
         }
         view.onDeleteFromSale(productId, Conversor.asCurrency(ticketTotal));
+    }
+
+    @Override
+    public long saveAsTemp(String productName, float productPrice) {
+        Product product = new Product();
+        product.setProductName(productName);
+        product.setProductStatus(Product.TEMPORARY);
+        product.setProductSellPrice(productPrice);
+        product.setId(1000L);
+        return product.save();
     }
 }

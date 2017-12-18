@@ -42,7 +42,7 @@ public interface RequiredViewOps {
         void onCancelSale();
     }
 
-    interface QuickSaleOps {
+    interface QuickSaleOps extends RequiredViewOps{
         void onApplySale();
     }
 }

@@ -83,6 +83,16 @@ public class QuickSellActivity extends BaseActivity implements RequiredViewOps.Q
         activityAdapter = new ActivityAdapter();
         presenter = new QuickSalePresenter(this);
         lvSale.setEmptyView(findViewById(android.R.id.empty));
+        lvSale.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                removeFromSale(position);
+                saleProductAdapter.clear();
+                saleProductAdapter.addAll(activityAdapter.getSaleProducts());
+                saleProductAdapter.notifyDataSetChanged();
+                return true;
+            }
+        });
         if (productAdapter == null)
             productAdapter = new SimpleProductAdapter(this, R.layout.row_simple_product, new ArrayList<Product>());
         if (saleProductAdapter == null){
@@ -113,13 +123,15 @@ public class QuickSellActivity extends BaseActivity implements RequiredViewOps.Q
         start();
     }
 
+    private void removeFromSale(int position) {
+        activityAdapter.remove(position);
+    }
+
     private void addToSale(long id, int i) {
         activityAdapter.addToSale(presenter.getProductFromId(id), i);
         saleProductAdapter.notifyDataSetChanged();
         tvTabTotal.setText(Conversor.asCurrency(activityAdapter.getSaleTotal()));
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -165,8 +177,9 @@ public class QuickSellActivity extends BaseActivity implements RequiredViewOps.Q
             DialogBuilder.newTempDialog(QuickSellActivity.this,
                     new DialogBuilder.DialogInteractionListener.OnNewTempDialogListener() {
                         @Override
-                        public void onNewTempProductDialog(Product product) {
-                            addToSale(product.getId(), 1);
+                        public void onNewTempProductDialog(String productName, float productPrice) {
+                            long id = presenter.saveAsTemp(productName, productPrice);
+                            addToSale(id, 1);
                         }
                     }).show();
             return true;
@@ -260,14 +273,19 @@ public class QuickSellActivity extends BaseActivity implements RequiredViewOps.Q
             }
         }
 
-
-
         List<Product> getSaleProducts(){
             return saleProducts;
         }
 
         float getSaleTotal() {
             return saleTotal;
+        }
+
+        void remove(int position) {
+            float productPrice = saleProducts.get(position).getProductSellPrice();
+            saleProducts.remove(position);
+            saleTotal -= productPrice;
+            tvTabTotal.setText(Conversor.asCurrency(saleTotal));
         }
     }
 }

@@ -46,6 +46,7 @@ public interface RequiredPresenterOps {
         void cancelTab(long ticketId);
         void removeFromSale(long ticketId, long id);
         void addToSale(long ticketId, Product product);
+        long saveAsTemp(String productName, float productPrice);
     }
 
     interface DepartmentPresenterOps{
@@ -73,5 +74,6 @@ public interface RequiredPresenterOps {
         List<Product> getProductsFromSearch(String searchArgs);
         Product getProductFromId(long id);
         void apply(List<Product> saleProducts);
+        long saveAsTemp(String productName, float productPrice);
     }
 }

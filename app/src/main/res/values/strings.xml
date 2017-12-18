@@ -66,4 +66,5 @@
     <string name="new_product_no_name">Product without name</string>
     <string name="product_without_name">Product without name</string>
     <string name="sale_applied">Sale applied</string>
+    <string name="cant_apply_empty_sale">Add products first to apply</string>
 </resources>

@@ -2,6 +2,7 @@ package com.pocket.poktsales.presenter;
 
 import android.text.method.DateTimeKeyListener;
 
+import com.pocket.poktsales.R;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
 import com.pocket.poktsales.model.Product;
@@ -39,6 +40,10 @@ public class QuickSalePresenter extends BasePresenter implements RequiredPresent
 
     @Override
     public void apply(List<Product> saleProducts) {
+    if (saleProducts == null || saleProducts.size() <= 0){
+        view.onError(R.string.cant_apply_empty_sale);
+        return;
+    }
         Ticket ticket = new Ticket();
         ticket.save();
         for (Product p : saleProducts){
@@ -55,5 +60,15 @@ public class QuickSalePresenter extends BasePresenter implements RequiredPresent
         ticket.setDateTime(DateTime.now().getMillis());
         ticket.save();
         view.onApplySale();
+    }
+
+    @Override
+    public long saveAsTemp(String productName, float productPrice) {
+        Product product = new Product();
+        product.setProductName(productName);
+        product.setProductStatus(Product.TEMPORARY);
+        product.setProductSellPrice(productPrice);
+        product.setId(1000L);
+        return product.save();
     }
 }
