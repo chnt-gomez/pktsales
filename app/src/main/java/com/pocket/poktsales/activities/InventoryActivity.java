@@ -36,8 +36,6 @@ import butterknife.BindView;
 public class InventoryActivity extends BaseActivity implements SearchView.OnQueryTextListener,
         AdapterView.OnItemClickListener, RequiredViewOps.InventoryViewOps{
 
-    private static final String TAG = "InventoryActivity";
-
     @BindView(R.id.fab)
     FloatingActionButton btnAdd;
     InventoryPresenter presenter;

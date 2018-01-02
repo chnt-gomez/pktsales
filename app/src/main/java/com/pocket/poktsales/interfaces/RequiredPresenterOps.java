@@ -76,4 +76,11 @@ public interface RequiredPresenterOps {
         void apply(List<Product> saleProducts);
         long saveAsTemp(String productName, float productPrice);
     }
+
+    interface DayReportPresenterOps {
+        List<Ticket> getTickets(long dateTimeStart, long dateTimeEnd);
+        List<Ticket> getTickets(long dateTime);
+        String getSaleOfTheDay(long dateTimeStart, long dateTimeEnd);
+        String getSaleOfTheDay(long dateTime);
+    }
 }

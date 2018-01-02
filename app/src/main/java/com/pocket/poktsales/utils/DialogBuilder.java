@@ -46,7 +46,7 @@ public class DialogBuilder {
         final TextView tvTabName = (TextView) dialogView.findViewById(R.id.tv_product_name);
         final ImageView image = (ImageView)dialogView.findViewById(R.id.img_reference);
         final ImageButton btnDelete = (ImageButton)dialogView.findViewById(R.id.btn_confirm_delete);
-        tvTabName.setText(ticketReference.getTicketReference()+" "+context.getString(R.string.will_be_deleted));
+        tvTabName.setText(String.format("%s %s", ticketReference.getTicketReference(), context.getString(R.string.will_be_deleted)));
         image.setImageResource(R.drawable.ic_receipt_big);
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override

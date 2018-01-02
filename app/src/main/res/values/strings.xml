@@ -67,4 +67,10 @@
     <string name="product_without_name">Product without name</string>
     <string name="sale_applied">Sale applied</string>
     <string name="cant_apply_empty_sale">Add products first to apply</string>
+    <string name="reports">Reports</string>
+    <string name="day_report">Day report</string>
+    <string name="business_report">Business reports</string>
+    <string name="settings">Settings</string>
+    <string name="business_settings">Business settings</string>
+    <string name="total_earnings">Total earnings</string>
 </resources>

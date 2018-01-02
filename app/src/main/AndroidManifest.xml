@@ -84,6 +84,10 @@
             android:name="android.support.PARENT_ACTIVITY"
             android:value="com.pocket.poktsales.activities.OpenTabsActivity" />
         </activity>
+        <activity android:name=".activities.DayReportActivity"
+            android:label="@string/day_report"
+            android:parentActivityName=".activities.HomeScreenActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

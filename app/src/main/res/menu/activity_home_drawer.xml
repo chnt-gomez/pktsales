@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <item android:title="@string/menu_cap">
+    <item android:title="@string/app_name">
         <menu>
-            <group android:title="@string/menu">
+            <group>
                 <item
                     android:id="@+id/nav_sales"
                     android:icon="@drawable/ic_menu_sales"
@@ -19,6 +18,28 @@
             </group>
         </menu>
     </item>
-
-
+    <item android:title="@string/reports">
+        <menu>
+            <group>
+                <item
+                    android:id="@+id/nav_day_report"
+                    android:title="@string/day_report"
+                    android:icon="@drawable/ic_playlist_add_check_24"/>
+                <item
+                    android:id="@+id/nav_business_report"
+                    android:title="@string/business_report"
+                    android:icon="@drawable/ic_show_chart_24"/>
+            </group>
+        </menu>
+    </item>
+    <item android:title="@string/settings">
+        <menu>
+            <group>
+                <item
+                    android:id="@+id/nav_business_settings"
+                    android:title="@string/business_settings"
+                    android:icon="@drawable/ic_settings_24"/>
+            </group>
+        </menu>
+    </item>
 </menu>

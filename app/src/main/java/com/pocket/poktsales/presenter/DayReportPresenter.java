@@ -1,0 +1,47 @@
+package com.pocket.poktsales.presenter;
+
+import com.pocket.poktsales.activities.BaseActivity;
+import com.pocket.poktsales.activities.DayReportActivity;
+import com.pocket.poktsales.interfaces.RequiredPresenterOps;
+import com.pocket.poktsales.interfaces.RequiredViewOps;
+import com.pocket.poktsales.model.Ticket;
+import com.pocket.poktsales.utils.Conversor;
+
+import java.util.List;
+
+/**
+ * Created by MAV1GA on 19/12/2017.
+ */
+
+public class DayReportPresenter extends BasePresenter implements RequiredPresenterOps.DayReportPresenterOps {
+
+    RequiredViewOps.DayReportOps view;
+
+    public DayReportPresenter(RequiredViewOps.DayReportOps view){
+        this.view = view;
+    }
+
+    @Override
+    public List<Ticket> getTickets(long dateTimeStart, long dateTimeEnd) {
+        return Ticket.find(Ticket.class, "date_time >= ? AND date_time < ?", String.valueOf(dateTimeStart), String.valueOf(dateTimeEnd));
+    }
+
+    @Override
+    public List<Ticket> getTickets(long dateTime) {
+        return null;
+    }
+
+    @Override
+    public String getSaleOfTheDay(long dateTimeStart, long dateTimeEnd) {
+        float total = 0;
+        for (Ticket t : getTickets(dateTimeStart, dateTimeEnd)){
+            total += t.getSaleTotal();
+        }
+        return Conversor.asCurrency(total);
+    }
+
+    @Override
+    public String getSaleOfTheDay(long dateTime) {
+        return null;
+    }
+}

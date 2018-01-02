@@ -181,6 +181,9 @@ public class HomeScreenActivity extends BaseActivity
         if (id == R.id.nav_categories){
             goTo(CategoriesActivity.class);
         }
+        if (id == R.id.nav_day_report){
+            goTo(DayReportActivity.class);
+        }
 
         drawer.closeDrawer(GravityCompat.START);
         return true;

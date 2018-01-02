@@ -45,4 +45,8 @@ public interface RequiredViewOps {
     interface QuickSaleOps extends RequiredViewOps{
         void onApplySale();
     }
+
+    interface DayReportOps {
+
+    }
 }
