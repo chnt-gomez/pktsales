@@ -10,6 +10,6 @@ public class MTicket {
 
     public String dateTime;
     public float saleTotal;
-    public String masksaleTotal;
+    public String maskSaleTotal;
     public String ticketReference;
 }

@@ -1,7 +1,6 @@
 package com.pocket.poktsales.presenter;
 
 import android.util.Log;
-import android.widget.ProgressBar;
 
 import com.pocket.poktsales.model.MDepartment;
 import com.pocket.poktsales.model.MProduct;
@@ -104,7 +103,7 @@ class BasePresenter {
         MTicket modelTicket = new MTicket();
         modelTicket.dateTime = String.valueOf(ticket.getDateTime());
         modelTicket.saleTotal = ticket.getSaleTotal();
-        modelTicket.masksaleTotal = Conversor.asCurrency(ticket.getSaleTotal());
+        modelTicket.maskSaleTotal = Conversor.asCurrency(ticket.getSaleTotal());
         modelTicket.ticketReference = ticket.getTicketReference();
         return modelTicket;
     }
