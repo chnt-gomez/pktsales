@@ -2,12 +2,14 @@ package com.pocket.poktsales.presenter;
 
 import android.util.Log;
 
-import com.pocket.poktsales.model.Department;
-import com.pocket.poktsales.model.Product;
-import com.pocket.poktsales.model.Ticket;
+import com.pocket.poktsales.model.MDepartment;
+import com.pocket.poktsales.model.MProduct;
+import com.pocket.poktsales.model.MTicket;
+import com.pocket.poktsales.utils.Conversor;
 
 import org.joda.time.DateTime;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -78,6 +80,66 @@ class BasePresenter {
 
     private static String formatForQuery(String rawQuery){
         return rawQuery.replace(" ", "%");
+    }
+
+    MDepartment fromDepartment(Department department){
+        MDepartment modelDepartment = new MDepartment();
+        modelDepartment.departmentName = department.getDepartmentName();
+        modelDepartment.departmentStatus = String.valueOf(department.getDepartmentStatus());
+        modelDepartment.colorResource = department.getColorResource();
+        modelDepartment.iconResource = department.getIconResource();
+        modelDepartment.id = department.getId();
+        return modelDepartment;
+    }
+
+    List<MDepartment> fromDepartmentList(List<Department> departments){
+        List<MDepartment> list = new ArrayList<>();
+        for (Department d : departments){
+            list.add(fromDepartment(d));
+        }
+        return list;
+    }
+
+    MTicket fromTicket(Ticket ticket){
+        MTicket modelTicket = new MTicket();
+        modelTicket.dateTime = String.valueOf(ticket.getDateTime());
+        modelTicket.saleTotal = ticket.getSaleTotal();
+        modelTicket.maskSaleTotal = Conversor.asCurrency(ticket.getSaleTotal());
+        modelTicket.ticketReference = ticket.getTicketReference();
+        modelTicket.id = ticket.getId();
+        return modelTicket;
+    }
+
+    List<MTicket> fromTicketList(List<Ticket> tickets){
+        List<MTicket> list = new ArrayList<>();
+        for (Ticket t: tickets){
+            list.add(fromTicket(t));
+        }
+        return list;
+    }
+
+    MProduct fromProduct(Product product){
+        MProduct modelProduct = new MProduct();
+        modelProduct.productName = product.getProductName();
+        modelProduct.productExistences = String.valueOf(product.getProductExistences());
+        modelProduct.productInventory = String.valueOf(product.getProductInventory());
+        modelProduct.productMeasureUnit = product.getProductMeasureUnit();
+        if (product.getDepartment() != null) {
+            modelProduct.productDepartment = product.getDepartment().getDepartmentName();
+            modelProduct.departmentId = product.getDepartment().getId();
+        }
+        modelProduct.id = product.getId();
+        modelProduct.maskProductSellPrice = Conversor.asCurrency(product.getProductSellPrice());
+        modelProduct.productSellPrice = product.getProductSellPrice();
+        return modelProduct;
+    }
+
+    List<MProduct> fromProductList(List<Product> products){
+        List<MProduct> list = new ArrayList<>();
+        for (Product p: products){
+            list.add(fromProduct(p));
+        }
+        return list;
     }
 
 }

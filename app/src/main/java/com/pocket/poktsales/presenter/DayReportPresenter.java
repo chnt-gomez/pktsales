@@ -1,12 +1,11 @@
 package com.pocket.poktsales.presenter;
 
-import com.pocket.poktsales.activities.BaseActivity;
-import com.pocket.poktsales.activities.DayReportActivity;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
-import com.pocket.poktsales.model.Ticket;
+import com.pocket.poktsales.model.MTicket;
 import com.pocket.poktsales.utils.Conversor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,21 +21,21 @@ public class DayReportPresenter extends BasePresenter implements RequiredPresent
     }
 
     @Override
-    public List<Ticket> getTickets(long dateTimeStart, long dateTimeEnd) {
-        return Ticket.find(Ticket.class, "date_time >= ? AND date_time < ?", String.valueOf(dateTimeStart), String.valueOf(dateTimeEnd));
+    public List<MTicket> getTickets(long dateTimeStart, long dateTimeEnd) {
+        return fromTicketList(Ticket.find(Ticket.class, "date_time >= ? AND date_time < ?"
+                , String.valueOf(dateTimeStart), String.valueOf(dateTimeEnd)));
     }
 
     @Override
-    public List<Ticket> getTickets(long dateTime) {
+    public List<MTicket> getTickets(long dateTime) {
         return null;
     }
 
     @Override
     public String getSaleOfTheDay(long dateTimeStart, long dateTimeEnd) {
         float total = 0;
-        for (Ticket t : getTickets(dateTimeStart, dateTimeEnd)){
-            total += t.getSaleTotal();
-        }
+        for (MTicket t : getTickets(dateTimeStart, dateTimeEnd))
+            total += t.saleTotal;
         return Conversor.asCurrency(total);
     }
 
@@ -44,4 +43,6 @@ public class DayReportPresenter extends BasePresenter implements RequiredPresent
     public String getSaleOfTheDay(long dateTime) {
         return null;
     }
+
+
 }

@@ -3,8 +3,8 @@ package com.pocket.poktsales.presenter;
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
-import com.pocket.poktsales.model.Department;
-import com.pocket.poktsales.model.Product;
+import com.pocket.poktsales.model.MDepartment;
+import com.pocket.poktsales.model.MProduct;
 
 import java.util.List;
 
@@ -22,13 +22,15 @@ public class InventoryPresenter extends BasePresenter implements RequiredPresent
     }
 
     @Override
-    public void createProduct(Product product) {
-        if (!isProductNameInUse(product.getProductName())) {
-            if (product.getProductName().equals("")) {
+    public void createProduct(MProduct product) {
+        if (!isProductNameInUse(product.productName)) {
+            if (product.productName.equals("")) {
                 view.onError(R.string.product_without_name);
                 return;
             }
-            product.save();
+            Product product1 = new Product(product);
+            product1.setProductStatus(Product.ACTIVE);
+            product.id = product1.save();
             view.onSuccess();
             view.onProductAdded(product);
         }else{
@@ -37,8 +39,9 @@ public class InventoryPresenter extends BasePresenter implements RequiredPresent
     }
 
     @Override
-    public List<Department> getAllDepartments() {
-        return Department.find(Department.class, "department_status = ?", String.valueOf(Department.ACTIVE));
+    public List<MDepartment> getAllDepartments() {
+        return fromDepartmentList(Department.find(Department.class, "department_status = ?",
+                String.valueOf(Department.ACTIVE)));
     }
 
     @Override
@@ -54,34 +57,34 @@ public class InventoryPresenter extends BasePresenter implements RequiredPresent
     }
 
     @Override
-    public Product getProduct(long productId) {
+    public MProduct getProduct(long productId) {
         Product product = findProductById(productId);
         if (product == null){
             view.onError("Can't find product");
-            return new Product();
+            return new MProduct();
         }
-        return product;
+        return fromProduct(product);
     }
 
     @Override
-    public List<Product> getAllProducts(Product.Sorting sorting) {
-        return findAllProducts(sorting);
+    public List<MProduct> getAllProducts() {
+        return fromProductList(findAllProducts(Product.Sorting.NONE));
     }
 
     @Override
-    public List<Product> searchProducts(String searchArg) {
-        return searchProductsWithQuery(searchArg);
+    public List<MProduct> searchProducts(String searchArg) {
+        return fromProductList(searchProductsWithQuery(searchArg));
     }
 
 
     @Override
-    public List<Product> getProductsInDepartment(Department department) {
-        return getProductsFromDepartment(department.getId());
+    public List<MProduct> getProductsInDepartment(MDepartment department) {
+        return fromProductList(getProductsFromDepartment(department.id));
     }
 
     @Override
-    public List<Product> getProductsInDepartment(long departmentId) {
-        return getProductsFromDepartment(departmentId);
+    public List<MProduct> getProductsInDepartment(long departmentId) {
+        return fromProductList(getProductsFromDepartment(departmentId));
     }
 
     @Override
@@ -94,14 +97,8 @@ public class InventoryPresenter extends BasePresenter implements RequiredPresent
             product.setProductMeasureUnit(newMeasure);
             product.setProductSellPrice(newPriceArgs);
             product.save();
-            view.onProductUpdated(product);
+            view.onProductUpdated(fromProduct(product));
         }
-    }
-
-    @Override
-    public void deactivateProduct(Product product) {
-        product.setProductStatus(Product.INACTIVE);
-        product.save();
     }
 
     @Override
@@ -128,4 +125,6 @@ public class InventoryPresenter extends BasePresenter implements RequiredPresent
             return -1;
         }
     }
+
+
 }

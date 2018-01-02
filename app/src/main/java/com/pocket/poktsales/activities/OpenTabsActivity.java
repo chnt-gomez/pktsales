@@ -10,12 +10,9 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.adapters.TabAdapter;
-import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
-import com.pocket.poktsales.model.Ticket;
-import com.pocket.poktsales.presenter.SalesPresenter;
+import com.pocket.poktsales.model.MTicket;
 import com.pocket.poktsales.presenter.TabPresenter;
-import com.pocket.poktsales.utils.DataLoader;
 import com.pocket.poktsales.utils.DialogBuilder;
 
 import java.util.ArrayList;
@@ -78,7 +75,7 @@ public class OpenTabsActivity extends BaseActivity implements AdapterView.OnItem
         gridView.setOnItemClickListener(this);
         if (getSupportActionBar()!= null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        adapter = new TabAdapter(getApplicationContext(), R.layout.grid_layout_tab, new ArrayList<Ticket>());
+        adapter = new TabAdapter(getApplicationContext(), R.layout.grid_layout_tab, new ArrayList<MTicket>());
         gridView.setAdapter(adapter);
         activityAdapter = new ActivityAdapter();
 
@@ -122,7 +119,7 @@ public class OpenTabsActivity extends BaseActivity implements AdapterView.OnItem
     }
 
     @Override
-    public void onNewTab(Ticket ticket) {
+    public void onNewTab(MTicket ticket) {
         activityAdapter.addTab(ticket);
         adapter.add(ticket);
         adapter.notifyDataSetChanged();
@@ -144,17 +141,17 @@ public class OpenTabsActivity extends BaseActivity implements AdapterView.OnItem
     }
 
     class ActivityAdapter {
-        List<Ticket> getTabList() {
+        List<MTicket> getTabList() {
             return tabList;
         }
 
-        void setTabList(List<Ticket> tabList) {
+        void setTabList(List<MTicket> tabList) {
             this.tabList = tabList;
         }
 
-        List<Ticket> tabList;
+        List<MTicket> tabList;
 
-        void addTab(Ticket ticket) {
+        void addTab(MTicket ticket) {
             if (tabList == null)
                 tabList = new ArrayList<>();
             tabList.add(ticket);
@@ -164,7 +161,7 @@ public class OpenTabsActivity extends BaseActivity implements AdapterView.OnItem
             if (tabList == null)
                 return;
             for (int i=0; i<tabList.size(); i++){
-                if (tabList.get(i).getId() == ticketId) {
+                if (tabList.get(i).id == ticketId) {
                     tabList.remove(i);
                     break;
                 }

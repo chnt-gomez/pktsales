@@ -1,6 +1,6 @@
 package com.pocket.poktsales;
 
-import com.pocket.poktsales.model.Product;
+import com.pocket.poktsales.presenter.Product;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.mockito.Mock;

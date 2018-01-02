@@ -20,11 +20,10 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
-import com.pocket.poktsales.model.Department;
+import com.pocket.poktsales.model.MDepartment;
 import com.pocket.poktsales.presenter.HomePresenter;
 import com.pocket.poktsales.utils.ChartValueFormatter;
 import com.pocket.poktsales.utils.Conversor;
-import com.pocket.poktsales.utils.DataLoader;
 
 import org.joda.time.DateTime;
 import java.util.ArrayList;
@@ -82,9 +81,9 @@ public class HomeScreenActivity extends BaseActivity
         for (int i = 1; i<= DateTime.now().getDayOfMonth(); i++){
             adapter.addToDaySales(new Entry(i, presenter.getSalesFromDay(i)));
         }
-        for (Department d : presenter.getAllDepartments()){
-            adapter.addToDeparmentSales(new PieEntry(presenter.getSaleFromDepartment(d.getId()),
-                    d.getDepartmentName()));
+        for (MDepartment d : presenter.getAllDepartments()){
+            adapter.addToDeparmentSales(new PieEntry(presenter.getSaleFromDepartment(d.id),
+                    d.departmentName));
         }
         adapter.setBestSeller(presenter.getBestSellerOfTheDay());
     }

@@ -13,17 +13,15 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.pocket.poktsales.R;
-import com.pocket.poktsales.adapters.DropDownDepartmentAdapter;
 import com.pocket.poktsales.adapters.SimpleCategoryAdapter;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
-import com.pocket.poktsales.model.Department;
-import com.pocket.poktsales.model.Product;
-import com.pocket.poktsales.model.Ticket;
+import com.pocket.poktsales.model.MDepartment;
+import com.pocket.poktsales.model.MProduct;
+import com.pocket.poktsales.model.MTicket;
 
 import java.util.List;
 
@@ -35,7 +33,7 @@ public class DialogBuilder {
 
     static Dialog instance;
 
-    public static Dialog confirmDeleteTabDialog(final Context context, final Ticket ticketReference,
+    public static Dialog confirmDeleteTabDialog(final Context context, final MTicket ticketReference,
                                                 final DialogInteractionListener.OnDeleteTabListener callback){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         @SuppressLint("InflateParams")
@@ -46,12 +44,12 @@ public class DialogBuilder {
         final TextView tvTabName = (TextView) dialogView.findViewById(R.id.tv_product_name);
         final ImageView image = (ImageView)dialogView.findViewById(R.id.img_reference);
         final ImageButton btnDelete = (ImageButton)dialogView.findViewById(R.id.btn_confirm_delete);
-        tvTabName.setText(String.format("%s %s", ticketReference.getTicketReference(), context.getString(R.string.will_be_deleted)));
+        tvTabName.setText(String.format("%s %s", ticketReference.ticketReference, context.getString(R.string.will_be_deleted)));
         image.setImageResource(R.drawable.ic_receipt_big);
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onDeleteTab(ticketReference.getId());
+                callback.onDeleteTab(ticketReference.id);
                 instance.dismiss();
             }
         });
@@ -70,8 +68,8 @@ public class DialogBuilder {
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Department department = new Department();
-                department.setDepartmentName(etDepartmentName.getText().toString());
+                MDepartment department = new MDepartment();
+                department.departmentName = etDepartmentName.getText().toString();
                 callback.onNewDepartment(department);
                 instance.dismiss();
             }
@@ -90,9 +88,9 @@ public class DialogBuilder {
         final View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_pick_category, null);
         final ListView lvCategories = (ListView) dialogView.findViewById(R.id.lv_categories);
         final Button btnRemoveFromCategory = (Button) dialogView.findViewById(R.id.btn_remove_from_category);
-        List<Department> departments = presenter.getAllDepartments();
-        for (Department d : departments){
-            d.setProductCount(presenter.getProductsInDepartment(d.getId()).size());
+        List<MDepartment> departments = presenter.getAllDepartments();
+        for (MDepartment d : departments){
+            d.productCount = presenter.getProductsInDepartment(d.id).size();
         }
         lvCategories.setAdapter(new SimpleCategoryAdapter(context, R.layout.row_department_item, departments));
         lvCategories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -128,10 +126,10 @@ public class DialogBuilder {
         positiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Product product = new Product();
-                product.setProductName(etProductName.getText().toString());
-                product.setProductMeasureUnit(spnProductMeasure.getSelectedItemPosition());
-                product.setProductSellPrice(Conversor.toFloat(etProductPrice.getText().toString()));
+                MProduct product = new MProduct();
+                product.productName = etProductName.getText().toString();
+                product.productMeasureUnit = spnProductMeasure.getSelectedItemPosition();
+                product.productSellPrice = Float.parseFloat(etProductPrice.getText().toString());
                 if (instance != null)
                     instance.dismiss();
                 callback.onNewProduct(product);
@@ -163,7 +161,7 @@ public class DialogBuilder {
         instance = builder.create();
         return instance;
     }
-
+    /*
     public static Dialog sortProductsDialog(final Context context, RequiredPresenterOps.ProductPresenterOps presenterOps,
                                             Product.Sorting sorting,
                                           final DialogInteractionListener.OnSortProductsListener callback){
@@ -205,9 +203,9 @@ public class DialogBuilder {
         builder.setView(dialogView);
         instance = builder.create();
         return instance;
-    }
+    }*/
 
-    public static Dialog confirmDeleteProductDialog(final Context context, final Product product,
+    public static Dialog confirmDeleteProductDialog(final Context context, final MProduct product,
                                           final DialogInteractionListener.OnDeleteProductListener callback) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         @SuppressLint("InflateParams")
@@ -219,11 +217,11 @@ public class DialogBuilder {
         final ImageButton btnDelete = (ImageButton)dialogView.findViewById(R.id.btn_confirm_delete);
         final ImageView image = (ImageView)dialogView.findViewById(R.id.img_reference);
         image.setImageResource(R.drawable.ic_box_big);
-        tvProductName.setText(product.getProductName()+" "+context.getString(R.string.will_be_deleted));
+        tvProductName.setText(String.format("%s %s", product.productName, context.getString(R.string.will_be_deleted)));
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onDeleteProduct(product.getId());
+                callback.onDeleteProduct(product.id);
                 instance.dismiss();
             }
         });
@@ -259,13 +257,13 @@ public class DialogBuilder {
 
     public static class DialogInteractionListener{
         public interface OnNewProductListener{
-            void onNewProduct(Product product);
+            void onNewProduct(MProduct product);
         }
         public interface OnDeleteProductListener{
             void onDeleteProduct(long productId);
         }
         public interface OnSortProductsListener{
-            void onSortProducts(long departmentId, Product.Sorting sorting);
+            void onSortProducts(long departmentId);
         }
         public interface OnNewTabListener{
             void onNewTab(String ticketReference);
@@ -277,7 +275,7 @@ public class DialogBuilder {
             void onNewTempProductDialog(String productName, float productPrice);
         }
         public interface OnNewDepartmentListener{
-            void onNewDepartment(Department department);
+            void onNewDepartment(MDepartment department);
         }
         public interface OnCategoryPickedListener{
             void onCategorySelected(long categoryId);

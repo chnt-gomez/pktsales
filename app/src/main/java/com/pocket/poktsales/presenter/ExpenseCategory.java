@@ -1,4 +1,4 @@
-package com.pocket.poktsales.model;
+package com.pocket.poktsales.presenter;
 
 import com.orm.SugarRecord;
 

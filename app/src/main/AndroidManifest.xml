@@ -21,7 +21,7 @@
             android:value="true" />
         <meta-data
             android:name="DOMAIN_PACKAGE_NAME"
-            android:value="com.pocket.poktsales" />
+            android:value="com.pocket.poktsales.presenter" />
 
         <activity
             android:name=".activities.HomeScreenActivity"
