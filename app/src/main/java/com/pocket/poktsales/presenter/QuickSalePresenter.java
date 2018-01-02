@@ -1,13 +1,9 @@
 package com.pocket.poktsales.presenter;
 
-import android.text.method.DateTimeKeyListener;
-
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
-import com.pocket.poktsales.model.Product;
-import com.pocket.poktsales.model.Sale;
-import com.pocket.poktsales.model.Ticket;
+import com.pocket.poktsales.model.MProduct;
 
 import org.joda.time.DateTime;
 
@@ -26,32 +22,32 @@ public class QuickSalePresenter extends BasePresenter implements RequiredPresent
     }
 
     @Override
-    public List<Product> getAllProducts() {
-        return findAllProducts(Product.Sorting.NONE);
+    public List<MProduct> getAllProducts() {
+        return fromProductList(findAllProducts(Product.Sorting.NONE));
     }
     @Override
-    public List<Product> getProductsFromSearch(String searchArgs) {
-        return searchProductsWithQuery(searchArgs);
+    public List<MProduct> getProductsFromSearch(String searchArgs) {
+        return fromProductList(searchProductsWithQuery(searchArgs));
     }
     @Override
-    public Product getProductFromId(long id) {
-        return findProductById(id);
+    public MProduct getProductFromId(long id) {
+        return fromProduct(findProductById(id));
     }
 
     @Override
-    public void apply(List<Product> saleProducts) {
+    public void apply(List<MProduct> saleProducts) {
     if (saleProducts == null || saleProducts.size() <= 0){
         view.onError(R.string.cant_apply_empty_sale);
         return;
     }
         Ticket ticket = new Ticket();
         ticket.save();
-        for (Product p : saleProducts){
+        for (MProduct p : saleProducts){
             Sale sale = new Sale();
-            sale.setProduct(p);
+            sale.setProduct(findProductById(p.id));
             sale.setTicket(ticket);
             sale.setProductAmount(1F);
-            sale.setSaleTotal(p.getProductSellPrice() * sale.getProductAmount());
+            sale.setSaleTotal(p.productSellPrice * sale.getProductAmount());
             sale.save();
             ticket.setSaleTotal(ticket.getSaleTotal()+sale.getSaleTotal());
             ticket.save();

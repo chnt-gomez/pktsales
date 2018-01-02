@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.adapters.SimpleProductAdapter;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
-import com.pocket.poktsales.model.Product;
+import com.pocket.poktsales.model.MProduct;
 import com.pocket.poktsales.presenter.QuickSalePresenter;
 import com.pocket.poktsales.utils.Conversor;
 import com.pocket.poktsales.utils.DataLoader;
@@ -94,9 +94,9 @@ public class QuickSellActivity extends BaseActivity implements RequiredViewOps.Q
             }
         });
         if (productAdapter == null)
-            productAdapter = new SimpleProductAdapter(this, R.layout.row_simple_product, new ArrayList<Product>());
+            productAdapter = new SimpleProductAdapter(this, R.layout.row_simple_product, new ArrayList<MProduct>());
         if (saleProductAdapter == null){
-            saleProductAdapter = new SimpleProductAdapter(this, R.layout.row_simple_product, new ArrayList<Product>());
+            saleProductAdapter = new SimpleProductAdapter(this, R.layout.row_simple_product, new ArrayList<MProduct>());
         }
         tvTabTotal.setText(Conversor.asCurrency(0));
         tvTabReference.setText(R.string.quick_sale);
@@ -191,7 +191,7 @@ public class QuickSellActivity extends BaseActivity implements RequiredViewOps.Q
     public void onLoadingPrepare() {
         super.onLoadingPrepare();
         if (productAdapter == null){
-            productAdapter = new SimpleProductAdapter(this, R.layout.row_simple_product, new ArrayList<Product>());
+            productAdapter = new SimpleProductAdapter(this, R.layout.row_simple_product, new ArrayList<MProduct>());
         }else{
             productAdapter.clear();
         }
@@ -253,27 +253,27 @@ public class QuickSellActivity extends BaseActivity implements RequiredViewOps.Q
     }
 
     class ActivityAdapter{
-        List<Product> allProducts;
-        List<Product> saleProducts;
+        List<MProduct> allProducts;
+        List<MProduct> saleProducts;
         float saleTotal = 0;
-        List<Product> getAllProducts() {
+        List<MProduct> getAllProducts() {
             return allProducts;
         }
-        void setAllProducts(List<Product> allProducts) {
+        void setAllProducts(List<MProduct> allProducts) {
             this.allProducts = allProducts;
         }
-        void addToSale(Product product, int qty){
+        void addToSale(MProduct product, int qty){
             if (saleProducts == null){
                 saleProducts = new ArrayList<>();
             }
             for (int i=0; i<qty; i++){
                 saleProducts.add(product);
                 saleProductAdapter.add(product);
-                saleTotal += product.getProductSellPrice();
+                saleTotal += product.productSellPrice;
             }
         }
 
-        List<Product> getSaleProducts(){
+        List<MProduct> getSaleProducts(){
             return saleProducts;
         }
 
@@ -282,7 +282,7 @@ public class QuickSellActivity extends BaseActivity implements RequiredViewOps.Q
         }
 
         void remove(int position) {
-            float productPrice = saleProducts.get(position).getProductSellPrice();
+            float productPrice = saleProducts.get(position).productSellPrice;
             saleProducts.remove(position);
             saleTotal -= productPrice;
             tvTabTotal.setText(Conversor.asCurrency(saleTotal));

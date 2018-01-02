@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.adapters.SimpleProductAdapter;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
-import com.pocket.poktsales.model.Product;
+import com.pocket.poktsales.model.MProduct;
 import com.pocket.poktsales.presenter.SalesPresenter;
 import com.pocket.poktsales.utils.Conversor;
 import com.pocket.poktsales.utils.DataLoader;
@@ -78,12 +78,12 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
         if (productAdapter != null ){
             productAdapter.clear();
         }else{
-            productAdapter = new SimpleProductAdapter(this, R.layout.row_simple_product, new ArrayList<Product>());
+            productAdapter = new SimpleProductAdapter(this, R.layout.row_simple_product, new ArrayList<MProduct>());
         }
         if (tabListProductAdapter != null){
             productAdapter.clear();
         }else{
-            tabListProductAdapter = new SimpleProductAdapter(this, R.layout.row_simple_product, new ArrayList<Product>());
+            tabListProductAdapter = new SimpleProductAdapter(this, R.layout.row_simple_product, new ArrayList<MProduct>());
         }
     }
 
@@ -92,8 +92,8 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
         super.onLoading();
         activityAdapter.setProducts(presenter.getProductsToSell());
         activityAdapter.setTabProducts(presenter.getProductsFromTab(ticketId));
-        activityAdapter.setTabReference(presenter.getTicket(ticketId).getTicketReference());
-        activityAdapter.setTabTotal(Conversor.asCurrency(presenter.getTicket(ticketId).getSaleTotal()));
+        activityAdapter.setTabReference(presenter.getTicket(ticketId).ticketReference);
+        activityAdapter.setTabTotal(Conversor.asCurrency(presenter.getTicket(ticketId).saleTotal));
     }
 
     @Override
@@ -193,7 +193,7 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
     }
 
     @Override
-    public void onProductAddToSale(Product product, String newTotal) {
+    public void onProductAddToSale(MProduct product, String newTotal) {
         activityAdapter.addToSale(product);
         tabListProductAdapter.add(product);
         tvTabTotal.setText(newTotal);
@@ -294,16 +294,16 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
     }
 
     class ActivityAdapter{
-        List<Product> tabProducts;
+        List<MProduct> tabProducts;
         String tabReference;
         String tabTotal;
-        List<Product> products;
+        List<MProduct> products;
 
-        List<Product> getTabProducts() {
+        List<MProduct> getTabProducts() {
             return tabProducts;
         }
 
-        void setTabProducts(List<Product> tabProducts) {
+        void setTabProducts(List<MProduct> tabProducts) {
             this.tabProducts = tabProducts;
         }
 
@@ -323,20 +323,20 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
             this.tabTotal = tabTotal;
         }
 
-        List<Product> getProducts() {
+        List<MProduct> getProducts() {
             return products;
         }
 
-        void setProducts(List<Product> products) {
+        void setProducts(List<MProduct> products) {
             this.products = products;
         }
 
-        void addToSale(Product product) {
+        void addToSale(MProduct product) {
             tabProducts.add(product);
         }
         void deleteFromSale(long productId) {
-            for (Product p : tabProducts) {
-                if (p.getId() == productId){
+            for (MProduct p : tabProducts) {
+                if (p.id == productId){
                     tabProducts.remove(p);
                     break;
                 }

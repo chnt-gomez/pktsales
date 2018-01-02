@@ -2,9 +2,9 @@ package com.pocket.poktsales.presenter;
 
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
-import com.pocket.poktsales.model.Department;
-import com.pocket.poktsales.model.Product;
+import com.pocket.poktsales.model.MDepartment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,13 +20,15 @@ public class CategoryPresenter extends BasePresenter implements RequiredPresente
     }
 
     @Override
-    public void addNewDepartment(Department department) {
-        if (!isDepartmentNameInUse(department.getDepartmentName())) {
-            if (department.getDepartmentName().equals("")){
+    public void addNewDepartment(MDepartment department) {
+        if (!isDepartmentNameInUse(department.departmentName)) {
+            if (department.departmentName.equals("")){
                 view.onError();
                 return;
             }
-            department.save();
+            Department ormDepartment = new Department(department);
+            ormDepartment.setDepartmentStatus(Department.ACTIVE);
+            department.id = ormDepartment.save();
             view.onDepartmentAdded(department);
         }else{
             view.onError();
@@ -34,8 +36,8 @@ public class CategoryPresenter extends BasePresenter implements RequiredPresente
     }
 
     @Override
-    public List<Department> getAllDepartments() {
-        return Department.listAll(Department.class);
+    public List<MDepartment> getAllDepartments() {
+        return fromDepartmentList(Department.find(Department.class, "department_status = ?", String.valueOf(Department.ACTIVE)));
     }
 
     @Override
@@ -44,8 +46,8 @@ public class CategoryPresenter extends BasePresenter implements RequiredPresente
     }
 
     @Override
-    public Department getDepartment(long id) {
-        return Department.findById(Department.class, id);
+    public MDepartment getDepartment(long id) {
+        return fromDepartment(Department.findById(Department.class, id));
     }
 
     @Override
@@ -59,6 +61,7 @@ public class CategoryPresenter extends BasePresenter implements RequiredPresente
         Department department = Department.findById(Department.class, departmentId);
         department.setDepartmentName(newDepartmentArgs);
         department.save();
-        view.onDepartmentUpdate(department);
+        MDepartment modelDepartment = fromDepartment(department);
+        view.onDepartmentUpdate(modelDepartment);
     }
 }

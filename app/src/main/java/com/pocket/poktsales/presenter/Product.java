@@ -1,9 +1,10 @@
-package com.pocket.poktsales.model;
+package com.pocket.poktsales.presenter;
 
 import android.util.Log;
 
 import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
+import com.pocket.poktsales.model.MProduct;
 
 import java.util.Locale;
 
@@ -11,7 +12,7 @@ import java.util.Locale;
  * Created by MAV1GA on 04/09/2017.
  */
 
-public class Product extends SugarRecord {
+class Product extends SugarRecord {
 
     @Ignore
     public static final int ACTIVE = 0;
@@ -30,6 +31,13 @@ public class Product extends SugarRecord {
     private float productSellPrice;
     private int productStatus;
     private int productInventory;
+
+    protected Product(MProduct product) {
+        productName = product.productName;
+        productExistences = 0;
+        productMeasureUnit = product.productMeasureUnit;
+        productSellPrice = product.productSellPrice;
+    }
 
     public String getCodeBar() {
         return codeBar;
@@ -55,7 +63,7 @@ public class Product extends SugarRecord {
             this.productInventory = productInventory;
         }else {
             Log.w(getClass().getSimpleName(), String.format(Locale.getDefault(),
-                    "Product inventory was expected to be 1 or 0. Setting 0 instead of %d", productInventory));
+                    "MProduct inventory was expected to be 1 or 0. Setting 0 instead of %d", productInventory));
         }
     }
 
@@ -106,7 +114,7 @@ public class Product extends SugarRecord {
             this.productStatus = productStatus;
         }else{
             Log.w(getClass().getSimpleName(), String.format(Locale.getDefault(),
-                    "Product status was expected to be 3, 1 or 0. Setting 0 instead of %d", productStatus));
+                    "MProduct status was expected to be 3, 1 or 0. Setting 0 instead of %d", productStatus));
         }
     }
 

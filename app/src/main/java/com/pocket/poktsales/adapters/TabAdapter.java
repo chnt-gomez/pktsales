@@ -10,9 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-
 import com.pocket.poktsales.R;
-import com.pocket.poktsales.model.Ticket;
+import com.pocket.poktsales.model.MTicket;
 import com.pocket.poktsales.utils.Conversor;
 
 import java.util.List;
@@ -21,8 +20,8 @@ import java.util.List;
  * Created by MAV1GA on 08/09/2017.
  */
 
-public class TabAdapter extends ArrayAdapter<Ticket> {
-    public TabAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<Ticket> objects) {
+public class TabAdapter extends ArrayAdapter<MTicket> {
+    public TabAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<MTicket> objects) {
         super(context, resource, objects);
     }
 
@@ -35,19 +34,19 @@ public class TabAdapter extends ArrayAdapter<Ticket> {
         }
         TextView tvTabName = (TextView)convertView.findViewById(R.id.tv_tab_reference);
         TextView tvTabTotal = (TextView)convertView.findViewById(R.id.tv_tab_total);
-        Ticket tab = getItem(position);
+        MTicket tab = getItem(position);
         if (tab != null){
-            tvTabName.setText(tab.getTicketReference());
-            tvTabTotal.setText(Conversor.asCurrency(tab.getSaleTotal()));
+            tvTabName.setText(tab.ticketReference);
+            tvTabTotal.setText(Conversor.asCurrency(tab.saleTotal));
         }
         return convertView;
     }
 
     @Override
     public long getItemId(int position) {
-        Ticket ticket = getItem(position);
+        MTicket ticket = getItem(position);
         if (ticket != null)
-            return ticket.getId();
+            return ticket.id;
         return -1;
     }
 

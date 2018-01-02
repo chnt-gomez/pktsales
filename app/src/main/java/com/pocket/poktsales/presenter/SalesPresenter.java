@@ -3,9 +3,8 @@ package com.pocket.poktsales.presenter;
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
-import com.pocket.poktsales.model.Product;
-import com.pocket.poktsales.model.Sale;
-import com.pocket.poktsales.model.Ticket;
+import com.pocket.poktsales.model.MProduct;
+import com.pocket.poktsales.model.MTicket;
 import com.pocket.poktsales.utils.Conversor;
 
 import org.joda.time.DateTime;
@@ -44,12 +43,7 @@ public class SalesPresenter extends BasePresenter implements
         ticket.setSaleTotal(newTotal);
         ticket.save();
         view.onSuccess();
-        view.onProductAddToSale(product, Conversor.asCurrency(newTotal));
-    }
-
-    @Override
-    public void addToSale(long ticketId, Product product) {
-        addToSale(ticketId, product.getId());
+        view.onProductAddToSale(fromProduct(product), Conversor.asCurrency(newTotal));
     }
 
     @Override
@@ -67,27 +61,27 @@ public class SalesPresenter extends BasePresenter implements
     }
 
     @Override
-    public List<Product> getProductsFromSearch(String args) {
-        return searchProductsWithQuery(args);
+    public List<MProduct> getProductsFromSearch(String args) {
+        return fromProductList(searchProductsWithQuery(args));
     }
 
     @Override
-    public List<Product> getProductsToSell() {
-        return Product.find(Product.class, "product_status = ?", String.valueOf(Product.ACTIVE));
+    public List<MProduct> getProductsToSell() {
+        return fromProductList(Product.find(Product.class, "product_status = ?", String.valueOf(Product.ACTIVE)));
     }
 
     @Override
-    public Ticket getTicket(long ticketId) {
-        return Ticket.findById(Ticket.class, ticketId);
+    public MTicket getTicket(long ticketId) {
+        return fromTicket(Ticket.findById(Ticket.class, ticketId));
     }
 
     @Override
-    public List<Product> getProductsFromTab(long ticketId) {
+    public List<MProduct> getProductsFromTab(long ticketId) {
 
         List<Sale> sales = Sale.find(Sale.class, "ticket = ?", String.valueOf(ticketId));
-        List <Product> products = new ArrayList<>();
+        List <MProduct> products = new ArrayList<>();
         for (Sale s : sales){
-            products.add(s.getProduct());
+            products.add(fromProduct(s.getProduct()));
         }
         return products;
     }

@@ -2,7 +2,7 @@ package com.pocket.poktsales.presenter;
 
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
-import com.pocket.poktsales.model.Ticket;
+import com.pocket.poktsales.model.MTicket;
 
 import java.util.List;
 
@@ -19,8 +19,9 @@ public class TabPresenter extends BasePresenter implements RequiredPresenterOps.
     }
 
     @Override
-    public List<Ticket> getAllOpenTabs() {
-        return Ticket.find(Ticket.class, "ticket_status = ?", String.valueOf(Ticket.TICKET_PENDING));
+    public List<MTicket> getAllOpenTabs() {
+        return fromTicketList(
+                Ticket.find(Ticket.class, "ticket_status = ?", String.valueOf(Ticket.TICKET_PENDING)));
     }
 
     @Override
@@ -30,7 +31,7 @@ public class TabPresenter extends BasePresenter implements RequiredPresenterOps.
             ticket.setTicketReference(tabReference);
             ticket.setTicketStatus(Ticket.TICKET_PENDING);
             ticket.save();
-            view.onNewTab(ticket);
+            view.onNewTab(fromTicket(ticket));
         }else{
             view.onError();
         }

@@ -10,12 +10,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.adapters.SimpleCategoryAdapter;
-import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
-import com.pocket.poktsales.model.Department;
+import com.pocket.poktsales.model.MDepartment;
 import com.pocket.poktsales.presenter.CategoryPresenter;
-import com.pocket.poktsales.presenter.SalesPresenter;
-import com.pocket.poktsales.utils.DataLoader;
 import com.pocket.poktsales.utils.DialogBuilder;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
@@ -71,7 +68,7 @@ public class CategoriesActivity extends BaseActivity implements AdapterView.OnIt
             public void onClick(View v) {
                 DialogBuilder.newDepartmentDialog(CategoriesActivity.this, new DialogBuilder.DialogInteractionListener.OnNewDepartmentListener() {
                     @Override
-                    public void onNewDepartment(Department department) {
+                    public void onNewDepartment(MDepartment department) {
                         presenter.addNewDepartment(department);
                     }
                 }).show();
@@ -79,7 +76,7 @@ public class CategoriesActivity extends BaseActivity implements AdapterView.OnIt
         });
         activityAdapter = new ActivityAdapter();
         adapter = new SimpleCategoryAdapter(getApplicationContext(), R.layout.row_department_item,
-                new ArrayList<Department>());
+                new ArrayList<MDepartment>());
         lvDepartments.setAdapter(adapter);
         panel.setPanelHeight(0);
         panel.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
@@ -133,12 +130,12 @@ public class CategoriesActivity extends BaseActivity implements AdapterView.OnIt
     }
 
     private void seeDepartmentDetail(final long id) {
-        final Department department = presenter.getDepartment(id);
+        final MDepartment department = presenter.getDepartment(id);
         if (panel.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED
                 || panel.getPanelState() == SlidingUpPanelLayout.PanelState.HIDDEN)
             panel.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-        etDepartmentName.setText(department.getDepartmentName());
-        tvDepartmentName.setText(department.getDepartmentName());
+        etDepartmentName.setText(department.departmentName);
+        tvDepartmentName.setText(department.departmentName);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -158,7 +155,7 @@ public class CategoriesActivity extends BaseActivity implements AdapterView.OnIt
     }
 
     @Override
-    public void onDepartmentUpdate(Department department) {
+    public void onDepartmentUpdate(MDepartment department) {
         activityAdapter.updateDepartment(department);
         adapter.clear();
         adapter.addAll(activityAdapter.getDepartmentList());
@@ -166,39 +163,39 @@ public class CategoriesActivity extends BaseActivity implements AdapterView.OnIt
     }
 
     @Override
-    public void onDepartmentAdded(Department department) {
+    public void onDepartmentAdded(MDepartment department) {
         activityAdapter.addDepartment(department);
         adapter.add(department);
         adapter.notifyDataSetChanged();
     }
 
     class ActivityAdapter {
-         List<Department> getDepartmentList() {
+         List<MDepartment> getDepartmentList() {
             return departmentList;
          }
 
-        void setDepartmentList(List<Department> departmentList) {
+        void setDepartmentList(List<MDepartment> departmentList) {
             this.departmentList = departmentList;
-            for (Department d : departmentList){
-                d.setProductCount(presenter.getProductCountFromDepartment(d.getId()));
+            for (MDepartment d : departmentList){
+                d.productCount = presenter.getProductCountFromDepartment(d.id);
             }
         }
 
-        void addDepartment(Department department){
+        void addDepartment(MDepartment department){
              if (departmentList == null)
                  departmentList = new ArrayList<>();
             departmentList.add(department);
         }
 
-        void updateDepartment(Department department){
+        void updateDepartment(MDepartment department){
             for (int i=0; i<departmentList.size(); i++){
-                if (departmentList.get(i).getId() == department.getId()) {
+                if (departmentList.get(i).id == department.id) {
                     departmentList.set(i, department);
                     return;
                 }
             }
         }
 
-        List<Department> departmentList;
+        List<MDepartment> departmentList;
     }
 }

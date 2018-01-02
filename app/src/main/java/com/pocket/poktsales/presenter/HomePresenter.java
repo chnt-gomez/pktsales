@@ -5,19 +5,14 @@ import android.content.Context;
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
-import com.pocket.poktsales.model.Department;
-import com.pocket.poktsales.model.Product;
-import com.pocket.poktsales.model.Sale;
-import com.pocket.poktsales.model.Ticket;
+import com.pocket.poktsales.model.MDepartment;
 
 import org.joda.time.DateTime;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.Callable;
-
-import rx.Observable;
 
 /**
  * Created by MAV1GA on 02/11/2017.
@@ -103,7 +98,8 @@ public class HomePresenter extends BasePresenter implements RequiredPresenterOps
     }
 
     @Override
-    public List<Department> getAllDepartments() {
-        return Department.find(Department.class, "department_status = ?", String.valueOf(Department.ACTIVE));
+    public List<MDepartment> getAllDepartments() {
+        return fromDepartmentList(
+                Department.find(Department.class, "department_status = ?", String.valueOf(Department.ACTIVE)));
     }
 }

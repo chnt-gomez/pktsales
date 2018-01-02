@@ -1,9 +1,10 @@
-package com.pocket.poktsales.model;
+package com.pocket.poktsales.presenter;
 
 import android.util.Log;
 
 import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
+import com.pocket.poktsales.model.MDepartment;
 
 import java.util.Locale;
 
@@ -11,7 +12,7 @@ import java.util.Locale;
  * Created by MAV1GA on 04/09/2017.
  */
 
-public class Department extends SugarRecord {
+ class Department extends SugarRecord {
 
     @Ignore
     public static final int ACTIVE = 0;
@@ -31,6 +32,10 @@ public class Department extends SugarRecord {
     private int colorResource;
 
     public Department(){}
+
+    protected Department(MDepartment department){
+        this.departmentName = department.departmentName;
+    }
 
     public String getDepartmentName() {
         if (departmentName == null)
@@ -53,7 +58,7 @@ public class Department extends SugarRecord {
             this.departmentStatus = departmentStatus;
         }else {
             Log.w(getClass().getSimpleName(), String.format(Locale.getDefault(),
-                    "Product status was expected to be 1 or 0. Setting 0 instead of %d", departmentStatus));
+                    "MProduct status was expected to be 1 or 0. Setting 0 instead of %d", departmentStatus));
         }
     }
 

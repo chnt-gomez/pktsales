@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.adapters.SimpleProductAdapter;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
-import com.pocket.poktsales.model.Product;
+import com.pocket.poktsales.model.MProduct;
 import com.pocket.poktsales.presenter.InventoryPresenter;
 import com.pocket.poktsales.utils.Conversor;
 import com.pocket.poktsales.utils.DataLoader;
@@ -121,7 +121,7 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
                 DialogBuilder.newProductDialog(InventoryActivity.this,
                         new DialogBuilder.DialogInteractionListener.OnNewProductListener() {
                     @Override
-                    public void onNewProduct(Product product) {
+                    public void onNewProduct(MProduct product) {
                         presenter.createProduct(product);
                     }
                 }).show();
@@ -152,7 +152,7 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
         });
         lvProducts.setOnItemClickListener(this);
         activityAdapter = new InventoryActivityAdapter();
-        listAdapter = new SimpleProductAdapter(getApplicationContext(), R.layout.row_simple_product, new ArrayList<Product>());
+        listAdapter = new SimpleProductAdapter(getApplicationContext(), R.layout.row_simple_product, new ArrayList<MProduct>());
         lvProducts.setAdapter(listAdapter);
     }
 
@@ -169,7 +169,7 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
 
     @Override
     public void onLoading() {
-        activityAdapter.setList(presenter.getAllProducts(Product.Sorting.NONE));
+        activityAdapter.setList(presenter.getAllProducts());
     }
 
     @Override
@@ -227,14 +227,14 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
     }
 
     private void showProduct(final long productId){
-        final Product product = presenter.getProduct(productId);
+        final MProduct product = presenter.getProduct(productId);
         if (product != null){
-            tvProductName.setText(product.getProductName());
-            etProductName.setText(product.getProductName());
-            etProductPrice.setText(Conversor.asFloat(product.getProductSellPrice()));
-            spnProductMeasure.setSelection(product.getProductMeasureUnit());
-            if (product.getDepartment() != null){
-                tvProductCategory.setText(product.getDepartment().getDepartmentName());
+            tvProductName.setText(product.productName);
+            etProductName.setText(product.productName);
+            etProductPrice.setText(product.maskProductSellPrice);
+            spnProductMeasure.setSelection(product.productMeasureUnit);
+            if (product.productDepartment != null){
+                tvProductCategory.setText(product.productDepartment);
             }else{
                 tvProductCategory.setText(getString(R.string.no_category));
             }
@@ -268,7 +268,7 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
                 DialogBuilder.addToCategoryDialog(InventoryActivity.this, new DialogBuilder.DialogInteractionListener.OnCategoryPickedListener() {
                     @Override
                     public void onCategorySelected(long categoryId) {
-                        presenter.addProductToCategory(product.getId(), categoryId);
+                        presenter.addProductToCategory(product.id, categoryId);
                         if (categoryId != 0)
                             tvProductCategory.setText(presenter.getCategoryName(categoryId));
                         else
@@ -280,14 +280,14 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
     }
 
     @Override
-    public void onProductAdded(Product product) {
+    public void onProductAdded(MProduct product) {
         listAdapter.add(product);
         activityAdapter.addProduct(product);
         listAdapter.notifyDataSetChanged();
     }
 
     @Override
-    public void onProductUpdated(Product product) {
+    public void onProductUpdated(MProduct product) {
         activityAdapter.updateProduct(product);
         listAdapter.clear();
         listAdapter.addAll(activityAdapter.getProductList());
@@ -302,17 +302,17 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
     }
 
     class InventoryActivityAdapter{
-        List<Product> productList;
+        List<MProduct> productList;
 
-        public void setList(List<Product> products){
+        public void setList(List<MProduct> products){
             productList = products;
         }
 
-        List<Product> getProductList() {
+        List<MProduct> getProductList() {
             return productList;
         }
 
-        void addProduct(Product product){
+        void addProduct(MProduct product){
             if (productList== null)
                 productList = new ArrayList<>();
             productList.add(productList.size(), product);
@@ -320,16 +320,16 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
 
         void remove(long productId){
             for(int i=0; i<productList.size(); i++){
-                if (productList.get(i).getId() == productId) {
+                if (productList.get(i).id == productId) {
                     productList.remove(i);
                     return;
                 }
             }
         }
 
-        void updateProduct(Product product){
+        void updateProduct(MProduct product){
            for (int i=0; i<productList.size(); i++){
-               if (productList.get(i).getId() == product.getId()) {
+               if (productList.get(i).id == product.id) {
                    productList.set(i, product);
                    return;
                }

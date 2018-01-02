@@ -8,13 +8,10 @@ import android.widget.TextView;
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
-import com.pocket.poktsales.model.Ticket;
+import com.pocket.poktsales.model.MTicket;
 import com.pocket.poktsales.presenter.DayReportPresenter;
-
 import org.joda.time.DateTime;
-
 import java.util.List;
-
 import butterknife.BindView;
 
 
@@ -77,7 +74,7 @@ public class DayReportActivity extends BaseActivity implements RequiredViewOps.D
     }
 
     class ActivityAdapter {
-        List<Ticket> allTickets;
+        List<MTicket> allTickets;
         String dayTotal;
         String date;
 
@@ -89,11 +86,11 @@ public class DayReportActivity extends BaseActivity implements RequiredViewOps.D
             this.date = date;
         }
 
-        public List<Ticket> getAllTickets() {
+        public List<MTicket> getAllTickets() {
             return allTickets;
         }
 
-        public void setAllTickets(List<Ticket> allTickets) {
+        public void setAllTickets(List<MTicket> allTickets) {
             this.allTickets = allTickets;
         }
 

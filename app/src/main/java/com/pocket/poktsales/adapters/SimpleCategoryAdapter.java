@@ -1,7 +1,6 @@
 package com.pocket.poktsales.adapters;
 
 import android.content.Context;
-import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,7 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.pocket.poktsales.R;
-import com.pocket.poktsales.model.Department;
+import com.pocket.poktsales.model.MDepartment;
 
 import java.util.List;
 import java.util.Locale;
@@ -22,9 +21,9 @@ import java.util.Locale;
  * Created by MAV1GA on 02/10/2017.
  */
 
-public class SimpleCategoryAdapter extends ArrayAdapter<Department> {
+public class SimpleCategoryAdapter extends ArrayAdapter<MDepartment> {
 
-    public SimpleCategoryAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<Department> objects) {
+    public SimpleCategoryAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<MDepartment> objects) {
         super(context, resource, objects);
     }
 
@@ -34,24 +33,24 @@ public class SimpleCategoryAdapter extends ArrayAdapter<Department> {
         if (convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_department_item, null);
         }
-        Department department = getItem(position);
+        MDepartment department = getItem(position);
         if (department == null) {
             Log.wtf("CategoryAdapter:", String.format(Locale.getDefault(), "The department at %d was null!!", position));
-            department = new Department();
+            department = new MDepartment();
         }
         TextView tvCategoryName = (TextView)convertView.findViewById(R.id.tv_department_name);
         TextView tvProductsInDepartment = (TextView)convertView.findViewById(R.id.tv_products_count);
 
-        tvCategoryName.setText(department.getDepartmentName());
-        tvProductsInDepartment.setText(String.valueOf(department.getProductCount()));
+        tvCategoryName.setText(department.departmentName);
+        tvProductsInDepartment.setText(String.valueOf(department.productCount));
         return convertView;
     }
 
     @Override
     public long getItemId(int position) {
-        Department department = getItem(position);
+        MDepartment department = getItem(position);
         if (department != null){
-            return department.getId();
+            return department.id;
         }
         Log.wtf("CategoryAdapter:", String.format(Locale.getDefault(), "The department at %d was null!!", position));
         return -1L;

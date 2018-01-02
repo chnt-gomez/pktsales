@@ -1,4 +1,4 @@
-package com.pocket.poktsales.model;
+package com.pocket.poktsales.presenter;
 
 import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
@@ -8,7 +8,7 @@ import com.pocket.poktsales.R;
  * Created by MAV1GA on 04/09/2017.
  */
 
-public class Ticket extends SugarRecord {
+class Ticket extends SugarRecord {
 
     private long dateTime;
     private float saleTotal;

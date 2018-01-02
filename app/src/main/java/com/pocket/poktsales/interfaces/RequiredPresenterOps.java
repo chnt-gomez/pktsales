@@ -2,10 +2,9 @@ package com.pocket.poktsales.interfaces;
 
 import android.content.Context;
 
-import com.pocket.poktsales.model.Department;
-import com.pocket.poktsales.model.Product;
-import com.pocket.poktsales.model.Ticket;
-
+import com.pocket.poktsales.model.MDepartment;
+import com.pocket.poktsales.model.MProduct;
+import com.pocket.poktsales.model.MTicket;
 import java.util.List;
 
 
@@ -16,44 +15,42 @@ import java.util.List;
 public interface RequiredPresenterOps {
 
     interface ProductPresenterOps{
-        void createProduct(Product product);
-        Product getProduct(long productId);
-        List<Product> getAllProducts(Product.Sorting sorting);
-        List<Product> searchProducts(String searchArg);
-        List<Product> getProductsInDepartment(Department department);
-        List<Product> getProductsInDepartment(long departmentId);
+        void createProduct(MProduct product);
+        MProduct getProduct(long productId);
+        List<MProduct> getAllProducts();
+        List<MProduct> searchProducts(String searchArg);
+        List<MProduct> getProductsInDepartment(MDepartment department);
+        List<MProduct> getProductsInDepartment(long departmentId);
         void updateProduct(long productId, String newProductName, float newProductPrice, int newMeasureUnit);
-        void deactivateProduct(Product product);
         void deactivateProduct(long productId);
         long reActivateProduct(long productId);
-        List<Department> getAllDepartments();
+        List<MDepartment> getAllDepartments();
         void addProductToCategory(long productId, long categoryId);
         String getCategoryName(long categoryId);
     }
 
     interface TabPresenterOps{
-        List<Ticket> getAllOpenTabs();
+        List<MTicket> getAllOpenTabs();
         void openTab(String tabReference);
     }
 
     interface SalePresenterOps{
         void addToSale(long ticketId, long productId);
         void applyTicket(long ticketId);
-        List<Product> getProductsFromSearch(String args);
-        List<Product> getProductsToSell();
-        Ticket getTicket(long ticketId);
-        List<Product> getProductsFromTab(long ticketId);
+        List<MProduct> getProductsFromSearch(String args);
+        List<MProduct> getProductsToSell();
+        MTicket getTicket(long ticketId);
+        List<MProduct> getProductsFromTab(long ticketId);
         void cancelTab(long ticketId);
         void removeFromSale(long ticketId, long id);
-        void addToSale(long ticketId, Product product);
         long saveAsTemp(String productName, float productPrice);
     }
 
     interface DepartmentPresenterOps{
-        void addNewDepartment(Department department);
-        List<Department> getAllDepartments();
+        void addNewDepartment(MDepartment department);
+        List<MDepartment> getAllDepartments();
         void removeDepartment(long departmentId, long moveProductsToDepartmentId);
-        Department getDepartment(long id);
+        MDepartment getDepartment(long id);
         int getProductCountFromDepartment(long departmentId);
         void updateDepartment(String newDepartmentArgs, long departmentId);
     }
@@ -62,7 +59,7 @@ public interface RequiredPresenterOps {
         float getDaySales();
         float getYesterdaySales();
         String getImprovement(Context context);
-        List<Department> getAllDepartments();
+        List<MDepartment> getAllDepartments();
         float getSaleFromDepartment(long departmentId);
         float getSalesFromDay(int dayOfMonth);
         String getBestSellerOfTheDay();
@@ -70,16 +67,16 @@ public interface RequiredPresenterOps {
 
     interface QuickSalePresenterOps{
 
-        List<Product> getAllProducts();
-        List<Product> getProductsFromSearch(String searchArgs);
-        Product getProductFromId(long id);
-        void apply(List<Product> saleProducts);
+        List<MProduct> getAllProducts();
+        List<MProduct> getProductsFromSearch(String searchArgs);
+        MProduct getProductFromId(long id);
+        void apply(List<MProduct> saleProducts);
         long saveAsTemp(String productName, float productPrice);
     }
 
     interface DayReportPresenterOps {
-        List<Ticket> getTickets(long dateTimeStart, long dateTimeEnd);
-        List<Ticket> getTickets(long dateTime);
+        List<MTicket> getTickets(long dateTimeStart, long dateTimeEnd);
+        List<MTicket> getTickets(long dateTime);
         String getSaleOfTheDay(long dateTimeStart, long dateTimeEnd);
         String getSaleOfTheDay(long dateTime);
     }
