@@ -8,7 +8,7 @@ import com.pocket.poktsales.R;
  * Created by MAV1GA on 04/09/2017.
  */
 
-class Ticket extends SugarRecord {
+public class Ticket extends SugarRecord {
 
     private long dateTime;
     private float saleTotal;

@@ -88,6 +88,7 @@ class BasePresenter {
         modelDepartment.departmentStatus = String.valueOf(department.getDepartmentStatus());
         modelDepartment.colorResource = department.getColorResource();
         modelDepartment.iconResource = department.getIconResource();
+        modelDepartment.id = department.getId();
         return modelDepartment;
     }
 
@@ -105,6 +106,7 @@ class BasePresenter {
         modelTicket.saleTotal = ticket.getSaleTotal();
         modelTicket.maskSaleTotal = Conversor.asCurrency(ticket.getSaleTotal());
         modelTicket.ticketReference = ticket.getTicketReference();
+        modelTicket.id = ticket.getId();
         return modelTicket;
     }
 

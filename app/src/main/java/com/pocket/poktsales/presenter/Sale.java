@@ -6,7 +6,7 @@ import com.orm.SugarRecord;
  * Created by MAV1GA on 04/09/2017.
  */
 
-class Sale extends SugarRecord {
+public class Sale extends SugarRecord {
 
     private String saleConcept;
     private float productAmount;

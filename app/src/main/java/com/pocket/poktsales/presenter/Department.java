@@ -12,7 +12,7 @@ import java.util.Locale;
  * Created by MAV1GA on 04/09/2017.
  */
 
- class Department extends SugarRecord {
+ public class Department extends SugarRecord {
 
     @Ignore
     public static final int ACTIVE = 0;
