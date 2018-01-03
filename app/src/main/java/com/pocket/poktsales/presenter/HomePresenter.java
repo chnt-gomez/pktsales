@@ -93,17 +93,20 @@ public class HomePresenter extends BasePresenter implements RequiredPresenterOps
                 String.valueOf(DateTime.now().plusDays(1).withTimeAtStartOfDay().getMillis())
         };
         return fromTicketList(Ticket.find(Ticket.class, "date_time >= ? and date_time < ?",
-                query, null, null, "10"));
+                query, null, "date_time DESC", "10"));
     }
 
     @Override
     public String getImprovement(Context context) {
         float overHand =  getDaySales() - getYesterdaySales();
         if (overHand > 0){
-            float demiHand = overHand / getYesterdaySales();
-            demiHand *= 100;
-            String decimalFormat = new DecimalFormat("##.## %").format(demiHand);
-            return String.format("%s %s",decimalFormat, context.getString(R.string.improvement_positive));
+            if (getYesterdaySales() > 0){
+                float demiHand = overHand / getYesterdaySales();
+                String decimalFormat = new DecimalFormat("##%").format(demiHand);
+                return String.format("%s %s",decimalFormat, context.getString(R.string.improvement_positive));
+            }else{
+                return context.getString(R.string.good_luck);
+            }
         }else{
             return String.format("%s %s", new DecimalFormat("##.##"),context.getString(R.string.improvement_negative));
         }
