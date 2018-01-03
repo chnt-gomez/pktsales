@@ -5,6 +5,8 @@ import android.content.Context;
 import com.pocket.poktsales.model.MDepartment;
 import com.pocket.poktsales.model.MProduct;
 import com.pocket.poktsales.model.MTicket;
+import com.pocket.poktsales.presenter.Ticket;
+
 import java.util.List;
 
 
@@ -63,6 +65,8 @@ public interface RequiredPresenterOps {
         float getSaleFromDepartment(long departmentId);
         float getSalesFromDay(int dayOfMonth);
         String getBestSellerOfTheDay();
+
+        List<MTicket> getRecentSales();
     }
 
     interface QuickSalePresenterOps{

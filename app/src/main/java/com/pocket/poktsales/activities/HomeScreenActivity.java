@@ -1,7 +1,6 @@
 package com.pocket.poktsales.activities;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -9,21 +8,24 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 import android.widget.TextView;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.pocket.poktsales.R;
+import com.pocket.poktsales.adapters.RecentSaleAdapter;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.model.MDepartment;
+import com.pocket.poktsales.model.MTicket;
 import com.pocket.poktsales.presenter.HomePresenter;
 import com.pocket.poktsales.utils.ChartValueFormatter;
 import com.pocket.poktsales.utils.Conversor;
+import com.pocket.poktsales.utils.CustomMarkerView;
 
 import org.joda.time.DateTime;
 import java.util.ArrayList;
@@ -44,16 +46,15 @@ public class HomeScreenActivity extends BaseActivity
     @BindView(R.id.tv_performance)
     TextView tvPerformance;
 
-    @BindView(R.id.chart_cat_sales)
-    PieChart chartCatSales;
-
     @BindView(R.id.chart_performance)
     LineChart chartPerformance;
 
-    @BindView(R.id.tv_star_product)
-    TextView tvStartProduct;
+    @BindView(R.id.lv_recent_sales)
+    ListView lvRecentSales;
+
     HomeActivityDataAdapter adapter;
     RequiredPresenterOps.HomePresenterOps presenter;
+    RecentSaleAdapter recentSaleAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +74,13 @@ public class HomeScreenActivity extends BaseActivity
     }
 
     @Override
+    public void onLoadingPrepare() {
+        super.onLoadingPrepare();
+        if (recentSaleAdapter != null)
+            recentSaleAdapter.clear();
+    }
+
+    @Override
     public void onLoading() {
         super.onLoading();
         adapter = new HomeActivityDataAdapter();
@@ -82,10 +90,10 @@ public class HomeScreenActivity extends BaseActivity
             adapter.addToDaySales(new Entry(i, presenter.getSalesFromDay(i)));
         }
         for (MDepartment d : presenter.getAllDepartments()){
-            adapter.addToDeparmentSales(new PieEntry(presenter.getSaleFromDepartment(d.id),
+            adapter.addToDepartmentSales(new PieEntry(presenter.getSaleFromDepartment(d.id),
                     d.departmentName));
         }
-        adapter.setBestSeller(presenter.getBestSellerOfTheDay());
+        adapter.setRecentSales(presenter.getRecentSales());
     }
 
     @Override
@@ -94,13 +102,14 @@ public class HomeScreenActivity extends BaseActivity
         tvTodayIncome.setText(adapter.getTodayIncome());
         tvPerformance.setText(adapter.getPerformance());
         setPerformanceChart(adapter.getDaySalesEntries());
-        setCategorySalesChart(adapter.getDepartmentSaleEntries());
-        setBestProductChart(adapter.getBestSeller());
+        recentSaleAdapter.addAll(adapter.getRecentSales());
+        recentSaleAdapter.notifyDataSetChanged();
     }
 
     @Override
     protected void init() {
         super.init();
+        recentSaleAdapter = new RecentSaleAdapter(this, R.layout.row_recent_sale, new ArrayList(0));
         presenter = new HomePresenter(this);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -108,22 +117,32 @@ public class HomeScreenActivity extends BaseActivity
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setItemIconTintList(null);
-
+        lvRecentSales.setAdapter(recentSaleAdapter);
     }
 
     private void setPerformanceChart( List<Entry> entries ){
         LineDataSet dataSet = new LineDataSet(entries, null);
         dataSet.setColors(new int[]{R.color.colorAccent}, getApplicationContext());
         dataSet.setLineWidth(2);
+        dataSet.setCircleColor(R.color.colorPrimary);
+        dataSet.setCircleHoleRadius(3);
+        dataSet.setCircleRadius(6);
+        dataSet.setHighlightEnabled(true);
         LineData lineData = new LineData(dataSet);
+        chartPerformance.getXAxis().setDrawLabels(false);
         chartPerformance.getLegend().setEnabled(false);
         chartPerformance.setDescription(null);
         chartPerformance.setData(lineData);
+        chartPerformance.setTouchEnabled(true);
         chartPerformance.getData().setValueFormatter(new ChartValueFormatter());
         chartPerformance.getData().setDrawValues(false);
         chartPerformance.invalidate();
+        CustomMarkerView mv = new CustomMarkerView (this, R.layout.layout_marker);
+        chartPerformance.setDragEnabled(true);
+        chartPerformance.setMarkerView(mv);
     }
 
+    /*
     private void setCategorySalesChart(List<PieEntry> entries){
         PieDataSet set = new PieDataSet(entries, null);
         set.setColors(new int[]{R.color.chart_red, R.color.chart_red_dark,
@@ -138,10 +157,7 @@ public class HomeScreenActivity extends BaseActivity
         chartCatSales.getData().setValueTextSize(16);
         chartCatSales.invalidate();
     }
-
-    private void setBestProductChart(String data){
-        tvStartProduct.setText(data);
-    }
+    */
 
     @Override
     public void onBackPressed() {
@@ -196,7 +212,6 @@ public class HomeScreenActivity extends BaseActivity
 
         String todayIncome;
         String performance;
-        String bestSeller;
 
         List<Entry> getDaySalesEntries() {
             return daySalesEntries;
@@ -208,6 +223,16 @@ public class HomeScreenActivity extends BaseActivity
 
         List<Entry> daySalesEntries;
         List<PieEntry> departmentSaleEntries = new ArrayList<>();
+
+        List<MTicket> getRecentSales() {
+            return recentSales;
+        }
+
+        void setRecentSales(List<MTicket> recentSales) {
+            this.recentSales = recentSales;
+        }
+
+        List<MTicket> recentSales;
 
         String getTodayIncome() {
             return todayIncome;
@@ -231,18 +256,12 @@ public class HomeScreenActivity extends BaseActivity
             daySalesEntries.add(daySale);
         }
 
-        void addToDeparmentSales(PieEntry departmentSale){
+        void addToDepartmentSales(PieEntry departmentSale){
             if (departmentSaleEntries == null)
                 departmentSaleEntries = new ArrayList<>();
             departmentSaleEntries.add(departmentSale);
         }
 
-        String getBestSeller() {
-            return bestSeller;
-        }
 
-        void setBestSeller(String bestSeller) {
-            this.bestSeller = bestSeller;
-        }
     }
 }

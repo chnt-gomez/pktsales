@@ -6,9 +6,11 @@ import com.pocket.poktsales.R;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
 import com.pocket.poktsales.model.MDepartment;
+import com.pocket.poktsales.model.MTicket;
 
 import org.joda.time.DateTime;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -86,14 +88,24 @@ public class HomePresenter extends BasePresenter implements RequiredPresenterOps
     }
 
     @Override
+    public List<MTicket> getRecentSales() {
+        String[] query = {String.valueOf(DateTime.now().withTimeAtStartOfDay().getMillis()),
+                String.valueOf(DateTime.now().plusDays(1).withTimeAtStartOfDay().getMillis())
+        };
+        return fromTicketList(Ticket.find(Ticket.class, "date_time >= ? and date_time < ?",
+                query, null, null, "10"));
+    }
+
+    @Override
     public String getImprovement(Context context) {
         float overHand =  getDaySales() - getYesterdaySales();
         if (overHand > 0){
             float demiHand = overHand / getYesterdaySales();
             demiHand *= 100;
-            return String.format(Locale.getDefault(), context.getString(R.string.improvement_positive), demiHand);
+            String decimalFormat = new DecimalFormat("##.## %").format(demiHand);
+            return String.format("%s %s",decimalFormat, context.getString(R.string.improvement_positive));
         }else{
-            return String.format(Locale.getDefault(), context.getString(R.string.improvement_negative), overHand);
+            return String.format("%s %s", new DecimalFormat("##.##"),context.getString(R.string.improvement_negative));
         }
     }
 
