@@ -231,7 +231,7 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
         if (product != null){
             tvProductName.setText(product.productName);
             etProductName.setText(product.productName);
-            etProductPrice.setText(product.maskProductSellPrice);
+            etProductPrice.setText(Conversor.asFloat(product.productSellPrice));
             spnProductMeasure.setSelection(product.productMeasureUnit);
             if (product.productDepartment != null){
                 tvProductCategory.setText(product.productDepartment);

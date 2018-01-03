@@ -1,5 +1,6 @@
 package com.pocket.poktsales.presenter;
 
+import com.pocket.poktsales.R;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
 import com.pocket.poktsales.model.MTicket;
@@ -26,6 +27,10 @@ public class TabPresenter extends BasePresenter implements RequiredPresenterOps.
 
     @Override
     public void openTab(String tabReference) {
+        if (!isValid(tabReference)){
+            view.onError(R.string.invalid_name_for_tab);
+            return;
+        }
         if (!isTicketInUse(tabReference)) {
             Ticket ticket = new Ticket();
             ticket.setTicketReference(tabReference);
@@ -35,5 +40,9 @@ public class TabPresenter extends BasePresenter implements RequiredPresenterOps.
         }else{
             view.onError();
         }
+    }
+
+    private boolean isValid(String tabReference){
+        return !tabReference.contains("*");
     }
 }

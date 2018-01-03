@@ -87,6 +87,7 @@
         android:orientation="horizontal"
         android:weightSum="2">
         <EditText
+            android:drawableStart="@drawable/ic_currency_usd"
             android:layout_width="0dp"
             android:id="@+id/et_product_price"
             android:layout_height="wrap_content"
