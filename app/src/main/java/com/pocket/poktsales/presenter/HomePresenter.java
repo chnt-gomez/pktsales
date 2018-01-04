@@ -7,6 +7,7 @@ import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
 import com.pocket.poktsales.model.MDepartment;
 import com.pocket.poktsales.model.MTicket;
+import com.pocket.poktsales.utils.Conversor;
 
 import org.joda.time.DateTime;
 
@@ -102,13 +103,13 @@ public class HomePresenter extends BasePresenter implements RequiredPresenterOps
         if (overHand > 0){
             if (getYesterdaySales() > 0){
                 float demiHand = overHand / getYesterdaySales();
-                String decimalFormat = new DecimalFormat("##%").format(demiHand);
-                return String.format("%s %s",decimalFormat, context.getString(R.string.improvement_positive));
+
+                return String.format("%s %s", Conversor.asPerc(demiHand), context.getString(R.string.improvement_positive));
             }else{
                 return context.getString(R.string.good_luck);
             }
         }else{
-            return String.format("%s %s", new DecimalFormat("##.##"),context.getString(R.string.improvement_negative));
+            return String.format("%s %s", Conversor.asCurrency(overHand*-1),context.getString(R.string.improvement_negative));
         }
     }
 

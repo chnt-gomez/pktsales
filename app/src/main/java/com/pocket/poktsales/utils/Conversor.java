@@ -2,6 +2,7 @@ package com.pocket.poktsales.utils;
 
 import android.util.Log;
 
+import java.text.DecimalFormat;
 import java.util.Locale;
 
 /**
@@ -21,20 +22,24 @@ public class Conversor {
 
     public static String asCurrency(float argument){
         try{
-            return String.format(Locale.US, "$ %.2f", argument);
+            return new DecimalFormat("$ ###,###,##0.00").format(argument);
         }catch (NumberFormatException e){
-            Log.w("Conversor", String.format("%d can't be converted to a currency String", argument));
+            Log.w("Conversor", String.format("%f can't be converted to a currency String", argument));
             return "$ "+String.valueOf(argument);
         }
     }
 
     public static String asFloat(float argument){
         try{
-            return String.format(Locale.US, "%.2f", argument);
+            return new DecimalFormat("###,###,##0.00").format(argument);
         }catch (NumberFormatException e){
-            Log.w("Conversor", String.format("%d can't be converted to a currency String", argument));
+            Log.w("Conversor", String.format("%f can't be converted to a currency String", argument));
             return String.valueOf(argument);
         }
+    }
+
+    public static String asPerc(float argument){
+       return new DecimalFormat("##%").format(argument);
     }
 
 
