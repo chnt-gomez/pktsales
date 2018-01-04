@@ -5,16 +5,19 @@ import android.support.annotation.Nullable;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.data.Entry;
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
 import com.pocket.poktsales.model.MTicket;
 import com.pocket.poktsales.presenter.DayReportPresenter;
 import org.joda.time.DateTime;
+
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
 import butterknife.BindView;
-
-
 
 /**
  * Created by MAV1GA on 19/12/2017.
@@ -64,6 +67,11 @@ public class DayReportActivity extends BaseActivity implements RequiredViewOps.D
         activityAdapter.setDayTotal(presenter.getSaleOfTheDay(DateTime.now().withTimeAtStartOfDay().getMillis(),
                 DateTime.now().withTime(23, 59, 59, 999).getMillis()));
         activityAdapter.setDate(DateTime.now().toString("dd - MMMM"));
+        for (int i=0; i<= 23; i++){
+            long from = DateTime.now().withHourOfDay(i).getMillis();
+            long to = DateTime.now().withHourOfDay(i).plusMinutes(59).plusSeconds(59).plusMillis(999).getMillis();
+            presenter.geTotalSalesAtTime(from, to);
+        }
     }
 
     @Override
@@ -77,12 +85,13 @@ public class DayReportActivity extends BaseActivity implements RequiredViewOps.D
         List<MTicket> allTickets;
         String dayTotal;
         String date;
+        List<Entry> dayPerformance;
 
-        public String getDate() {
+        String getDate() {
             return date;
         }
 
-        public void setDate(String date) {
+        void setDate(String date) {
             this.date = date;
         }
 
@@ -90,16 +99,17 @@ public class DayReportActivity extends BaseActivity implements RequiredViewOps.D
             return allTickets;
         }
 
-        public void setAllTickets(List<MTicket> allTickets) {
+        void setAllTickets(List<MTicket> allTickets) {
             this.allTickets = allTickets;
         }
 
-        public String getDayTotal() {
+        String getDayTotal() {
             return dayTotal;
         }
 
-        public void setDayTotal(String dayTotal) {
+        void setDayTotal(String dayTotal) {
             this.dayTotal = dayTotal;
         }
+
     }
 }

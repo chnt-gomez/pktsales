@@ -83,5 +83,7 @@ public interface RequiredPresenterOps {
         List<MTicket> getTickets(long dateTime);
         String getSaleOfTheDay(long dateTimeStart, long dateTimeEnd);
         String getSaleOfTheDay(long dateTime);
+        float geTotalSalesAtTime(long from, long to);
+
     }
 }

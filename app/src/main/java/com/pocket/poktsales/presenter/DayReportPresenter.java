@@ -26,6 +26,8 @@ public class DayReportPresenter extends BasePresenter implements RequiredPresent
                 , String.valueOf(dateTimeStart), String.valueOf(dateTimeEnd)));
     }
 
+
+
     @Override
     public List<MTicket> getTickets(long dateTime) {
         return null;
@@ -44,5 +46,13 @@ public class DayReportPresenter extends BasePresenter implements RequiredPresent
         return null;
     }
 
-
+    @Override
+    public float geTotalSalesAtTime(long from, long to) {
+        float total = 0f;
+        for (Ticket t : Ticket.find(Ticket.class, "date_time >= ? AND date_time < ?", String.valueOf(from),
+                String.valueOf(to))){
+            total += t.getSaleTotal();
+        }
+        return total;
+    }
 }
