@@ -100,10 +100,9 @@ public class HomePresenter extends BasePresenter implements RequiredPresenterOps
     @Override
     public String getImprovement(Context context) {
         float overHand =  getDaySales() - getYesterdaySales();
-        if (overHand > 0){
+        if (overHand >= 0){
             if (getYesterdaySales() > 0){
                 float demiHand = overHand / getYesterdaySales();
-
                 return String.format("%s %s", Conversor.asPerc(demiHand), context.getString(R.string.improvement_positive));
             }else{
                 return context.getString(R.string.good_luck);

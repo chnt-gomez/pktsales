@@ -26,8 +26,6 @@ public class DayReportPresenter extends BasePresenter implements RequiredPresent
                 , String.valueOf(dateTimeStart), String.valueOf(dateTimeEnd)));
     }
 
-
-
     @Override
     public List<MTicket> getTickets(long dateTime) {
         return null;

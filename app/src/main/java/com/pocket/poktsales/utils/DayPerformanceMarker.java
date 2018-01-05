@@ -10,47 +10,38 @@ import com.github.mikephil.charting.utils.MPPointF;
 import com.pocket.poktsales.R;
 
 import org.joda.time.DateTime;
+import org.w3c.dom.Text;
 
 import java.text.DecimalFormat;
 
 /**
- * Created by MAV1GA on 03/01/2018.
+ * Created by MAV1GA on 05/01/2018.
  */
 
-public class CustomMarkerView extends MarkerView {
+public class DayPerformanceMarker extends MarkerView {
 
-    private TextView tvContent;
+    TextView tvContent;
+    private MPPointF mOffset;
 
-    public CustomMarkerView(Context context, int layoutResource) {
+
+    public DayPerformanceMarker(Context context, int layoutResource) {
         super(context, layoutResource);
-
-        // find your layout components
         tvContent = (TextView) findViewById(R.id.tv_marker_content);
     }
 
-    // callbacks everytime the MarkerView is redrawn, can be used to update the
-    // content (user-interface)
     @Override
     public void refreshContent(Entry e, Highlight highlight) {
-
-        DateTime date = DateTime.now().withDayOfMonth((int)e.getX());
-
-        tvContent.setText(String.format("%s, %s ",date.toString("dd MMM"), Conversor.asCurrency(e.getY())));
-
-        // this will perform necessary layouting
+        String hourTime = DateTime.now().withTime((int)e.getX(),0, 0,0 ).toString("HH:mm");
+        tvContent.setText(String.format("%s, %s ",hourTime, Conversor.asCurrency(e.getY())));
         super.refreshContent(e, highlight);
     }
-
-    private MPPointF mOffset;
 
     @Override
     public MPPointF getOffset() {
 
         if(mOffset == null) {
-            // center the marker horizontally and vertically
             mOffset = new MPPointF(-(getWidth() / 2), -getHeight());
         }
-
         return mOffset;
     }
 }

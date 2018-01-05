@@ -86,8 +86,8 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <com.github.mikephil.charting.charts.LineChart
-                    android:id="@+id/chart_sales_and_expenses"
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/chart_day_performance"
                     android:layout_width="0dp"
                     android:layout_height="250dp"
                     app:layout_constraintLeft_toLeftOf="parent"

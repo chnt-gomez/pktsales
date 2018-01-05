@@ -15,8 +15,6 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.adapters.RecentSaleAdapter;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
@@ -25,7 +23,7 @@ import com.pocket.poktsales.model.MTicket;
 import com.pocket.poktsales.presenter.HomePresenter;
 import com.pocket.poktsales.utils.ChartValueFormatter;
 import com.pocket.poktsales.utils.Conversor;
-import com.pocket.poktsales.utils.CustomMarkerView;
+import com.pocket.poktsales.utils.MonthPerformanceMarker;
 
 import org.joda.time.DateTime;
 import java.util.ArrayList;
@@ -137,7 +135,7 @@ public class HomeScreenActivity extends BaseActivity
         chartPerformance.getData().setValueFormatter(new ChartValueFormatter());
         chartPerformance.getData().setDrawValues(false);
         chartPerformance.invalidate();
-        CustomMarkerView mv = new CustomMarkerView (this, R.layout.layout_marker);
+        MonthPerformanceMarker mv = new MonthPerformanceMarker(this, R.layout.layout_marker);
         chartPerformance.setDragEnabled(true);
         chartPerformance.setMarkerView(mv);
     }
