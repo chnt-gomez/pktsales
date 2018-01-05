@@ -84,6 +84,7 @@ public interface RequiredPresenterOps {
         String getSaleOfTheDay(long dateTimeStart, long dateTimeEnd);
         String getSaleOfTheDay(long dateTime);
         float geTotalSalesAtTime(long from, long to);
-
+        float getSalesFromDepartment(long departmentId, long from, long to);
+        List<MDepartment> getAllActiveDepartments();
     }
 }

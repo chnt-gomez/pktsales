@@ -4,9 +4,7 @@ import com.pocket.poktsales.R;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
 import com.pocket.poktsales.model.MProduct;
-
 import org.joda.time.DateTime;
-
 import java.util.List;
 
 /**

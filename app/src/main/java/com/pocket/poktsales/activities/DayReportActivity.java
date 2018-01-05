@@ -1,16 +1,22 @@
 package com.pocket.poktsales.activities;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
+import com.pocket.poktsales.model.MDepartment;
 import com.pocket.poktsales.model.MTicket;
 import com.pocket.poktsales.presenter.DayReportPresenter;
 import com.pocket.poktsales.utils.ChartValueFormatter;
@@ -36,6 +42,9 @@ public class DayReportActivity extends BaseActivity implements RequiredViewOps.D
 
     @BindView(R.id.chart_day_performance)
     BarChart dayChart;
+
+    @BindView(R.id.chart_day_department_sales)
+    PieChart categoryChart;
 
     RequiredPresenterOps.DayReportPresenterOps presenter;
     ActivityAdapter activityAdapter;
@@ -77,9 +86,12 @@ public class DayReportActivity extends BaseActivity implements RequiredViewOps.D
             DateTime nowPlus = now.plusMinutes(59).plusSeconds(59).plusMillis(999);
             activityAdapter.addTimeSale(new BarEntry(i, presenter.geTotalSalesAtTime(now.getMillis(), nowPlus.getMillis())));
         }
+        for (MDepartment d : presenter.getAllActiveDepartments()){
+            activityAdapter.addToCategorySales(new PieEntry(presenter.getSalesFromDepartment(d.id,
+                    DateTime.now().withTimeAtStartOfDay().getMillis(),
+                    DateTime.now().plusDays(1).withTimeAtStartOfDay().getMillis()), d.departmentName));
+        }
     }
-
-
 
     @Override
     public void onLoadingComplete() {
@@ -87,6 +99,7 @@ public class DayReportActivity extends BaseActivity implements RequiredViewOps.D
         tvIncome.setText(activityAdapter.getDayTotal());
         tvPerformance.setText(activityAdapter.getDate());
         setPerformanceChart(activityAdapter.getDayPerformance());
+        setCategorySalesChart(activityAdapter.getCategorySales());
     }
 
     private void setPerformanceChart( List<BarEntry> entries ){
@@ -107,8 +120,39 @@ public class DayReportActivity extends BaseActivity implements RequiredViewOps.D
         dayChart.setMarkerView(mv);
     }
 
+    private void setCategorySalesChart(List<PieEntry> entries){
+        PieDataSet set = new PieDataSet(entries, null);
+        set.setColors(new int[]{R.color.chart_red, R.color.chart_red_dark,
+                R.color.chart_purple, R.color.chart_blue, R.color.chart_blue_light,
+                R.color.chart_green, R.color.chart_green_light}, getApplicationContext());
+        PieData data = new PieData(set);
+        data.setValueFormatter(new ChartValueFormatter());
+        categoryChart.setData(data);
+        categoryChart.getLegend().setEnabled(false);
+        categoryChart.setDescription(null);
+        categoryChart.getData().setValueTextColor(Color.WHITE);
+        categoryChart.getData().setValueTextSize(16);
+        categoryChart.invalidate();
+    }
+
     class ActivityAdapter {
         List<MTicket> allTickets;
+
+        public List<PieEntry> getCategorySales() {
+            return categorySales;
+        }
+
+        public void addToCategorySales(PieEntry entry) {
+            if (categorySales == null)
+                    categorySales = new ArrayList<>();
+            categorySales.add(entry);
+        }
+
+        public void setDayPerformance(List<BarEntry> dayPerformance) {
+            this.dayPerformance = dayPerformance;
+        }
+
+        List<PieEntry> categorySales;
         String dayTotal;
         String date;
 

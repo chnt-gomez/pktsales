@@ -140,22 +140,7 @@ public class HomeScreenActivity extends BaseActivity
         chartPerformance.setMarkerView(mv);
     }
 
-    /*
-    private void setCategorySalesChart(List<PieEntry> entries){
-        PieDataSet set = new PieDataSet(entries, null);
-        set.setColors(new int[]{R.color.chart_red, R.color.chart_red_dark,
-                R.color.chart_purple, R.color.chart_blue, R.color.chart_blue_light,
-                R.color.chart_green, R.color.chart_green_light}, getApplicationContext());
-        PieData data = new PieData(set);
-        data.setValueFormatter(new ChartValueFormatter());
-        chartCatSales.setData(data);
-        chartCatSales.getLegend().setEnabled(false);
-        chartCatSales.setDescription(null);
-        chartCatSales.getData().setValueTextColor(Color.WHITE);
-        chartCatSales.getData().setValueTextSize(16);
-        chartCatSales.invalidate();
-    }
-    */
+
 
     @Override
     public void onBackPressed() {

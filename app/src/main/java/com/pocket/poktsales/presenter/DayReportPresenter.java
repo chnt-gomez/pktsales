@@ -2,6 +2,7 @@ package com.pocket.poktsales.presenter;
 
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
+import com.pocket.poktsales.model.MDepartment;
 import com.pocket.poktsales.model.MTicket;
 import com.pocket.poktsales.utils.Conversor;
 
@@ -52,5 +53,24 @@ public class DayReportPresenter extends BasePresenter implements RequiredPresent
             total += t.getSaleTotal();
         }
         return total;
+    }
+
+    @Override
+    public float getSalesFromDepartment(long departmentId, long from, long to) {
+        float total = 0;
+        for (Sale s : Sale.findWithQuery(
+                Sale.class, "SELECT * from Sale s, Product p, Department d, Ticket t WHERE " +
+                        "p.department = d.id AND d.id = ? AND s.product = p.id AND s.id = t.id AND t.date_time >= ? " +
+                        "AND t.date_time < ?", String.valueOf(departmentId), String.valueOf(from), String.valueOf(to)
+        )){
+            total += s.getSaleTotal();
+        }
+        return total;
+    }
+
+    @Override
+    public List<MDepartment> getAllActiveDepartments() {
+        return fromDepartmentList(
+                Department.find(Department.class, "department_status = ?", String.valueOf(Department.ACTIVE)));
     }
 }
