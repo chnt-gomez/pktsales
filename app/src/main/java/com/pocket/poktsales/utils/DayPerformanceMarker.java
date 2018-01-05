@@ -2,17 +2,12 @@ package com.pocket.poktsales.utils;
 
 import android.content.Context;
 import android.widget.TextView;
-
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.utils.MPPointF;
 import com.pocket.poktsales.R;
-
 import org.joda.time.DateTime;
-import org.w3c.dom.Text;
-
-import java.text.DecimalFormat;
 
 /**
  * Created by MAV1GA on 05/01/2018.

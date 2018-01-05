@@ -73,9 +73,9 @@ public class DayReportActivity extends BaseActivity implements RequiredViewOps.D
                 DateTime.now().withTime(23, 59, 59, 999).getMillis()));
         activityAdapter.setDate(DateTime.now().toString("dd - MMMM"));
         for (int i=0; i<= 23; i++){
-            long from = DateTime.now().withHourOfDay(i).getMillis();
-            long to = DateTime.now().withHourOfDay(i).plusMinutes(59).plusSeconds(59).plusMillis(999).getMillis();
-            activityAdapter.addTimeSale(new BarEntry(i, presenter.geTotalSalesAtTime(from, to)));
+            DateTime now = DateTime.now().withTimeAtStartOfDay().plusHours(i);
+            DateTime nowPlus = now.plusMinutes(59).plusSeconds(59).plusMillis(999);
+            activityAdapter.addTimeSale(new BarEntry(i, presenter.geTotalSalesAtTime(now.getMillis(), nowPlus.getMillis())));
         }
     }
 
