@@ -49,4 +49,8 @@ public interface RequiredViewOps {
     interface DayReportOps {
 
     }
+
+    interface BusinessReportViewOps extends RequiredViewOps{
+
+    }
 }

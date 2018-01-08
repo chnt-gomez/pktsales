@@ -6,9 +6,6 @@ package com.pocket.poktsales.model;
  */
 
 public class MExpense {
-
     public String expenseTotal;
     public String expenseConcept;
-    public String category;
-
 }

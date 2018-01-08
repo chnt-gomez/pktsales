@@ -9,7 +9,8 @@ import com.orm.SugarRecord;
  public class Expense extends SugarRecord {
 
     private float expenseTotal;
-    private String expenseConcept;
+    private int expenseApply;
+    private long applyDate;
     private ExpenseCategory category;
 
 }

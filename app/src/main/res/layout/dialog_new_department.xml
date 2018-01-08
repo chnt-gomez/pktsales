@@ -30,6 +30,7 @@
     </LinearLayout>
 
     <EditText
+        android:layout_margin="4dp"
         android:layout_width="match_parent"
         android:hint="@string/hint_tab_reference"
         android:layout_height="wrap_content"

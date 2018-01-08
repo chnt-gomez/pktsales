@@ -65,12 +65,10 @@ public interface RequiredPresenterOps {
         float getSaleFromDepartment(long departmentId);
         float getSalesFromDay(int dayOfMonth);
         String getBestSellerOfTheDay();
-
         List<MTicket> getRecentSales();
     }
 
     interface QuickSalePresenterOps{
-
         List<MProduct> getAllProducts();
         List<MProduct> getProductsFromSearch(String searchArgs);
         MProduct getProductFromId(long id);
@@ -86,5 +84,9 @@ public interface RequiredPresenterOps {
         float geTotalSalesAtTime(long from, long to);
         float getSalesFromDepartment(long departmentId, long from, long to);
         List<MDepartment> getAllActiveDepartments();
+    }
+
+    interface ReportsPresenterOps {
+        long getMonthSales(int monthOfYear, int year);
     }
 }

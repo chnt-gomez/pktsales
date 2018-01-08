@@ -88,6 +88,10 @@
             android:label="@string/day_report"
             android:parentActivityName=".activities.HomeScreenActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".activities.BusinessReportActivity"
+            android:label="@string/reports"
+            android:parentActivityName=".activities.HomeScreenActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>
