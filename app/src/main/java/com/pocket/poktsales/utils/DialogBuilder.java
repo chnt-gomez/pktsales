@@ -1,7 +1,9 @@
 package com.pocket.poktsales.utils;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -9,12 +11,14 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.adapters.SimpleCategoryAdapter;
@@ -22,6 +26,8 @@ import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.model.MDepartment;
 import com.pocket.poktsales.model.MProduct;
 import com.pocket.poktsales.model.MTicket;
+
+import org.joda.time.DateTime;
 
 import java.util.List;
 
@@ -230,6 +236,16 @@ public class DialogBuilder {
         return instance;
     }
 
+    public static Dialog newDatePickerDialog(final Context context, final DialogInteractionListener.OnDateSelected callback){
+
+        return new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                callback.onDateSelected(new DateTime(year, month+1, dayOfMonth, 0, 0));
+            }
+        }, DateTime.now().getYear(), DateTime.now().getMonthOfYear()-1, DateTime.now().getDayOfMonth());
+    }
+
     public static Dialog newTempDialog(final Context context, final DialogInteractionListener.OnNewTempDialogListener callback) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         @SuppressLint("InflateParams")
@@ -279,6 +295,10 @@ public class DialogBuilder {
         }
         public interface OnCategoryPickedListener{
             void onCategorySelected(long categoryId);
+        }
+
+        public interface OnDateSelected {
+            void onDateSelected(DateTime date);
         }
     }
 }

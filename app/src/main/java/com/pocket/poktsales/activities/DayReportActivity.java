@@ -3,6 +3,8 @@ package com.pocket.poktsales.activities;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.github.mikephil.charting.charts.BarChart;
@@ -21,6 +23,8 @@ import com.pocket.poktsales.model.MTicket;
 import com.pocket.poktsales.presenter.DayReportPresenter;
 import com.pocket.poktsales.utils.ChartValueFormatter;
 import com.pocket.poktsales.utils.DayPerformanceMarker;
+import com.pocket.poktsales.utils.DialogBuilder;
+
 import org.joda.time.DateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +50,9 @@ public class DayReportActivity extends BaseActivity implements RequiredViewOps.D
     @BindView(R.id.chart_day_department_sales)
     PieChart categoryChart;
 
+    @BindView(R.id.fab)
+    FloatingActionButton fabDate;
+
     RequiredPresenterOps.DayReportPresenterOps presenter;
     ActivityAdapter activityAdapter;
 
@@ -63,6 +70,22 @@ public class DayReportActivity extends BaseActivity implements RequiredViewOps.D
         if (getSupportActionBar()!= null)
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         start();
+        fabDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pickDate();
+            }
+        });
+    }
+
+    private void pickDate() {
+        DialogBuilder.newDatePickerDialog(this, new DialogBuilder.DialogInteractionListener.OnDateSelected() {
+            @Override
+            public void onDateSelected(DateTime date) {
+                activityAdapter.setDate(date);
+                start();
+            }
+        }).show();
     }
 
     @Override
@@ -71,25 +94,30 @@ public class DayReportActivity extends BaseActivity implements RequiredViewOps.D
         if (activityAdapter == null){
             activityAdapter = new ActivityAdapter();
         }
+        dayChart.clear();
+        categoryChart.clear();
+        if (activityAdapter.categorySales != null)
+            activityAdapter.categorySales.clear();
+        if (activityAdapter.dayPerformance != null)
+            activityAdapter.dayPerformance.clear();
     }
 
     @Override
     public void onLoading() {
         super.onLoading();
-        activityAdapter.setAllTickets(presenter.getTickets(DateTime.now().withTimeAtStartOfDay().getMillis(),
-                DateTime.now().withTime(23, 59, 59, 999).getMillis()));
-        activityAdapter.setDayTotal(presenter.getSaleOfTheDay(DateTime.now().withTimeAtStartOfDay().getMillis(),
-                DateTime.now().withTime(23, 59, 59, 999).getMillis()));
-        activityAdapter.setDate(DateTime.now().toString("dd - MMMM"));
+        activityAdapter.setAllTickets(presenter.getTickets(activityAdapter.getDateTime().withTimeAtStartOfDay().getMillis(),
+                activityAdapter.getDateTime().plusDays(1).withTimeAtStartOfDay().getMillis()));
+        activityAdapter.setDayTotal(presenter.getSaleOfTheDay(activityAdapter.getDateTime().withTimeAtStartOfDay().getMillis(),
+                activityAdapter.getDateTime().plusDays(1).withTimeAtStartOfDay().getMillis()));
         for (int i=0; i<= 23; i++){
-            DateTime now = DateTime.now().withTimeAtStartOfDay().plusHours(i);
+            DateTime now = activityAdapter.getDateTime().withTimeAtStartOfDay().withTime(i, 0, 0, 0);
             DateTime nowPlus = now.plusMinutes(59).plusSeconds(59).plusMillis(999);
             activityAdapter.addTimeSale(new BarEntry(i, presenter.geTotalSalesAtTime(now.getMillis(), nowPlus.getMillis())));
         }
         for (MDepartment d : presenter.getAllActiveDepartments()){
             activityAdapter.addToCategorySales(new PieEntry(presenter.getSalesFromDepartment(d.id,
-                    DateTime.now().withTimeAtStartOfDay().getMillis(),
-                    DateTime.now().plusDays(1).withTimeAtStartOfDay().getMillis()), d.departmentName));
+                    activityAdapter.getDateTime().withTimeAtStartOfDay().getMillis(),
+                   activityAdapter.getDateTime().plusDays(1).withTimeAtStartOfDay().getMillis()), d.departmentName));
         }
     }
 
@@ -97,7 +125,7 @@ public class DayReportActivity extends BaseActivity implements RequiredViewOps.D
     public void onLoadingComplete() {
         super.onLoadingComplete();
         tvIncome.setText(activityAdapter.getDayTotal());
-        tvPerformance.setText(activityAdapter.getDate());
+        tvPerformance.setText(activityAdapter.getDateTime().toString("dd - MMMM"));
         setPerformanceChart(activityAdapter.getDayPerformance());
         setCategorySalesChart(activityAdapter.getCategorySales());
     }
@@ -137,12 +165,28 @@ public class DayReportActivity extends BaseActivity implements RequiredViewOps.D
 
     class ActivityAdapter {
         List<MTicket> allTickets;
+        DateTime dateTime;
+        List<PieEntry> categorySales;
+        String dayTotal;
 
-        public List<PieEntry> getCategorySales() {
+        void setDate(DateTime date) {
+            this.dateTime = date;
+        }
+
+        DateTime getDateTime(){
+            new DateTime();
+            return dateTime != null ? dateTime : DateTime.now();
+        }
+
+        public void setCategorySales(List<PieEntry> categorySales) {
+            this.categorySales = categorySales;
+        }
+
+        List<PieEntry> getCategorySales() {
             return categorySales;
         }
 
-        public void addToCategorySales(PieEntry entry) {
+        void addToCategorySales(PieEntry entry) {
             if (categorySales == null)
                     categorySales = new ArrayList<>();
             categorySales.add(entry);
@@ -151,10 +195,6 @@ public class DayReportActivity extends BaseActivity implements RequiredViewOps.D
         public void setDayPerformance(List<BarEntry> dayPerformance) {
             this.dayPerformance = dayPerformance;
         }
-
-        List<PieEntry> categorySales;
-        String dayTotal;
-        String date;
 
         List<BarEntry> getDayPerformance() {
             return dayPerformance!= null ? dayPerformance : new ArrayList<BarEntry>();
@@ -166,14 +206,6 @@ public class DayReportActivity extends BaseActivity implements RequiredViewOps.D
             if (dayPerformance == null)
                 dayPerformance = new ArrayList<>();
             dayPerformance.add(a);
-        }
-
-        String getDate() {
-            return date;
-        }
-
-        void setDate(String date) {
-            this.date = date;
         }
 
         public List<MTicket> getAllTickets() {
