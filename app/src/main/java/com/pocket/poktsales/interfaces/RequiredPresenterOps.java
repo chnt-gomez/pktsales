@@ -2,6 +2,8 @@ package com.pocket.poktsales.interfaces;
 
 import android.content.Context;
 
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieEntry;
 import com.pocket.poktsales.model.MDepartment;
 import com.pocket.poktsales.model.MProduct;
 import com.pocket.poktsales.model.MTicket;
@@ -87,6 +89,12 @@ public interface RequiredPresenterOps {
     }
 
     interface ReportsPresenterOps {
-        long getMonthSales(int monthOfYear, int year);
+        float getMonthSales(int monthOfYear, int year);
+        List<Entry> getMonthPerformance(int monthOfYear, int year);
+        List<MDepartment> getDepartments();
+        float getSaleByDepartment(long departmentId, int monthOfYear, int year);
+        List<PieEntry> getMonthPerformanceByCategory(int monthOfYear, int year);
     }
+
+
 }
