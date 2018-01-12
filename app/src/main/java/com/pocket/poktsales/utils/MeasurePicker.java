@@ -14,7 +14,7 @@ public class MeasurePicker {
     private static final int LT = 4;
     private static final int OZ = 5;
 
-    public static String getString(Resources res, int measure){
+    private static String getString(Resources res, int measure){
         int ref;
         switch (measure){
 

@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -244,6 +245,18 @@ public class DialogBuilder {
                 callback.onDateSelected(new DateTime(year, month+1, dayOfMonth, 0, 0));
             }
         }, DateTime.now().getYear(), DateTime.now().getMonthOfYear()-1, DateTime.now().getDayOfMonth());
+    }
+
+    public static Dialog newDatePickerDialogMonthOnly(final Context context, final DialogInteractionListener.OnDateSelected callback){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        @SuppressWarnings("InflateParams")
+        final String months = {context.get}
+        final View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_no_year_date_picker, null);
+        final Spinner spnMonth = (Spinner)dialogView.findViewById(R.id.spn_month);
+        final Spinner spnYear = (Spinner)dialogView.findViewById(R.id.spn_year);
+        spnMonth.setAdapter(new ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item,
+                {"a","b"}));
+
     }
 
     public static Dialog newTempDialog(final Context context, final DialogInteractionListener.OnNewTempDialogListener callback) {

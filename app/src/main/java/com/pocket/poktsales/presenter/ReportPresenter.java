@@ -1,6 +1,7 @@
 package com.pocket.poktsales.presenter;
 
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieEntry;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
 import com.pocket.poktsales.model.MDepartment;
@@ -76,6 +77,14 @@ public class ReportPresenter extends BasePresenter implements RequiredPresenterO
         return total;
     }
 
+    @Override
+    public List<PieEntry> getMonthPerformanceByCategory(int monthOfYear, int year) {
+        List<PieEntry> entries = new ArrayList<>();
+        for (MDepartment m : getDepartments()){
+            entries.add(new PieEntry(getSaleByDepartment(m.id, monthOfYear, year), m.departmentName));
+        }
+        return entries;
+    }
 
 
 }

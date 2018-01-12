@@ -68,8 +68,10 @@ public class HomePresenter extends BasePresenter implements RequiredPresenterOps
     public float getSaleFromDepartment(long departmentId) {
         float total = 0;
         for (Sale s : Sale.findWithQuery(
-                Sale.class, "SELECT * from Sale s, Product p, Department d WHERE " +
-                        "p.department = d.id AND d.id = ? AND s.product = p.id", String.valueOf(departmentId)
+                Sale.class, "SELECT * from Sale s, Product p, Department d, Ticket t WHERE " +
+                        "p.department = d.id AND d.id = ? AND s.product = p.id AND s.ticket = t.id AND t.ticket_status = ?",
+                        String.valueOf(departmentId),
+                        String.valueOf(Ticket.TICKET_APPLIED)
         )){
             total += s.getSaleTotal();
         }

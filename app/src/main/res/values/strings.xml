@@ -79,4 +79,5 @@
     <string name="day_activity">Sales activity of the day</string>
     <string name="month_total_earnings">Month\'s total earnings</string>
     <string name="mongh_sales_by_category">Month sales by category</string>
+    <string name="select_date">Select date…</string>
 </resources>
