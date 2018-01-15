@@ -68,30 +68,37 @@
         </activity>
         <activity
             android:name=".activities.CategoriesActivity"
-            android:windowSoftInputMode="stateHidden"
             android:label="@string/title_activity_categories"
             android:parentActivityName=".activities.HomeScreenActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.pocket.poktsales.activities.HomeScreenActivity" />
         </activity>
-        <activity android:name=".activities.QuickSellActivity"
+        <activity
+            android:name=".activities.QuickSellActivity"
             android:label="@string/quick_sale"
             android:parentActivityName=".activities.OpenTabsActivity"
             android:theme="@style/AppTheme.NoActionBar">
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value="com.pocket.poktsales.activities.OpenTabsActivity" />
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.pocket.poktsales.activities.OpenTabsActivity" />
         </activity>
-        <activity android:name=".activities.DayReportActivity"
+        <activity
+            android:name=".activities.DayReportActivity"
             android:label="@string/day_report"
             android:parentActivityName=".activities.HomeScreenActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".activities.BusinessReportActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.BusinessReportActivity"
             android:label="@string/reports"
             android:parentActivityName=".activities.HomeScreenActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:label="@string/business_settings"
+            android:parentActivityName=".activities.HomeScreenActivity" />
     </application>
 
 </manifest>
