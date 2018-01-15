@@ -22,6 +22,8 @@ public class SettingsActivity extends PreferenceActivity {
 
     private AppCompatDelegate mDelegate;
 
+    public static final String KEY_BUSINESS_NAME = "pf_business_name";
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,7 +33,6 @@ public class SettingsActivity extends PreferenceActivity {
                 .commit();
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            // Show the Up button in the action bar.
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
@@ -68,8 +69,8 @@ public class SettingsActivity extends PreferenceActivity {
 
         private void init(SharedPreferences sp) {
             /* Business name */
-            EditTextPreference etPrefBusinessName = (EditTextPreference)findPreference("pf_business_name");
-            etPrefBusinessName.setSummary(sp.getString("pf_business_name", getString(R.string.set_default_business_name)));
+            EditTextPreference etPrefBusinessName = (EditTextPreference)findPreference(KEY_BUSINESS_NAME);
+            etPrefBusinessName.setSummary(sp.getString(KEY_BUSINESS_NAME, getString(R.string.set_default_business_name)));
 
             /* Admin Name */
             EditTextPreference etPrefAdminName = (EditTextPreference)findPreference("pf_admin_name");

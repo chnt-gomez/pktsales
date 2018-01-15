@@ -2,6 +2,7 @@ package com.pocket.poktsales.activities;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -147,5 +148,9 @@ public abstract class BaseActivity extends AppCompatActivity implements Required
                     .setDuration(300)
                     .alpha(0f);
         }
+    }
+
+    protected String getPreferenceString(String key, String defVal){
+        return PreferenceManager.getDefaultSharedPreferences(this).getString((key), defVal);
     }
 }

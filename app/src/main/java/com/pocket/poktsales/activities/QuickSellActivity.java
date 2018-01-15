@@ -226,6 +226,7 @@ public class QuickSellActivity extends BaseActivity implements RequiredViewOps.Q
     @Override
     public void onLoadingComplete() {
         super.onLoadingComplete();
+        productAdapter.clear();
         productAdapter.addAll(activityAdapter.getAllProducts());
         productAdapter.notifyDataSetChanged();
     }

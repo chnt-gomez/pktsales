@@ -1,7 +1,10 @@
 package com.pocket.poktsales.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -116,6 +119,7 @@ public class HomeScreenActivity extends BaseActivity
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setItemIconTintList(null);
         lvRecentSales.setAdapter(recentSaleAdapter);
+        setTitle(getPreferenceString(SettingsActivity.KEY_BUSINESS_NAME, getString(R.string.set_default_business_name)));
     }
 
     private void setPerformanceChart( List<Entry> entries ){
@@ -150,18 +154,6 @@ public class HomeScreenActivity extends BaseActivity
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.new_sale, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
