@@ -74,7 +74,9 @@ public class BusinessReportActivity extends BaseActivity implements RequiredView
                 DialogBuilder.newDatePickerDialogMonthOnly(BusinessReportActivity.this, new DialogBuilder.DialogInteractionListener.OnDateSelected() {
                     @Override
                     public void onDateSelected(DateTime date) {
-
+                        activityAdapter.setMonth(date.getMonthOfYear());
+                        activityAdapter.setYear(date.getYear());
+                        start();
                     }
                 }).show();
             }

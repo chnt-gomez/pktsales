@@ -250,12 +250,29 @@ public class DialogBuilder {
     public static Dialog newDatePickerDialogMonthOnly(final Context context, final DialogInteractionListener.OnDateSelected callback){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         @SuppressWarnings("InflateParams")
-        final String months = {context.get}
+        final String[] months = context.getResources().getStringArray(R.array.months);
+        final String[] years = {"2018", "2019", "2020" };
         final View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_no_year_date_picker, null);
         final Spinner spnMonth = (Spinner)dialogView.findViewById(R.id.spn_month);
         final Spinner spnYear = (Spinner)dialogView.findViewById(R.id.spn_year);
-        spnMonth.setAdapter(new ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item,
-                {"a","b"}));
+        final ImageButton btnOk = (ImageButton)dialogView.findViewById(R.id.btn_ok);
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int month = spnMonth.getSelectedItemPosition();
+                int year = 2018+(spnYear.getSelectedItemPosition());
+                callback.onDateSelected(
+                new DateTime(year, month + 1, 1, 0, 0));
+                instance.dismiss();
+            }
+        });
+        spnMonth.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item,
+                months));
+        spnYear.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, years));
+        builder.setView(dialogView);
+        instance = builder.create();
+        return instance;
+
 
     }
 
