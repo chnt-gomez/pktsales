@@ -1,15 +1,11 @@
 package com.pocket.poktsales.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -18,6 +14,8 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.adapters.RecentSaleAdapter;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
@@ -56,6 +54,8 @@ public class HomeScreenActivity extends BaseActivity
     HomeActivityDataAdapter adapter;
     RequiredPresenterOps.HomePresenterOps presenter;
     RecentSaleAdapter recentSaleAdapter;
+
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +120,9 @@ public class HomeScreenActivity extends BaseActivity
         navigationView.setItemIconTintList(null);
         lvRecentSales.setAdapter(recentSaleAdapter);
         setTitle(getPreferenceString(SettingsActivity.KEY_BUSINESS_NAME, getString(R.string.set_default_business_name)));
+        mAdView = (AdView)findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
 
     private void setPerformanceChart( List<Entry> entries ){

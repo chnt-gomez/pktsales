@@ -65,6 +65,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Required
 
     }
 
+
+
     @Override
     public void onSuccess(int messageRes) {
         Snackbar.make(coordinatorLayout, messageRes, Snackbar.LENGTH_SHORT).show();
