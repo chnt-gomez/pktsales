@@ -91,14 +91,18 @@ public class InventoryPresenter extends BasePresenter implements RequiredPresent
     public void updateProduct(long productId, String newProductArgs, float newPriceArgs, int newMeasure) {
         if (isProductNameInUse(newProductArgs, productId)){
             view.onError(R.string.product_in_use);
-        }else{
-            Product product = findProductById(productId);
-            product.setProductName(newProductArgs);
-            product.setProductMeasureUnit(newMeasure);
-            product.setProductSellPrice(newPriceArgs);
-            product.save();
-            view.onProductUpdated(fromProduct(product));
+            return;
         }
+        if (newProductArgs.length() <= 0){
+            view.onError(R.string.err_invalid_product_name);
+            return;
+        }
+        Product product = findProductById(productId);
+        product.setProductName(newProductArgs);
+        product.setProductMeasureUnit(newMeasure);
+        product.setProductSellPrice(newPriceArgs);
+        product.save();
+        view.onProductUpdated(fromProduct(product));
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.pocket.poktsales.presenter;
 
+import com.pocket.poktsales.R;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
 import com.pocket.poktsales.model.MDepartment;
@@ -58,7 +59,18 @@ public class CategoryPresenter extends BasePresenter implements RequiredPresente
 
     @Override
     public void updateDepartment(String newDepartmentArgs, long departmentId) {
+        if (newDepartmentArgs.length()<= 0){
+            view.onError(R.string.err_invalid_department_name);
+            return;
+        }
         Department department = Department.findById(Department.class, departmentId);
+        if (department.getDepartmentName().equals(newDepartmentArgs)){
+            return;
+        }
+        if (isDepartmentNameInUse(newDepartmentArgs)){
+            view.onError(R.string.err_department_name_already_in_use);
+            return;
+        }
         department.setDepartmentName(newDepartmentArgs);
         department.save();
         MDepartment modelDepartment = fromDepartment(department);

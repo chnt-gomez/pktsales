@@ -113,6 +113,7 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
         tvTabTotal.setText(activityAdapter.getTabTotal());
         tabListProductAdapter.notifyDataSetChanged();
         productAdapter.notifyDataSetChanged();
+        setTitle(activityAdapter.getTabReference());
     }
 
     @Override
@@ -168,6 +169,7 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
             }
         });
         btnDelete.setOnClickListener(this);
+        setTitle(R.string.title_activity_add_to_sale);
         start();
     }
 
@@ -246,7 +248,8 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
                         @Override
                         public void onNewTempProductDialog(String productName, float productPrice) {
                             long id = presenter.saveAsTemp(productName, productPrice);
-                            presenter.addToSale(ticketId, id);
+                            if (id != -1)
+                                presenter.addToSale(ticketId, id);
                         }
                     }).show();
             return true;

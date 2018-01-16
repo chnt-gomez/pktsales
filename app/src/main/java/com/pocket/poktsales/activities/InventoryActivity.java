@@ -113,6 +113,7 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
         if (presenter == null)
             presenter = new InventoryPresenter(this);
         loadingBar = (ProgressBar)findViewById(R.id.progressBar);
+        setTitle(R.string.title_activity_inventory);
         if (getSupportActionBar()!= null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         btnAdd.setOnClickListener(new View.OnClickListener() {

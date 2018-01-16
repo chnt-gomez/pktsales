@@ -78,7 +78,7 @@ public class OpenTabsActivity extends BaseActivity implements AdapterView.OnItem
         adapter = new TabAdapter(getApplicationContext(), R.layout.grid_layout_tab, new ArrayList<MTicket>());
         gridView.setAdapter(adapter);
         activityAdapter = new ActivityAdapter();
-
+        setTitle(R.string.title_activity_sell);
     }
 
     @Override

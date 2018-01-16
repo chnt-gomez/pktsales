@@ -11,6 +11,7 @@ import org.joda.time.DateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Created by MAV1GA on 04/09/2017.
  */
@@ -113,11 +114,19 @@ public class SalesPresenter extends BasePresenter implements
 
     @Override
     public long saveAsTemp(String productName, float productPrice) {
+        if (!isValid(productName)){
+            view.onError(R.string.err_invalid_product_name);
+            return -1;
+        }
         Product product = new Product();
         product.setProductName(productName);
         product.setProductStatus(Product.TEMPORARY);
         product.setProductSellPrice(productPrice);
         product.setId(1000L);
         return product.save();
+    }
+
+    private boolean isValid(String argument){
+        return !argument.contains("*") && argument.length() > 0;
     }
 }

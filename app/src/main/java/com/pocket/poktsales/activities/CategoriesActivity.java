@@ -98,7 +98,7 @@ public class CategoriesActivity extends BaseActivity implements AdapterView.OnIt
                 panel.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
             }
         });
-
+        setTitle(R.string.title_activity_categories);
         lvDepartments.setOnItemClickListener(this);
         start();
     }

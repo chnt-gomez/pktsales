@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_marginTop="?attr/actionBarSize"
-        android:background="@color/colorAccent"
+        android:background="@color/colorPrimaryDark"
         android:orientation="horizontal"
         android:weightSum="5">
         <TextView

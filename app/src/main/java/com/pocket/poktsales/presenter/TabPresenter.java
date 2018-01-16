@@ -38,11 +38,11 @@ public class TabPresenter extends BasePresenter implements RequiredPresenterOps.
             ticket.save();
             view.onNewTab(fromTicket(ticket));
         }else{
-            view.onError();
+            view.onError(R.string.err_tab_name_already_in_use);
         }
     }
 
     private boolean isValid(String tabReference){
-        return !tabReference.contains("*");
+        return !tabReference.contains("*") && tabReference.length() > 0;
     }
 }
