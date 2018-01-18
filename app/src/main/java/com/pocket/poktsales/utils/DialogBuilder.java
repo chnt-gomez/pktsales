@@ -280,11 +280,8 @@ public class DialogBuilder {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         @SuppressLint("InflateParams")
         final View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_new_temp_product, null);
-        final Spinner spnProductMeasure = (Spinner)dialogView.findViewById(R.id.spn_product_measure);
         final EditText etProductName = (EditText)dialogView.findViewById(R.id.et_product_name);
         final EditText etProductPrice = (EditText)dialogView.findViewById(R.id.et_product_price);
-        spnProductMeasure.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item,
-                MeasurePicker.getEntries(context.getResources())));
         ImageButton positiveButton = (ImageButton)dialogView.findViewById(R.id.btn_ok);
         positiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
