@@ -5,6 +5,7 @@ import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
 import com.pocket.poktsales.model.MDepartment;
 import com.pocket.poktsales.model.MProduct;
+import com.pocket.poktsales.utils.Conversor;
 
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class InventoryPresenter extends BasePresenter implements RequiredPresent
                 view.onError(R.string.product_without_name);
                 return;
             }
+            product.maskProductSellPrice = Conversor.asCurrency(product.productSellPrice);
             Product product1 = new Product(product);
             product1.setProductStatus(Product.ACTIVE);
             product.id = product1.save();

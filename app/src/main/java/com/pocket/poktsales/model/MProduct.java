@@ -1,5 +1,7 @@
 package com.pocket.poktsales.model;
 
+import com.pocket.poktsales.utils.Conversor;
+
 /**
  * Created by MAV1GA on 02/01/2018.
  */
@@ -16,5 +18,4 @@ public class MProduct {
     public String productInventory;
     public String productDepartment;
     public float productSellPrice;
-
 }
