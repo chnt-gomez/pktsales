@@ -39,7 +39,7 @@ public class QuickSalePresenter extends BasePresenter implements RequiredPresent
         return;
     }
         Ticket ticket = new Ticket();
-        ticket.setTicketReference("Quick Sale *");
+        ticket.setTicketReference(view.getResString(R.string.quick_sale)+" *");
         ticket.save();
         for (MProduct p : saleProducts){
             Sale sale = new Sale();

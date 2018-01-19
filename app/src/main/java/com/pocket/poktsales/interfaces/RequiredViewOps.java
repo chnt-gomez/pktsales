@@ -17,6 +17,7 @@ public interface RequiredViewOps {
     void onError();
     void onError(int messageRes);
     void onError(String message);
+    String getResString(int resourceId);
 
     interface InventoryViewOps extends RequiredViewOps {
         void onProductAdded(MProduct product);

@@ -50,6 +50,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Required
         }
     }
 
+
+
     protected void start(){
         loader = new DataLoader(this);
         loader.execute();
@@ -99,6 +101,11 @@ public abstract class BaseActivity extends AppCompatActivity implements Required
         tv.setTextColor(Color.parseColor("#ff7f7f"));
         snack.show();
         onError();
+    }
+
+    @Override
+    public String getResString(int resourceId) {
+        return getString(resourceId);
     }
 
     @Override

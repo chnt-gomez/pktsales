@@ -66,6 +66,8 @@ public class HomeScreenActivity extends BaseActivity
     @Override
     protected void onResume() {
         super.onResume();
+        setTitle(getPreferenceString(SettingsActivity.KEY_BUSINESS_NAME,
+                getString(R.string.set_default_business_name)));
         start();
     }
 
@@ -119,7 +121,7 @@ public class HomeScreenActivity extends BaseActivity
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setItemIconTintList(null);
         lvRecentSales.setAdapter(recentSaleAdapter);
-        setTitle(getPreferenceString(SettingsActivity.KEY_BUSINESS_NAME, getString(R.string.set_default_business_name)));
+
         mAdView = (AdView)findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);

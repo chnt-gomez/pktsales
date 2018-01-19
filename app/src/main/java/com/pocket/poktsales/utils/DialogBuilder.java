@@ -129,14 +129,22 @@ public class DialogBuilder {
         final EditText etProductPrice = (EditText)dialogView.findViewById(R.id.et_product_price);
         spnProductMeasure.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item,
                 MeasurePicker.getEntries(context.getResources())));
-        ImageButton positiveButton = (ImageButton)dialogView.findViewById(R.id.btn_ok);
+        final ImageButton positiveButton = (ImageButton)dialogView.findViewById(R.id.btn_ok);
         positiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MProduct product = new MProduct();
                 product.productName = etProductName.getText().toString();
                 product.productMeasureUnit = spnProductMeasure.getSelectedItemPosition();
-                product.productSellPrice = Float.parseFloat(etProductPrice.getText().toString());
+                String productSellPrice;
+                if (etProductPrice.getText() != null) {
+                    productSellPrice = etProductPrice.getText().toString();
+                    if (productSellPrice.length() <= 0)
+                        productSellPrice = "0";
+                }else{
+                    productSellPrice = "0";
+                }
+                product.productSellPrice = Float.parseFloat(productSellPrice);
                 if (instance != null)
                     instance.dismiss();
                 callback.onNewProduct(product);

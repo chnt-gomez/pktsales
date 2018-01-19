@@ -55,5 +55,4 @@ public class TabAdapter extends ArrayAdapter<MTicket> {
             if (getItemId(i) == tabId)
                 remove(getItem(i));
     }
-
 }

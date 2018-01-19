@@ -4,7 +4,7 @@
     <string name="navigation_drawer_open">Abrir</string>
     <string name="navigation_drawer_close">Cerrar</string>
     <string name="action_settings">Ajustes</string>
-    <string name="success">Exito</string>
+    <string name="success">Éxito</string>
     <string name="error">Error</string>
     <string name="title_activity_inventory">Inventario</string>
     <string name="menu_inventory">Inventario</string>
@@ -25,18 +25,18 @@
     <string name="measure_non_specified">Sin medida</string>
     <string name="header_product_name">Nombre del Producto</string>
     <string name="header_product_price">Precio</string>
-    <string name="new_product">Nuevo Producto...</string>
+    <string name="new_product">Nuevo Producto…</string>
     <string name="desc_product">Descripción del Producto</string>
     <string name="inventory_product">Producto contado</string>
-    <string name="sort">Ordenar por...</string>
+    <string name="sort">Ordenar por…</string>
     <string name="alphabetically">Nombre</string>
     <string name="price">Precio</string>
     <string name="none">Ninguno</string>
     <string name="delete_product">Eliminar Producto</string>
     <string name="will_be_deleted">será eliminado!</string>
     <string name="title_activity_sell">Ventas</string>
-    <string name="open_new_tab">Abrir nueva cuenta...</string>
-    <string name="hint_tab_reference">Nombre de cuenta o referencia...</string>
+    <string name="open_new_tab">Abrir nueva cuenta…</string>
+    <string name="hint_tab_reference">Nombre de cuenta o referencia…</string>
     <string name="title_activity_add_to_sale">Añadir a venta</string>
     <string name="apply">Aplicar</string>
     <string name="title_activity_categories">Categorias</string>
@@ -45,16 +45,16 @@
     <string name="empty_sale">No hay Productos en la venta</string>
     <string name="quick_sale">Venta rápida</string>
     <string name="new_sale">Nueva venta</string>
-    <string name="new_temp_product">Añadir Producto Temporal...</string>
+    <string name="new_temp_product">Añadir Producto Temporal…</string>
     <string name="departments">Categorias</string>
     <string name="w_o_category">Sin Categoríaa</string>
     <string name="menu">Menú</string>
     <string name="products_in_category">Productos en la Categoría</string>
-    <string name="new_department_name">Nueva Categoría...</string>
+    <string name="new_department_name">Nueva Categoría…</string>
     <string name="hint_department_name">Nombre de Categoría</string>
     <string name="menu_cap">MENU</string>
-    <string name="assign_to_category">Asignar a Categoría...</string>
-    <string name="prompt_department">Asignar a Categoría...</string>
+    <string name="assign_to_category">Asignar a Categoría…</string>
+    <string name="prompt_department">Asignar a Categoría…</string>
     <string name="no_category">sin Categoría</string>
     <string name="remove_from_category">Quitar de Categoría</string>
     <string name="improvement_positive">mejor que ayer</string>
@@ -79,7 +79,7 @@
     <string name="day_activity">Actividad de las ventas del día</string>
     <string name="month_total_earnings">Ganancias del mes</string>
     <string name="mongh_sales_by_category">Ventas del mes por Categoría</string>
-    <string name="select_date">Selecciona la fecha...</string>
+    <string name="select_date">Selecciona la fecha…</string>
     <string name="title_activity_settings">Ajustes</string>
     <string name="pref_header_general">General</string>
     <string name="set_default_business_name">Mi negocio</string>
@@ -90,4 +90,18 @@
     <string name="err_invalid_product_name">Nombre de Producto inválido</string>
     <string name="err_department_name_already_in_use">Nombre de Categoría en uso</string>
     <string name="err_invalid_department_name">Nombre de Categoría inválido</string>
+    <string-array name="months">
+        <item>Enero</item>
+        <item>Febrero</item>
+        <item>Marzo</item>
+        <item>Abril</item>
+        <item>Mayo</item>
+        <item>Junio</item>
+        <item>Julio</item>
+        <item>Agosto</item>
+        <item>Septiembre</item>
+        <item>Octubre</item>
+        <item>Noviembre</item>
+        <item>Diciembre</item>
+    </string-array>
 </resources>
