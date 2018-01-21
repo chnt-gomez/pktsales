@@ -6,9 +6,11 @@ package com.pocket.poktsales.model;
  */
 
 public class MSale {
+    public long id;
     public String saleConcept;
     public String productAmount;
-    public String saleTotal;
-    public String productId;
-    public String ticketId;
+    public float saleTotal;
+    public String maskSaleTotal;
+    public long productId;
+    public long ticketId;
 }

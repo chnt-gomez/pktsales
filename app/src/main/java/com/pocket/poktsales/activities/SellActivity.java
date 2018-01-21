@@ -1,9 +1,14 @@
 package com.pocket.poktsales.activities;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.SearchManager;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.graphics.ColorUtils;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
@@ -18,8 +23,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.adapters.SimpleProductAdapter;
+import com.pocket.poktsales.adapters.SimpleSaleAdapter;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
 import com.pocket.poktsales.model.MProduct;
+import com.pocket.poktsales.model.MSale;
 import com.pocket.poktsales.presenter.SalesPresenter;
 import com.pocket.poktsales.utils.Conversor;
 import com.pocket.poktsales.utils.DataLoader;
@@ -55,7 +62,7 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
     ImageButton btnDelete;
 
     SimpleProductAdapter productAdapter;
-    SimpleProductAdapter tabListProductAdapter;
+    SimpleSaleAdapter tabListProductAdapter;
     ActivityAdapter activityAdapter;
 
 
@@ -83,7 +90,7 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
         if (tabListProductAdapter != null){
             productAdapter.clear();
         }else{
-            tabListProductAdapter = new SimpleProductAdapter(this, R.layout.row_simple_product, new ArrayList<MProduct>());
+            tabListProductAdapter = new SimpleSaleAdapter(this, R.layout.row_simple_product, new ArrayList<MSale>());
         }
     }
 
@@ -153,12 +160,18 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
             }
         }
         lvProducts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                presenter.addToSale(ticketId, id);
-                if (searchView.isIconified()){
-                    panel.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                }
+
+                DialogBuilder.addToSaleDialog(SellActivity.this, new DialogBuilder.DialogInteractionListener.OnAddToSale() {
+                    @Override
+                    public void onAddToSale(long productId, int qty) {
+                        presenter.addToSale(ticketId, productId, qty);
+                    }
+                }, id).show();
+
+
             }
         });
         lvSale.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -195,11 +208,28 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
     }
 
     @Override
-    public void onProductAddToSale(MProduct product, String newTotal) {
-        activityAdapter.addToSale(product);
-        tabListProductAdapter.add(product);
+    public void onProductAddToSale(MSale sale, String newTotal, int qty) {
+        activityAdapter.addToSale(sale);
+        tabListProductAdapter.add(sale);
         tvTabTotal.setText(newTotal);
         tabListProductAdapter.notifyDataSetChanged();
+        animateTotal();
+    }
+
+    private void animateTotal() {
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
+        valueAnimator.setDuration(1000);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                float fractionAnim = (float) valueAnimator.getAnimatedValue();
+
+                tvTabTotal.setTextColor(ColorUtils.blendARGB(Color.parseColor("#00ff00")
+                        , Color.parseColor("#FFFFFF")
+                        , fractionAnim));
+            }
+        });
+        valueAnimator.start();
     }
 
     @Override
@@ -249,7 +279,7 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
                         public void onNewTempProductDialog(String productName, float productPrice) {
                             long id = presenter.saveAsTemp(productName, productPrice);
                             if (id != -1)
-                                presenter.addToSale(ticketId, id);
+                                presenter.addToSale(ticketId, id, 1);
                         }
                     }).show();
             return true;
@@ -297,16 +327,16 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
     }
 
     class ActivityAdapter{
-        List<MProduct> tabProducts;
+        List<MSale> tabProducts;
         String tabReference;
         String tabTotal;
         List<MProduct> products;
 
-        List<MProduct> getTabProducts() {
+        List<MSale> getTabProducts() {
             return tabProducts;
         }
 
-        void setTabProducts(List<MProduct> tabProducts) {
+        void setTabProducts(List<MSale> tabProducts) {
             this.tabProducts = tabProducts;
         }
 
@@ -334,13 +364,13 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
             this.products = products;
         }
 
-        void addToSale(MProduct product) {
-            tabProducts.add(product);
+        void addToSale(MSale sale) {
+            tabProducts.add(sale);
         }
-        void deleteFromSale(long productId) {
-            for (MProduct p : tabProducts) {
-                if (p.id == productId){
-                    tabProducts.remove(p);
+        void deleteFromSale(long saleId) {
+            for (MSale s : tabProducts) {
+                if (s.id == saleId){
+                    tabProducts.remove(s);
                     break;
                 }
             }

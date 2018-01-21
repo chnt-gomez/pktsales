@@ -2,6 +2,7 @@ package com.pocket.poktsales.interfaces;
 
 import com.pocket.poktsales.model.MDepartment;
 import com.pocket.poktsales.model.MProduct;
+import com.pocket.poktsales.model.MSale;
 import com.pocket.poktsales.model.MTicket;
 
 /**
@@ -37,7 +38,7 @@ public interface RequiredViewOps {
     }
 
     interface SaleViewOps extends RequiredViewOps{
-        void onProductAddToSale(MProduct product, String newTotal);
+        void onProductAddToSale(MSale sale, String newTotal, int qty);
         void onDeleteFromSale(long productId, String newTotal);
         void onApplySale();
         void onCancelSale();

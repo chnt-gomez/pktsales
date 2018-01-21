@@ -6,6 +6,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieEntry;
 import com.pocket.poktsales.model.MDepartment;
 import com.pocket.poktsales.model.MProduct;
+import com.pocket.poktsales.model.MSale;
 import com.pocket.poktsales.model.MTicket;
 import com.pocket.poktsales.presenter.Ticket;
 
@@ -39,12 +40,12 @@ public interface RequiredPresenterOps {
     }
 
     interface SalePresenterOps{
-        void addToSale(long ticketId, long productId);
+        void addToSale(long ticketId, long productId, int qty);
         void applyTicket(long ticketId);
         List<MProduct> getProductsFromSearch(String args);
         List<MProduct> getProductsToSell();
         MTicket getTicket(long ticketId);
-        List<MProduct> getProductsFromTab(long ticketId);
+        List<MSale> getProductsFromTab(long ticketId);
         void cancelTab(long ticketId);
         void removeFromSale(long ticketId, long id);
         long saveAsTemp(String productName, float productPrice);

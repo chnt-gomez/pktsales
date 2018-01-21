@@ -1,9 +1,12 @@
 package com.pocket.poktsales.activities;
 
+import android.animation.ValueAnimator;
 import android.app.SearchManager;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.graphics.ColorUtils;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
@@ -108,6 +111,7 @@ public class QuickSellActivity extends BaseActivity implements RequiredViewOps.Q
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 addToSale(id, 1);
+
             }
         });
         final LinearLayout layout = (LinearLayout)findViewById(R.id.ll_header);
@@ -131,6 +135,7 @@ public class QuickSellActivity extends BaseActivity implements RequiredViewOps.Q
         activityAdapter.addToSale(presenter.getProductFromId(id), i);
         saleProductAdapter.notifyDataSetChanged();
         tvTabTotal.setText(Conversor.asCurrency(activityAdapter.getSaleTotal()));
+        animateTotal();
     }
 
     @Override
@@ -246,6 +251,22 @@ public class QuickSellActivity extends BaseActivity implements RequiredViewOps.Q
             searchProducts(query);
         }
         return true;
+    }
+
+    private void animateTotal() {
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
+        valueAnimator.setDuration(1000);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                float fractionAnim = (float) valueAnimator.getAnimatedValue();
+
+                tvTabTotal.setTextColor(ColorUtils.blendARGB(Color.parseColor("#00ff00")
+                        , Color.parseColor("#FFFFFF")
+                        , fractionAnim));
+            }
+        });
+        valueAnimator.start();
     }
 
     private void searchProducts(String query) {

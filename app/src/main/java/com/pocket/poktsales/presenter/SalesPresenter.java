@@ -4,6 +4,7 @@ import com.pocket.poktsales.R;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
 import com.pocket.poktsales.model.MProduct;
+import com.pocket.poktsales.model.MSale;
 import com.pocket.poktsales.model.MTicket;
 import com.pocket.poktsales.utils.Conversor;
 
@@ -25,7 +26,7 @@ public class SalesPresenter extends BasePresenter implements
     }
 
     @Override
-    public void addToSale(long ticketId, long productId) {
+    public void addToSale(long ticketId, long productId, int qty) {
         Product product;
         try{
             product = Product.findById(Product.class, productId);
@@ -36,7 +37,7 @@ public class SalesPresenter extends BasePresenter implements
         Sale sale = new Sale();
         sale.setProduct(product);
         sale.setTicket(ticket);
-        sale.setProductAmount(1F);
+        sale.setProductAmount(qty);
         sale.setSaleConcept(product.getProductName());
         sale.setSaleTotal(product.getProductSellPrice()*sale.getProductAmount());
         sale.save();
@@ -44,7 +45,7 @@ public class SalesPresenter extends BasePresenter implements
         ticket.setSaleTotal(newTotal);
         ticket.save();
         view.onSuccess();
-        view.onProductAddToSale(fromProduct(product), Conversor.asCurrency(newTotal));
+        view.onProductAddToSale(fromSale(sale), Conversor.asCurrency(newTotal), qty);
     }
 
     @Override
@@ -77,14 +78,8 @@ public class SalesPresenter extends BasePresenter implements
     }
 
     @Override
-    public List<MProduct> getProductsFromTab(long ticketId) {
-
-        List<Sale> sales = Sale.find(Sale.class, "ticket = ?", String.valueOf(ticketId));
-        List <MProduct> products = new ArrayList<>();
-        for (Sale s : sales){
-            products.add(fromProduct(s.getProduct()));
-        }
-        return products;
+    public List<MSale> getProductsFromTab(long ticketId) {
+        return fromSaleList(Sale.find(Sale.class, "ticket = ?", String.valueOf(ticketId)));
     }
 
     @Override
@@ -97,11 +92,11 @@ public class SalesPresenter extends BasePresenter implements
     }
 
     @Override
-    public void removeFromSale(long ticketId, long productId) {
+    public void removeFromSale(long ticketId, long saleId) {
         Ticket ticket = Ticket.findById(Ticket.class, ticketId);
         float ticketTotal= 0;
-        String args[] = {String.valueOf(productId), String.valueOf(ticketId)};
-        for (Sale s : Sale.find(Sale.class, "product = ? AND ticket = ?", args,
+        String args[] = {String.valueOf(saleId), String.valueOf(ticketId)};
+        for (Sale s : Sale.find(Sale.class, "id = ? AND ticket = ?", args,
                 null, null, String.valueOf(1))){
             float saleTotal = s.getSaleTotal();
             ticketTotal = ticket.getSaleTotal()-saleTotal;
@@ -109,7 +104,7 @@ public class SalesPresenter extends BasePresenter implements
             s.delete();
             ticket.save();
         }
-        view.onDeleteFromSale(productId, Conversor.asCurrency(ticketTotal));
+        view.onDeleteFromSale(saleId, Conversor.asCurrency(ticketTotal));
     }
 
     @Override

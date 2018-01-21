@@ -104,4 +104,5 @@
     <string name="err_department_name_already_in_use">Category name in use</string>
     <string name="err_invalid_department_name">Invalid Category name</string>
     <string name="advertising">Advertising</string>
+    <string name="add_to_current_sale">Add to current sale...</string>
 </resources>

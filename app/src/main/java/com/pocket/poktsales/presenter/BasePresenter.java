@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.pocket.poktsales.model.MDepartment;
 import com.pocket.poktsales.model.MProduct;
+import com.pocket.poktsales.model.MSale;
 import com.pocket.poktsales.model.MTicket;
 import com.pocket.poktsales.utils.Conversor;
 
@@ -138,6 +139,27 @@ class BasePresenter {
         List<MProduct> list = new ArrayList<>();
         for (Product p: products){
             list.add(fromProduct(p));
+        }
+        return list;
+    }
+
+    MSale fromSale(Sale s){
+        MSale mSale = new MSale();
+        mSale.id = s.getId();
+        mSale.productAmount = String.valueOf(s.getProductAmount());
+        mSale.productId = s.getProduct().getId();
+        mSale.saleConcept = s.getSaleConcept();
+        mSale.saleTotal = s.getSaleTotal();
+        mSale.maskSaleTotal = Conversor.asCurrency(s.getSaleTotal());
+        mSale.ticketId = s.getTicket().getId();
+        return mSale;
+
+    }
+
+    List<MSale> fromSaleList(List<Sale> sales){
+        List<MSale> list = new ArrayList<>();
+        for (Sale s : sales){
+            list.add(fromSale(s));
         }
         return list;
     }

@@ -176,6 +176,60 @@ public class DialogBuilder {
         instance = builder.create();
         return instance;
     }
+
+    public static Dialog addToSaleDialog(final Context context, final DialogInteractionListener.OnAddToSale callback,final long productId){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        final View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_add_to_sale, null);
+        final ImageButton btnMinus = (ImageButton) dialogView.findViewById(R.id.btn_minus);
+        final ImageButton btnPlus = (ImageButton) dialogView.findViewById(R.id.btn_plus);
+        final EditText etProductQty = (EditText) dialogView.findViewById(R.id.et_product_qty);
+        final ImageButton positiveButton = (ImageButton)dialogView.findViewById(R.id.btn_ok);
+        btnMinus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try{
+                    int actual = Integer.valueOf(etProductQty.getText().toString());
+                    if (actual > 0) {
+                        actual--;
+                        etProductQty.setText(String.valueOf(actual));
+                    }
+                }catch (Exception e){
+                    etProductQty.setText("1");
+                }
+            }
+        });
+        btnPlus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try{
+                    int actual = Integer.valueOf(etProductQty.getText().toString());
+                    actual ++;
+                    etProductQty.setText(String.valueOf(actual));
+                }catch (Exception e){
+                    etProductQty.setText("1");
+                }
+            }
+        });
+        positiveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int qty;
+                try{
+                    qty = Integer.valueOf(etProductQty.getText().toString());
+                }catch (Exception e){
+                    qty = 1;
+                }
+                callback.onAddToSale(
+                        productId, qty
+                );
+                instance.dismiss();
+            }
+        });
+        builder.setView(dialogView);
+        instance = builder.create();
+        return instance;
+
+    }
     /*
     public static Dialog sortProductsDialog(final Context context, RequiredPresenterOps.ProductPresenterOps presenterOps,
                                             Product.Sorting sorting,
@@ -334,6 +388,10 @@ public class DialogBuilder {
 
         public interface OnDateSelected {
             void onDateSelected(DateTime date);
+        }
+
+        public interface OnAddToSale {
+            void onAddToSale(long productId, int qty);
         }
     }
 }
