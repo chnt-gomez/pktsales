@@ -1,11 +1,10 @@
 package com.pocket.poktsales.activities;
 
-import android.animation.ObjectAnimator;
+
 import android.animation.ValueAnimator;
 import android.app.SearchManager;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.graphics.ColorUtils;
@@ -90,7 +89,7 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
         if (tabListProductAdapter != null){
             productAdapter.clear();
         }else{
-            tabListProductAdapter = new SimpleSaleAdapter(this, R.layout.row_simple_product, new ArrayList<MSale>());
+            tabListProductAdapter = new SimpleSaleAdapter(this);
         }
     }
 
