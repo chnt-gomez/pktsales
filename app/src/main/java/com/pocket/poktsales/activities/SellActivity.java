@@ -93,6 +93,8 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
         }
         if (tabListProductAdapter == null){
             tabListProductAdapter = new SimpleSaleAdapter(this, R.layout.simple_sale_row, new ArrayList<MSale>());
+        }else{
+            tabListProductAdapter.clear();
         }
     }
 
@@ -206,10 +208,6 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
 
     @Override
     public void onProductAddToSale(MSale sale, String newTotal, int qty) {
-        activityAdapter.addToSale(sale);
-        tabListProductAdapter.add(sale);
-        tvTabTotal.setText(newTotal);
-        tabListProductAdapter.notifyDataSetChanged();
         start();
         animateTotal();
     }

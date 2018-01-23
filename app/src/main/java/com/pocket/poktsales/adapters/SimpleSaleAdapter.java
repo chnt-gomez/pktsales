@@ -2,7 +2,6 @@ package com.pocket.poktsales.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,9 +27,17 @@ public class SimpleSaleAdapter extends ArraySwipeAdapter<MSale>{
         view = (ViewOperations)context;
     }
 
+    @Override
+    public long getItemId(int position) {
+        MSale sale = (MSale)getItem(position);
+        if (sale != null)
+            return sale.id;
+        return -1;
+    }
+
     @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         if (convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.simple_sale_row, null);
         }
@@ -48,7 +55,7 @@ public class SimpleSaleAdapter extends ArraySwipeAdapter<MSale>{
         convertView.findViewById(R.id.btn_confirm_delete).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("OnClick", String.format("onClick: &d", pos));
+                view.requestDelete(getItemId(position));
             }
         });
         return convertView;
@@ -60,6 +67,6 @@ public class SimpleSaleAdapter extends ArraySwipeAdapter<MSale>{
     }
 
     public interface ViewOperations{
-        void requestDelete(long productId);
+        void requestDelete(long saleId);
     }
 }
