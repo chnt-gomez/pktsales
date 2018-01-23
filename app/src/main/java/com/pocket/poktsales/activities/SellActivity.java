@@ -20,6 +20,8 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.daimajia.swipe.SwipeLayout;
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.adapters.SimpleProductAdapter;
 import com.pocket.poktsales.adapters.SimpleSaleAdapter;
@@ -37,7 +39,8 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public class SellActivity extends BaseActivity implements SearchView.OnQueryTextListener, View.OnClickListener, RequiredViewOps.SaleViewOps{
+public class SellActivity extends BaseActivity implements SearchView.OnQueryTextListener, View.OnClickListener, RequiredViewOps.SaleViewOps,
+    SimpleSaleAdapter.ViewOperations{
 
     @BindView(R.id.include)
     SlidingUpPanelLayout panel;
@@ -81,15 +84,15 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
         super.onLoadingPrepare();
         if (activityAdapter == null)
             activityAdapter = new ActivityAdapter();
+        else
+            activityAdapter.clear();
         if (productAdapter != null ){
             productAdapter.clear();
         }else{
             productAdapter = new SimpleProductAdapter(this, R.layout.row_simple_product, new ArrayList<MProduct>());
         }
-        if (tabListProductAdapter != null){
-            productAdapter.clear();
-        }else{
-            tabListProductAdapter = new SimpleSaleAdapter(this);
+        if (tabListProductAdapter == null){
+            tabListProductAdapter = new SimpleSaleAdapter(this, R.layout.simple_sale_row, new ArrayList<MSale>());
         }
     }
 
@@ -111,12 +114,10 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
     @Override
     public void onLoadingComplete() {
         super.onLoadingComplete();
-        tabListProductAdapter.clear();
-        productAdapter.clear();
-        tabListProductAdapter.addAll(activityAdapter.getTabProducts());
         productAdapter.addAll(activityAdapter.getProducts());
         tvTabReference.setText(activityAdapter.getTabReference());
         tvTabTotal.setText(activityAdapter.getTabTotal());
+        tabListProductAdapter.addAll(activityAdapter.getTabProducts());
         tabListProductAdapter.notifyDataSetChanged();
         productAdapter.notifyDataSetChanged();
         setTitle(activityAdapter.getTabReference());
@@ -169,15 +170,14 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
                         presenter.addToSale(ticketId, productId, qty);
                     }
                 }, id).show();
-
-
             }
         });
-        lvSale.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+        lvSale.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                presenter.removeFromSale(ticketId, id);
-                return true;
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ((SwipeLayout)(lvSale.getChildAt(position - lvSale.getFirstVisiblePosition()))).setClickToClose(true);
+                ((SwipeLayout)(lvSale.getChildAt(position - lvSale.getFirstVisiblePosition()))).open(true);
             }
         });
         btnDelete.setOnClickListener(this);
@@ -200,10 +200,8 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
 
     @Override
     public void onDeleteFromSale(long productId, String newTotal) {
-        activityAdapter.deleteFromSale(productId);
-        tabListProductAdapter.remove(productId);
-        tvTabTotal.setText(newTotal);
-        tabListProductAdapter.notifyDataSetChanged();
+        start();
+        animateTotalNegative();
     }
 
     @Override
@@ -212,7 +210,24 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
         tabListProductAdapter.add(sale);
         tvTabTotal.setText(newTotal);
         tabListProductAdapter.notifyDataSetChanged();
+        start();
         animateTotal();
+    }
+
+    private void animateTotalNegative(){
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
+        valueAnimator.setDuration(1000);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                float fractionAnim = (float) valueAnimator.getAnimatedValue();
+
+                tvTabTotal.setTextColor(ColorUtils.blendARGB(Color.parseColor("#FF0000")
+                        , Color.parseColor("#FFFFFF")
+                        , fractionAnim));
+            }
+        });
+        valueAnimator.start();
     }
 
     private void animateTotal() {
@@ -325,11 +340,23 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
                     }).show();
     }
 
+    @Override
+    public void requestDelete(long productId) {
+        presenter.removeFromSale(ticketId, productId);
+    }
+
     class ActivityAdapter{
         List<MSale> tabProducts;
         String tabReference;
         String tabTotal;
         List<MProduct> products;
+
+        public void clear(){
+            if (tabProducts != null)
+                tabProducts.clear();
+            if (products != null)
+                products.clear();
+        }
 
         List<MSale> getTabProducts() {
             return tabProducts;

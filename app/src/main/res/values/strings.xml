@@ -105,4 +105,5 @@
     <string name="err_invalid_department_name">Invalid Category name</string>
     <string name="advertising">Advertising</string>
     <string name="add_to_current_sale">Add to current sale...</string>
+    <string name="remove_from_sale_q">Remove from sale?</string>
 </resources>
