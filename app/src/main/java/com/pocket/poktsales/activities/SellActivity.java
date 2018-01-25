@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.daimajia.swipe.SwipeLayout;
 import com.pocket.poktsales.R;
+import com.pocket.poktsales.adapters.PickToSellProductAdapter;
 import com.pocket.poktsales.adapters.SimpleProductAdapter;
 import com.pocket.poktsales.adapters.SimpleSaleAdapter;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
@@ -40,7 +41,7 @@ import java.util.List;
 import butterknife.BindView;
 
 public class SellActivity extends BaseActivity implements SearchView.OnQueryTextListener, View.OnClickListener, RequiredViewOps.SaleViewOps,
-    SimpleSaleAdapter.ViewOperations{
+    SimpleSaleAdapter.ViewOperations, PickToSellProductAdapter.ViewOperations{
 
     @BindView(R.id.include)
     SlidingUpPanelLayout panel;
@@ -63,7 +64,7 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
     @BindView(R.id.btn_delete)
     ImageButton btnDelete;
 
-    SimpleProductAdapter productAdapter;
+    PickToSellProductAdapter productAdapter;
     SimpleSaleAdapter tabListProductAdapter;
     ActivityAdapter activityAdapter;
 
@@ -89,7 +90,7 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
         if (productAdapter != null ){
             productAdapter.clear();
         }else{
-            productAdapter = new SimpleProductAdapter(this, R.layout.row_simple_product, new ArrayList<MProduct>());
+            productAdapter = new PickToSellProductAdapter(this, R.layout.row_pick_product, new ArrayList<MProduct>());
         }
         if (tabListProductAdapter == null){
             tabListProductAdapter = new SimpleSaleAdapter(this, R.layout.simple_sale_row, new ArrayList<MSale>());
@@ -165,21 +166,22 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                DialogBuilder.addToSaleDialog(SellActivity.this, new DialogBuilder.DialogInteractionListener.OnAddToSale() {
-                    @Override
-                    public void onAddToSale(long productId, int qty) {
-                        presenter.addToSale(ticketId, productId, qty);
-                    }
-                }, id).show();
+                if (((SwipeLayout)(lvProducts.getChildAt(position - lvProducts.getFirstVisiblePosition()))).getOpenStatus() == SwipeLayout.Status.Open){
+                    ((SwipeLayout)(lvProducts.getChildAt(position - lvProducts.getFirstVisiblePosition()))).close(true);
+                }else{
+                    ((SwipeLayout)(lvProducts.getChildAt(position - lvProducts.getFirstVisiblePosition()))).open(true);
+                }
             }
         });
 
         lvSale.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ((SwipeLayout)(lvSale.getChildAt(position - lvSale.getFirstVisiblePosition()))).setClickToClose(true);
-                ((SwipeLayout)(lvSale.getChildAt(position - lvSale.getFirstVisiblePosition()))).open(true);
+                if (((SwipeLayout)(lvSale.getChildAt(position - lvSale.getFirstVisiblePosition()))).getOpenStatus() == SwipeLayout.Status.Open){
+                    ((SwipeLayout)(lvSale.getChildAt(position - lvSale.getFirstVisiblePosition()))).close(true);
+                }else{
+                    ((SwipeLayout)(lvSale.getChildAt(position - lvSale.getFirstVisiblePosition()))).open(true);
+                }
             }
         });
         btnDelete.setOnClickListener(this);
@@ -197,7 +199,12 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
 
     @Override
     public void onApplySale() {
-        finish();
+        DialogBuilder.saleSuccessDialog(SellActivity.this, new DialogBuilder.DialogInteractionListener.OnSaleSuccessListener(){
+            @Override
+            public void onSuccess() {
+                finish();
+            }
+        }).show();
     }
 
     @Override
@@ -323,7 +330,12 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
 
     @Override
     public void onCancelSale() {
-        finish();
+        DialogBuilder.saleCanceledDialog(SellActivity.this, new DialogBuilder.DialogInteractionListener.OnSaleCancelListener(){
+            @Override
+            public void onCancel() {
+                finish();
+            }
+        }).show();
     }
 
     @Override
@@ -341,6 +353,21 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
     @Override
     public void requestDelete(long productId) {
         presenter.removeFromSale(ticketId, productId);
+    }
+
+    @Override
+    public void addOne(long productId) {
+        presenter.addToSale(ticketId, productId, 1);
+    }
+
+    @Override
+    public void requestAddMany(long productId) {
+        DialogBuilder.addToSaleDialog(SellActivity.this, new DialogBuilder.DialogInteractionListener.OnAddToSale() {
+            @Override
+            public void onAddToSale(long productId, int qty) {
+                presenter.addToSale(ticketId, productId, qty);
+            }
+        }, productId).show();
     }
 
     class ActivityAdapter{

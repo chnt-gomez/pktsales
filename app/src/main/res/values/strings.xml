@@ -107,4 +107,6 @@
     <string name="add_to_current_sale">Add to current sale...</string>
     <string name="remove_from_sale_q">Remove from sale?</string>
     <string name="pref_header_general">General</string>
+    <string name="sale_success">Sale aplied successfuly</string>
+    <string name="sale_canceled">Sale canceled</string>
 </resources>

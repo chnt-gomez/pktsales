@@ -10,4 +10,5 @@
     <dimen name="padding_medium">6dp</dimen>
     <dimen name="margin_big">22sp</dimen>
     <dimen name="padding_big">8dp</dimen>
+    <dimen name="barSize">56dp</dimen>
 </resources>

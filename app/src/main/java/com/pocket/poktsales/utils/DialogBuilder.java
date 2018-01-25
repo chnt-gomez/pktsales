@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -56,8 +57,9 @@ public class DialogBuilder {
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onDeleteTab(ticketReference.id);
                 instance.dismiss();
+                callback.onDeleteTab(ticketReference.id);
+
             }
         });
         builder.setView(dialogView);
@@ -75,10 +77,11 @@ public class DialogBuilder {
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                instance.dismiss();
                 MDepartment department = new MDepartment();
                 department.departmentName = etDepartmentName.getText().toString();
                 callback.onNewDepartment(department);
-                instance.dismiss();
+
             }
         });
         builder.setView(dialogView);
@@ -103,19 +106,58 @@ public class DialogBuilder {
         lvCategories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                callback.onCategorySelected(id);
                 instance.dismiss();
+                callback.onCategorySelected(id);
+
             }
         });
         btnRemoveFromCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onCategorySelected(0L);
                 instance.dismiss();
+                callback.onCategorySelected(0L);
             }
         });
         builder.setView(dialogView);
         instance = builder.create();
+        return instance;
+    }
+
+    public static Dialog saleSuccessDialog(final Context context, final DialogInteractionListener.OnSaleSuccessListener callback){
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        @SuppressLint("InflateParams")
+        final View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_sale_success, null);
+        final ImageButton positiveButton = (ImageButton)dialogView.findViewById(R.id.btn_ok);
+        positiveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback.onSuccess();
+                instance.dismiss();
+            }
+        });
+
+        builder.setView(dialogView);
+        instance = builder.create();
+        instance.setCancelable(false);
+        return instance;
+    }
+
+    public static Dialog saleCanceledDialog(final Context context, final DialogInteractionListener.OnSaleCancelListener callback){
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        @SuppressLint("InflateParams")
+        final View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_canceled_sale, null);
+        final ImageButton positiveButton = (ImageButton)dialogView.findViewById(R.id.btn_ok);
+        positiveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback.onCancel();
+                instance.dismiss();
+            }
+        });
+
+        builder.setView(dialogView);
+        instance = builder.create();
+        instance.setCancelable(false);
         return instance;
     }
 
@@ -392,6 +434,14 @@ public class DialogBuilder {
 
         public interface OnAddToSale {
             void onAddToSale(long productId, int qty);
+        }
+
+        public interface OnSaleSuccessListener {
+            void onSuccess();
+        }
+
+        public interface OnSaleCancelListener{
+            void onCancel();
         }
     }
 }

@@ -39,10 +39,8 @@ public class SimpleCategoryAdapter extends ArrayAdapter<MDepartment> {
             department = new MDepartment();
         }
         TextView tvCategoryName = (TextView)convertView.findViewById(R.id.tv_department_name);
-        TextView tvProductsInDepartment = (TextView)convertView.findViewById(R.id.tv_products_count);
 
         tvCategoryName.setText(department.departmentName);
-        tvProductsInDepartment.setText(String.valueOf(department.productCount));
         return convertView;
     }
 
