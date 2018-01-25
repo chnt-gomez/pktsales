@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">PoktSales</string>
+    <string name="app_name">OhKey</string>
     <string name="navigation_drawer_open">Abrir</string>
     <string name="navigation_drawer_close">Cerrar</string>
     <string name="action_settings">Ajustes</string>
@@ -104,4 +104,7 @@
         <item>Noviembre</item>
         <item>Diciembre</item>
     </string-array>
+    <string name="advertising">Publicidad</string>
+    <string name="add_to_current_sale">Añadir a la venta…</string>
+    <string name="remove_from_sale_q">¿Quitar de la venta?</string>
 </resources>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">PoktSales</string>
+    <string name="app_name" translatable="false">OhKey</string>
     <string name="navigation_drawer_open">Open</string>
     <string name="navigation_drawer_close">Close</string>
     <string name="action_settings">Settings</string>
@@ -106,4 +106,5 @@
     <string name="advertising">Advertising</string>
     <string name="add_to_current_sale">Add to current sale...</string>
     <string name="remove_from_sale_q">Remove from sale?</string>
+    <string name="pref_header_general">General</string>
 </resources>

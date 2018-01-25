@@ -6,7 +6,9 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.CardView;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.github.mikephil.charting.charts.LineChart;
@@ -14,8 +16,10 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.adapters.RecentSaleAdapter;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
@@ -50,6 +54,9 @@ public class HomeScreenActivity extends BaseActivity
 
     @BindView(R.id.lv_recent_sales)
     ListView lvRecentSales;
+
+    @BindView(R.id.card_advertising)
+    CardView cvAdvertising;
 
     HomeActivityDataAdapter adapter;
     RequiredPresenterOps.HomePresenterOps presenter;
@@ -112,6 +119,7 @@ public class HomeScreenActivity extends BaseActivity
     @Override
     protected void init() {
         super.init();
+        MobileAds.initialize(this, "ca-app-pub-2236350735048598~2611871037");
         recentSaleAdapter = new RecentSaleAdapter(this, R.layout.row_recent_sale, new ArrayList(0));
         presenter = new HomePresenter(this);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -123,8 +131,16 @@ public class HomeScreenActivity extends BaseActivity
         lvRecentSales.setAdapter(recentSaleAdapter);
 
         mAdView = (AdView)findViewById(R.id.adView);
+        cvAdvertising.setVisibility(View.GONE);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+        mAdView.setAdListener(new AdListener(){
+            @Override
+            public void onAdLoaded() {
+                cvAdvertising.setVisibility(View.VISIBLE);
+            }
+        });
+
     }
 
     private void setPerformanceChart( List<Entry> entries ){

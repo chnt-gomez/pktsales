@@ -15,8 +15,6 @@ public class DataLoader extends AsyncTask<String, Void, Void> {
 
     private final OnLoadingEventListener callback;
 
-    private static final String TAG = "DataLoader";
-
     public DataLoader (OnLoadingEventListener callback){
         this.callback = callback;
     }
@@ -32,14 +30,12 @@ public class DataLoader extends AsyncTask<String, Void, Void> {
 
     @Override
     protected void onPreExecute() {
-        Log.i(TAG, "onPreExecute: is executing!");
         super.onPreExecute();
         callback.onLoadingPrepare();
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        Log.i(TAG, "onPostExecute: is called. Loading is finished");
         super.onPostExecute(aVoid);
         callback.onLoadingComplete();
     }
