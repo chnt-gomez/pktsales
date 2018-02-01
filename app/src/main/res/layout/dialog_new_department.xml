@@ -34,7 +34,7 @@
     <EditText
         android:layout_margin="4dp"
         android:layout_width="match_parent"
-        android:hint="@string/hint_tab_reference"
+        android:hint="@string/hint_category_name"
         android:layout_height="wrap_content"
         android:id="@+id/et_department_name"/>
 
