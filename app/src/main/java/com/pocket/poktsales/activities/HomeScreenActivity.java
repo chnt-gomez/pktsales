@@ -32,6 +32,7 @@ import com.pocket.poktsales.utils.MonthPerformanceMarker;
 
 import org.joda.time.DateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import butterknife.BindView;
 
@@ -160,7 +161,7 @@ public class HomeScreenActivity extends BaseActivity
         chartPerformance.getData().setValueFormatter(new ChartValueFormatter());
         chartPerformance.getData().setDrawValues(false);
         chartPerformance.invalidate();
-        MonthPerformanceMarker mv = new MonthPerformanceMarker(this, R.layout.layout_marker);
+        MonthPerformanceMarker mv = new MonthPerformanceMarker(this, R.layout.layout_marker, DateTime.now().getMonthOfYear(), DateTime.now().getYear());
         chartPerformance.setDragEnabled(true);
         chartPerformance.setMarkerView(mv);
     }

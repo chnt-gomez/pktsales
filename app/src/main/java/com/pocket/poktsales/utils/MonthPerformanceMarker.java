@@ -20,11 +20,11 @@ import java.text.DecimalFormat;
 public class MonthPerformanceMarker extends MarkerView {
 
     protected TextView tvContent;
-
-    public MonthPerformanceMarker(Context context, int layoutResource) {
+    private int year, month;
+    public MonthPerformanceMarker(Context context, int layoutResource, int month, int year) {
         super(context, layoutResource);
-
-        // find your layout components
+        this. year = year;
+        this.month = month;
         tvContent = (TextView) findViewById(R.id.tv_marker_content);
     }
 
@@ -33,7 +33,7 @@ public class MonthPerformanceMarker extends MarkerView {
     @Override
     public void refreshContent(Entry e, Highlight highlight) {
 
-        DateTime date = DateTime.now().withDayOfMonth((int)e.getX());
+        DateTime date = new DateTime(year, month, (int)e.getX(), 0,0);
 
         tvContent.setText(String.format("%s, %s ",date.toString("dd MMM"), Conversor.asCurrency(e.getY())));
 

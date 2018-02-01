@@ -16,7 +16,6 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.pocket.poktsales.R;
-import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
 import com.pocket.poktsales.presenter.ReportPresenter;
 import com.pocket.poktsales.utils.ChartValueFormatter;
@@ -57,7 +56,6 @@ public class BusinessReportActivity extends BaseActivity implements RequiredView
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         this.layoutResourceId = R.layout.activity_reports;
-
         super.onCreate(savedInstanceState);
     }
 
@@ -96,7 +94,7 @@ public class BusinessReportActivity extends BaseActivity implements RequiredView
         activityAdapter.setMonthIncome(
                 Conversor.asCurrency(presenter.getMonthSales(activityAdapter.getMonth(), activityAdapter.getYear())));
         activityAdapter.setMonthPerformanceEntries(presenter.getMonthPerformance(activityAdapter.getYear(), activityAdapter.getMonth()));
-        activityAdapter.setMonthCategorieEntries(presenter.getMonthPerformanceByCategory(activityAdapter.getMonth(), activityAdapter.getYear()));
+        activityAdapter.setMonthCategoryEntries(presenter.getMonthPerformanceByCategory(activityAdapter.getMonth(), activityAdapter.getYear()));
     }
 
     @Override
@@ -104,7 +102,7 @@ public class BusinessReportActivity extends BaseActivity implements RequiredView
         super.onLoadingComplete();
         tvMonthIncome.setText(activityAdapter.getMonthIncome());
         setPerformanceChart(activityAdapter.getMonthPerformanceEntries());
-        setCategoriesChart(activityAdapter.getMonthCategorieEntries());
+        setCategoriesChart(activityAdapter.getMonthCategoryEntries());
     }
 
     private void setCategoriesChart(List<PieEntry> monthPerformanceEntries) {
@@ -140,7 +138,7 @@ public class BusinessReportActivity extends BaseActivity implements RequiredView
         chartPerformance.getData().setValueFormatter(new ChartValueFormatter());
         chartPerformance.getData().setDrawValues(false);
         chartPerformance.invalidate();
-        MonthPerformanceMarker mv = new MonthPerformanceMarker(this, R.layout.layout_marker);
+        MonthPerformanceMarker mv = new MonthPerformanceMarker(this, R.layout.layout_marker,activityAdapter.getMonth(),  activityAdapter.getYear());
         chartPerformance.setDragEnabled(true);
         chartPerformance.setMarkerView(mv);
     }
@@ -177,13 +175,13 @@ public class BusinessReportActivity extends BaseActivity implements RequiredView
             this.monthPerformanceEntries = monthPerformanceEntries;
         }
 
-        void setMonthCategorieEntries(List<PieEntry> entries){
+        void setMonthCategoryEntries(List<PieEntry> entries){
             if (monthCategorieEntries != null)
                 this.monthCategorieEntries.clear();
             this.monthCategorieEntries = entries;
         }
 
-        List<PieEntry> getMonthCategorieEntries(){
+        List<PieEntry> getMonthCategoryEntries(){
             if (monthCategorieEntries == null)
                 monthCategorieEntries = new ArrayList<>();
             return monthCategorieEntries;
