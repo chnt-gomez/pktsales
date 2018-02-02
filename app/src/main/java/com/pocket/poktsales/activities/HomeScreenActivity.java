@@ -201,6 +201,9 @@ public class HomeScreenActivity extends BaseActivity
         if (id == R.id.nav_business_settings){
             goTo(SettingsActivity.class);
         }
+        if (id == R.id.nav_contact){
+            goTo(ContactActivity.class);
+        }
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
