@@ -2,6 +2,7 @@ package com.pocket.poktsales.activities;
 
 import android.app.SearchManager;
 import android.content.Context;
+
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.MenuItemCompat;
@@ -155,7 +156,9 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
         activityAdapter = new InventoryActivityAdapter();
         listAdapter = new SimpleProductAdapter(getApplicationContext(), R.layout.row_simple_product, new ArrayList<MProduct>());
         lvProducts.setAdapter(listAdapter);
+
     }
+
 
     @Override
     public void onLoadingPrepare() {

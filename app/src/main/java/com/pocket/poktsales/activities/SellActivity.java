@@ -24,7 +24,6 @@ import android.widget.TextView;
 import com.daimajia.swipe.SwipeLayout;
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.adapters.PickToSellProductAdapter;
-import com.pocket.poktsales.adapters.SimpleProductAdapter;
 import com.pocket.poktsales.adapters.SimpleSaleAdapter;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
 import com.pocket.poktsales.model.MProduct;

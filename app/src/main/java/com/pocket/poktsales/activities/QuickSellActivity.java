@@ -204,9 +204,13 @@ public class QuickSellActivity extends BaseActivity implements RequiredViewOps.Q
 
     @Override
     public void onApplySale() {
-        finish();
+        DialogBuilder.saleSuccessDialog(QuickSellActivity.this, new DialogBuilder.DialogInteractionListener.OnSaleSuccessListener(){
+            @Override
+            public void onSuccess() {
+                finish();
+            }
+        }).show();
     }
-
     private void applySale(){
         presenter.apply(activityAdapter.getSaleProducts());
     }
