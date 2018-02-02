@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
 
@@ -42,6 +44,6 @@
             android:layout_height="wrap_content"
             android:id="@+id/btn_confirm_delete"
             android:background="@drawable/selector_button_delete"
-            android:src="@drawable/ic_delete_big"/>
+            app:srcCompat="@drawable/ic_delete_big"/>
     </LinearLayout>
 </LinearLayout>

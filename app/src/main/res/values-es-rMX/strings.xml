@@ -107,4 +107,8 @@
     <string name="advertising">Publicidad</string>
     <string name="add_to_current_sale">Añadir a la venta…</string>
     <string name="remove_from_sale_q">¿Quitar de la venta?</string>
+    <string name="sale_success">Venta aplicada con éxito!</string>
+    <string name="sale_canceled">Venta cancelada</string>
+    <string name="logo_desc">OhKey es la app para tu pequeño negocio</string>
+    <string name="hint_category_name">Nombre de categoria</string>
 </resources>
