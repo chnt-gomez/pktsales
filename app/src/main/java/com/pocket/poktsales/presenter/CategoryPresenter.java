@@ -49,9 +49,10 @@ public class CategoryPresenter extends BasePresenter implements RequiredPresente
             p.save();
         }
         Department d = Department.findById(Department.class, departmentId);
-        if (d != null)
+        if (d != null) {
             d.setDepartmentStatus(Department.INACTIVE);
-        d.save();
+            d.save();
+        }
         view.onDepartmentDeleted();
     }
 
