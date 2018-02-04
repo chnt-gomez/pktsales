@@ -29,6 +29,7 @@ public interface RequiredViewOps {
     interface CategoryViewOps extends RequiredViewOps{
         void onDepartmentUpdate(MDepartment department);
         void onDepartmentAdded(MDepartment department);
+        void onDepartmentDeleted();
     }
 
     interface TabViewOps extends RequiredViewOps{

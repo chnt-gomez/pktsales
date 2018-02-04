@@ -14,7 +14,7 @@ import java.util.List;
 
 public class CategoryPresenter extends BasePresenter implements RequiredPresenterOps.DepartmentPresenterOps {
 
-    RequiredViewOps.CategoryViewOps view;
+    private RequiredViewOps.CategoryViewOps view;
 
     public CategoryPresenter(RequiredViewOps.CategoryViewOps view){
         this.view = view;
@@ -43,7 +43,16 @@ public class CategoryPresenter extends BasePresenter implements RequiredPresente
 
     @Override
     public void removeDepartment(long departmentId, long moveProductsToDepartmentId) {
-
+        List<Product> products = Product.find(Product.class, "department = ? ", String.valueOf(departmentId));
+        for (Product p : products){
+            p.setDepartment(null);
+            p.save();
+        }
+        Department d = Department.findById(Department.class, departmentId);
+        if (d != null)
+            d.setDepartmentStatus(Department.INACTIVE);
+        d.save();
+        view.onDepartmentDeleted();
     }
 
     @Override

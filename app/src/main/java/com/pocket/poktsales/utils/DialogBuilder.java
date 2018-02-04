@@ -402,6 +402,32 @@ public class DialogBuilder {
         return instance;
     }
 
+    public static Dialog confirmDeleteCategoryDialog(final Context context, final MDepartment category,
+                                                     final DialogInteractionListener.OnDeleteCategoryListener callback) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        @SuppressLint("InflateParams")
+        final View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_confirm_delete, null);
+        /*
+        Init widgets
+         */
+        final TextView tvTabName = (TextView) dialogView.findViewById(R.id.tv_product_name);
+        final ImageView image = (ImageView)dialogView.findViewById(R.id.img_reference);
+        final ImageButton btnDelete = (ImageButton)dialogView.findViewById(R.id.btn_confirm_delete);
+        tvTabName.setText(String.format("%s %s", category.departmentName, context.getString(R.string.will_be_deleted)));
+        image.setImageResource(R.drawable.ic_modules_big);
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                instance.dismiss();
+                callback.onDeleteCategory(category.id);
+
+            }
+        });
+        builder.setView(dialogView);
+        instance = builder.create();
+        return instance;
+    }
+
     public static class DialogInteractionListener{
         public interface OnNewProductListener{
             void onNewProduct(MProduct product);
@@ -442,6 +468,10 @@ public class DialogBuilder {
 
         public interface OnSaleCancelListener{
             void onCancel();
+        }
+
+        public interface OnDeleteCategoryListener {
+            void onDeleteCategory(long categoryId);
         }
     }
 }

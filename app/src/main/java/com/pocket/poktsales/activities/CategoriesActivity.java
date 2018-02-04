@@ -98,6 +98,7 @@ public class CategoriesActivity extends BaseActivity implements AdapterView.OnIt
                 panel.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
             }
         });
+
         setTitle(R.string.title_activity_categories);
         lvDepartments.setOnItemClickListener(this);
         start();
@@ -144,6 +145,26 @@ public class CategoriesActivity extends BaseActivity implements AdapterView.OnIt
                     panel.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
             }
         });
+
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogBuilder.confirmDeleteCategoryDialog(CategoriesActivity.this, department, new DialogBuilder.DialogInteractionListener.OnDeleteCategoryListener() {
+                    @Override
+                    public void onDeleteCategory(long categoryId) {
+                        presenter.removeDepartment(categoryId, -1);
+                    }
+                }).show();
+            }
+        });
+
+    }
+
+    @Override
+    public void onDepartmentDeleted() {
+        if (panel.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED)
+            panel.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+        start();
     }
 
     @Override
