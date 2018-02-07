@@ -94,6 +94,7 @@
         <item>November</item>
         <item>December</item>
     </string-array>
+    <string name="facebook_app_id" translatable="false">1564492696979621</string>
     <string name="title_activity_settings">Settings</string>
     <string name="set_default_business_name">My Business</string>
     <string name="label_business_name">Your business name</string>
