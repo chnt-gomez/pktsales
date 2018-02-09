@@ -209,6 +209,11 @@ public class QuickSellActivity extends BaseActivity implements RequiredViewOps.Q
             public void onSuccess() {
                 finish();
             }
+
+            @Override
+            public void onShareTicket() {
+                finish();
+            }
         }).show();
     }
     private void applySale(){

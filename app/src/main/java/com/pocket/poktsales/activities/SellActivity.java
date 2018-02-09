@@ -4,12 +4,15 @@ package com.pocket.poktsales.activities;
 import android.animation.ValueAnimator;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.graphics.ColorUtils;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,6 +35,7 @@ import com.pocket.poktsales.presenter.SalesPresenter;
 import com.pocket.poktsales.utils.Conversor;
 import com.pocket.poktsales.utils.DataLoader;
 import com.pocket.poktsales.utils.DialogBuilder;
+import com.pocket.poktsales.utils.HtmlTicketBuilder;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
@@ -202,6 +206,17 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
             @Override
             public void onSuccess() {
                 finish();
+            }
+
+            @Override
+            public void onShareTicket() {
+                final Intent shareIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:"));
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, "The Subject");
+                shareIntent.putExtra(
+                        Intent.EXTRA_TEXT,
+                        HtmlTicketBuilder.buildTicket()
+                );
+                startActivity(shareIntent);
             }
         }).show();
     }
