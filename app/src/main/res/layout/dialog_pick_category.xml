@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/margin_big"
+        android:paddingTop="@dimen/margin_big"
+        android:background="@color/colorPrimary"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/padding_title"
+                android:layout_gravity="center_vertical"
+                app:srcCompat="@drawable/ic_box_big"/>
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="@dimen/padding_title"
+                app:srcCompat="@drawable/ic_arrow_right_thick" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/padding_title"
+                android:layout_gravity="center_vertical"
+                app:srcCompat="@drawable/ic_modules_big"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textAlignment="center"
+            android:layout_gravity="center_vertical"
+            android:text="@string/assign_to_category"
+            android:padding="@dimen/padding_title"/>
+    </LinearLayout>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/lv_categories">
+
+    </ListView>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_button_gray"
+        android:text="@string/remove_from_category"
+        android:id="@+id/btn_remove_from_category"
+        android:textColor="@android:color/white"/>
+
+</LinearLayout>

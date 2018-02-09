@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/margin_big"
+        android:paddingTop="@dimen/margin_big"
+        android:background="@color/colorPrimary"
+        android:orientation="vertical">
+        <ImageView
+            android:contentDescription="@string/desc_product"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/padding_title"
+            android:layout_gravity="center_horizontal"
+            app:srcCompat="@drawable/ic_receipt_big"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textAlignment="center"
+            android:layout_gravity="center_vertical"
+            android:text="@string/open_new_tab"
+            android:padding="@dimen/padding_title"/>
+    </LinearLayout>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:hint="@string/hint_tab_reference"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/padding_medium"
+        android:id="@+id/et_tab_name"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/colorSubtleGray">
+
+        <ImageButton
+            android:padding="@dimen/padding_medium"
+            android:contentDescription="@string/desc_ok_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_ok"
+            android:background="@drawable/selector_button_gray"
+            android:src="@drawable/ic_check"/>
+    </LinearLayout>
+</LinearLayout>

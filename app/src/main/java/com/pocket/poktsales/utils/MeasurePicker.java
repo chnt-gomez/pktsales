@@ -1,7 +1,5 @@
 package com.pocket.poktsales.utils;
-
 import android.content.res.Resources;
-
 import com.pocket.poktsales.R;
 
 /**
@@ -16,7 +14,7 @@ public class MeasurePicker {
     private static final int LT = 4;
     private static final int OZ = 5;
 
-    public static String getString(Resources res, int measure){
+    private static String getString(Resources res, int measure){
         int ref;
         switch (measure){
 
@@ -44,7 +42,7 @@ public class MeasurePicker {
         return res.getString(ref);
     }
 
-    static String[] getEntries(Resources res){
+    public static String[] getEntries(Resources res){
         String[] entries = new String[6];
         for (int i=0; i<6; i++){
             entries[i] = getString(res, i);

@@ -1,49 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:id="@+id/coordinator_layout"
-    tools:context="com.pocket.poktsales.activities.InventoryActivity">
-
-    <android.support.design.widget.AppBarLayout
+    <android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        xmlns:sothree="http://schemas.android.com/tools"
+        android:id="@+id/coordinator_layout"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        tools:context="com.pocket.poktsales.activities.InventoryActivity">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+        <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
 
-    </android.support.design.widget.AppBarLayout>
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|center_horizontal"
-        app:layout_anchor="@+id/include"
-        app:layout_anchorGravity="center_vertical|center_horizontal" />
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/barSize"
+                android:background="@color/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_box_add" />
-    <include
-        android:id="@+id/include"
-        layout="@layout/content_inventory" />
+        </android.support.design.widget.AppBarLayout>
 
 
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            app:layout_anchorGravity="center_vertical|center_horizontal" />
 
-
-
-
-</android.support.design.widget.CoordinatorLayout>
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="@dimen/fab_margin"
+                app:srcCompat="@drawable/ic_box_add" />
+            <com.sothree.slidinguppanel.SlidingUpPanelLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:id="@+id/sliding_up_panel"
+                sothree:umanoDragView="@+id/panel_content"
+                sothree:umanoPanelState="hidden"
+                android:gravity="bottom"
+                sothree:overlay="false"
+                sothree:umanoPanelHeight="0dp"
+                sothree:umanoParalaxOffset="100dp"
+                sothree:umanoShadowHeight="4dp">
+                <include
+                    android:id="@+id/include"
+                    layout="@layout/content_inventory" />
+                <include android:id="@+id/panel_content"
+                    layout="@layout/content_product_detail"/>
+            </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+    </android.support.design.widget.CoordinatorLayout>

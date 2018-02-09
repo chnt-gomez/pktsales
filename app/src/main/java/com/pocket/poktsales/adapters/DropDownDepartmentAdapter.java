@@ -12,7 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.pocket.poktsales.R;
-import com.pocket.poktsales.model.Department;
+import com.pocket.poktsales.model.MDepartment;
 
 import java.util.List;
 
@@ -20,8 +20,8 @@ import java.util.List;
  * Created by vicente on 6/09/17.
  */
 
-public class DropDownDepartmentAdapter extends ArrayAdapter<Department> {
-    public DropDownDepartmentAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<Department> objects) {
+public class DropDownDepartmentAdapter extends ArrayAdapter<MDepartment> {
+    public DropDownDepartmentAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<MDepartment> objects) {
         super(context, resource, objects);
     }
 
@@ -32,26 +32,29 @@ public class DropDownDepartmentAdapter extends ArrayAdapter<Department> {
         if (convertView == null)
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.dropdown_department_item, null);
         TextView tvDepartmentName = (TextView)convertView.findViewById(R.id.tv_item);
-        Department department = getItem(position);
+        MDepartment department = getItem(position);
         if (department != null)
-            tvDepartmentName.setText(department.getDepartmentName());
+            tvDepartmentName.setText(department.departmentName);
         return convertView;
     }
 
+    
+    @SuppressLint("InflateParams")
+    @NonNull
     @Override
     public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         if (convertView == null)
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.dropdown_department_item, null);
         TextView tvDepartmentName = (TextView)convertView.findViewById(R.id.tv_item);
-        Department department = getItem(position);
+        MDepartment department = getItem(position);
         if (department != null)
-            tvDepartmentName.setText(department.getDepartmentName());
+            tvDepartmentName.setText(department.departmentName);
         return convertView;
     }
 
     @Override
     public long getItemId(int position) {
-        Department department = getItem(position);
-        return department != null ? department.getId() : -1;
+        MDepartment department = getItem(position);
+        return department != null ? department.id : -1;
     }
 }

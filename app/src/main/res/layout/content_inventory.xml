@@ -8,19 +8,20 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.pocket.poktsales.activities.InventoryActivity"
+    android:layout_marginTop="@dimen/barSize"
     tools:showIn="@layout/activity_inventory">
-
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorAccent"
+        android:layout_height="@dimen/barSize"
+        android:layout_marginTop="@dimen/barSize"
+        android:background="@color/colorPrimaryDark"
         android:orientation="horizontal"
         android:weightSum="5">
         <TextView
             android:id="@+id/tv_product_name"
             android:layout_width="0dp"
             android:paddingLeft="@dimen/padding_title"
+            android:textSize="18sp"
             android:textColor="@android:color/white"
             android:layout_gravity="center_vertical"
             android:text="@string/header_product_name"
@@ -30,12 +31,12 @@
             android:layout_width="0dp"
             android:textColor="@android:color/white"
             android:layout_height="wrap_content"
+            android:textSize="18sp"
             android:layout_weight="1"
             android:text="@string/header_product_price"
             android:textAlignment="center"
             android:layout_gravity="center_vertical"
             android:id="@+id/tv_product_price"/>
-
     </LinearLayout>
     <ListView
         android:layout_width="match_parent"

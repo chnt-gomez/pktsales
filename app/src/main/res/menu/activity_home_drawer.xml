@@ -1,36 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_sales"
-            android:icon="@drawable/ic_menu_sales"
-            android:title="@string/menu_sales" />
-        <item
-            android:id="@+id/nav_inventory"
-            android:icon="@drawable/ic_menu_box"
-            android:title="@string/menu_inventory" />
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
-    </group>
-
-    <item android:title="Communicate">
+    <item android:title="@string/menu">
         <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+            <group>
+                <item
+                    android:id="@+id/nav_sales"
+                    android:icon="@drawable/ic_menu_sales"
+                    android:title="@string/menu_sales" />
+                <item
+                    android:id="@+id/nav_inventory"
+                    android:icon="@drawable/ic_menu_box"
+                    android:title="@string/menu_inventory" />
+                <item
+                    android:id="@+id/nav_categories"
+                    android:icon="@drawable/ic_view_module"
+                    android:title="@string/departments" />
+            </group>
         </menu>
     </item>
-
+    <item android:title="@string/reports">
+        <menu>
+            <group>
+                <item
+                    android:id="@+id/nav_day_report"
+                    android:title="@string/day_report"
+                    android:icon="@drawable/ic_playlist_add_check_24"/>
+                <item
+                    android:id="@+id/nav_business_report"
+                    android:title="@string/business_report"
+                    android:icon="@drawable/ic_show_chart_24"/>
+            </group>
+        </menu>
+    </item>
+    <item android:title="@string/settings">
+        <menu>
+            <group>
+                <item
+                    android:id="@+id/nav_business_settings"
+                    android:title="@string/business_settings"
+                    android:icon="@drawable/ic_settings_24"/>
+            </group>
+        </menu>
+    </item>
+    <item android:title="@string/contact">
+        <menu>
+            <group>
+                <item
+                    android:id="@+id/nav_contact"
+                    android:title="@string/about"
+                    android:icon="@drawable/ic_help_circle"/>
+            </group>
+        </menu>
+    </item>
 </menu>

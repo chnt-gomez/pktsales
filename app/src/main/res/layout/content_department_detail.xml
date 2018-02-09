@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/margin_big"
+        android:paddingTop="@dimen/margin_big"
+        android:background="@color/colorPrimary"
+        android:layout_marginBottom="@dimen/margin_big"
+        android:orientation="vertical">
+        <ImageButton
+            android:contentDescription="@string/delete_product"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_delete"
+            android:layout_marginEnd="@dimen/margin_big"
+            android:layout_gravity="end"
+            android:background="@null"
+            app:srcCompat="@drawable/ic_delete_empty"/>
+        <ImageView
+            android:contentDescription="@string/desc_product"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/padding_title"
+            android:layout_gravity="center_horizontal"
+            app:srcCompat="@drawable/ic_modules_big"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textAlignment="center"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/tv_department_name"
+            android:padding="@dimen/padding_title"/>
+    </LinearLayout>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_margin="@dimen/padding_small"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_department_name"
+        android:id="@+id/et_department_name"
+        android:nextFocusUp="@id/et_department_name"
+        android:nextFocusLeft="@id/et_department_name"/>
+
+    <LinearLayout
+        android:layout_marginTop="@dimen/margin_big"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/colorSubtleGray">
+
+        <ImageButton
+            android:padding="@dimen/padding_medium"
+            android:contentDescription="@string/desc_ok_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_ok"
+            android:background="@drawable/selector_button_gray"
+            app:srcCompat="@drawable/ic_save"/>
+    </LinearLayout>
+
+
+</LinearLayout>

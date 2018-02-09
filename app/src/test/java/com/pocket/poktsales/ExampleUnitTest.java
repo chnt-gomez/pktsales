@@ -1,5 +1,6 @@
 package com.pocket.poktsales;
 
+import org.joda.time.DateTime;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -14,4 +15,14 @@ public class ExampleUnitTest {
     public void addition_isCorrect() throws Exception {
         assertEquals(4, 2 + 2);
     }
+
+    @Test
+    public void seeMaxDaysInJan() throws Exception{
+        DateTime date = new DateTime().withMonthOfYear(1);
+        assertEquals(date.dayOfMonth().get(), 9);
+        assertEquals(date.dayOfMonth().getMaximumValue(), 31);
+        assertEquals(date.toString("MMM"), "Jan");
+    }
+
+
 }

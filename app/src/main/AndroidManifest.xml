@@ -3,13 +3,15 @@
     package="com.pocket.poktsales">
 
     <application
-        android:name="com.orm.SugarApp"
+        android:name=".PktApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id"/>
         <meta-data
             android:name="DATABASE"
             android:value="pkt.db" />
@@ -18,14 +20,15 @@
             android:value="1" />
         <meta-data
             android:name="QUERY_LOG"
-            android:value="true" />
+            android:value="false" />
         <meta-data
             android:name="DOMAIN_PACKAGE_NAME"
-            android:value="com.pocket.poktsales" />
+            android:value="com.pocket.poktsales.presenter" />
 
         <activity
             android:name=".activities.HomeScreenActivity"
             android:label="@string/app_name"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,8 +46,66 @@
                 android:value="com.pocket.poktsales.activities.HomeScreenActivity" />
             <meta-data
                 android:name="searchable"
-                android:resource="@xml/searchable"/>
+                android:resource="@xml/searchable" />
         </activity>
+        <activity
+            android:name=".activities.OpenTabsActivity"
+            android:label="@string/title_activity_sell"
+            android:parentActivityName=".activities.HomeScreenActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.pocket.poktsales.activities.HomeScreenActivity" />
+        </activity>
+        <activity
+            android:name=".activities.SellActivity"
+            android:label="@string/title_activity_add_to_sale"
+            android:parentActivityName=".activities.OpenTabsActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.pocket.poktsales.activities.OpenTabsActivity" />
+            <meta-data
+                android:name="searchable"
+                android:resource="@xml/searchable" />
+        </activity>
+        <activity
+            android:name=".activities.CategoriesActivity"
+            android:label="@string/title_activity_categories"
+            android:parentActivityName=".activities.HomeScreenActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.pocket.poktsales.activities.HomeScreenActivity" />
+        </activity>
+        <activity
+            android:name=".activities.QuickSellActivity"
+            android:label="@string/quick_sale"
+            android:parentActivityName=".activities.OpenTabsActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.pocket.poktsales.activities.OpenTabsActivity" />
+        </activity>
+        <activity
+            android:name=".activities.DayReportActivity"
+            android:label="@string/day_report"
+            android:parentActivityName=".activities.HomeScreenActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.BusinessReportActivity"
+            android:label="@string/reports"
+            android:parentActivityName=".activities.HomeScreenActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:label="@string/business_settings"
+            android:parentActivityName=".activities.HomeScreenActivity" />
+        <activity
+            android:name=".activities.ContactActivity"
+            android:label="@string/contact"
+            android:parentActivityName=".activities.HomeScreenActivity"/>
     </application>
 
 </manifest>

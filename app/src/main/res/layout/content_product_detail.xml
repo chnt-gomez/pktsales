@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_big"
+        android:background="@color/colorPrimary"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/margin_big">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/barSize"
+            android:gravity="end"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btn_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="@string/assign_to_category"
+                android:layout_margin="@dimen/padding_big"
+                app:srcCompat="@drawable/ic_view_module_white" />
+
+            <ImageButton
+                android:layout_gravity="center_vertical"
+                android:id="@+id/btn_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/padding_big"
+                android:background="@null"
+                android:contentDescription="@string/delete_product"
+                android:padding="@dimen/padding_big"
+                app:srcCompat="@drawable/ic_delete_empty" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/padding_title"
+            android:contentDescription="@string/desc_product"
+            app:srcCompat="@drawable/ic_box_big" />
+
+        <TextView
+            android:id="@+id/tv_product_name_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:padding="@dimen/padding_title"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_product_category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:padding="@dimen/padding_medium"
+            android:text="@string/no_category"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="italic" />
+    </LinearLayout>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_margin="@dimen/padding_small"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_product_name"
+        android:id="@+id/et_product_name"
+        android:nextFocusUp="@id/et_product_name"
+        android:nextFocusLeft="@id/et_product_name"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/padding_small"
+        android:orientation="horizontal"
+        android:weightSum="2">
+        <EditText
+            android:drawableStart="@drawable/ic_currency_usd"
+            android:layout_width="0dp"
+            android:id="@+id/et_product_price"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:layout_weight="1"
+            android:hint="@string/hint_sell_price" />
+        <Spinner
+            android:layout_width="0dp"
+            android:id="@+id/spn_product_measure"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="@dimen/margin_big"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/colorSubtleGray">
+
+        <ImageButton
+            android:padding="@dimen/padding_medium"
+            android:contentDescription="@string/desc_ok_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_ok"
+            android:background="@drawable/selector_button_gray"
+            app:srcCompat="@drawable/ic_save"/>
+    </LinearLayout>
+
+
+</LinearLayout>
