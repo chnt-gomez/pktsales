@@ -5,6 +5,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -76,6 +77,26 @@ public class HomeScreenActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         layoutResourceId = R.layout.activity_home;
         super.onCreate(savedInstanceState);
+        boolean firstStart = getPreferenceBoolean(SettingsActivity.KEY_IS_FIRST_START, true);
+        if (firstStart){
+            startIntro();
+        }
+    }
+
+    private void startIntro(){
+        Intent intent = new Intent(this, IntroActivity.class);
+        startActivityForResult(intent, 101);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 101){
+            if (resultCode == RESULT_OK){
+                saveBooleanPreference(SettingsActivity.KEY_IS_FIRST_START, false);
+            }
+        }
     }
 
     @Override
@@ -211,6 +232,9 @@ public class HomeScreenActivity extends BaseActivity
         }
         if (id == R.id.nav_contact){
             goTo(ContactActivity.class);
+        }
+        if (id == R.id.nav_intro){
+            startIntro();
         }
 
         drawer.closeDrawer(GravityCompat.START);

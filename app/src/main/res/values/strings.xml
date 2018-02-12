@@ -117,4 +117,6 @@
     <string name="about_content" translatable="false">OhKey is the small business app to help you grow your business. It is free to download and use and constantly updated by a dedicated team.</string>
     <string name="help_instructions" translatable="false">We are currenlty working in providing more resources to help you use better this app. If you need assistance you can contact us in our social media</string>
     <string name="thankyou">Thank you!</string>
+    <string name="replay_intro">Replay intro</string>
+    <string name="help">Help</string>
 </resources>

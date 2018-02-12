@@ -114,4 +114,6 @@
     <string name="contact">Contacto</string>
     <string name="about">Acerca de</string>
     <string name="thankyou">Gracias!</string>
+    <string name="replay_intro">Reproducir intro</string>
+    <string name="help">Ayuda</string>
 </resources>

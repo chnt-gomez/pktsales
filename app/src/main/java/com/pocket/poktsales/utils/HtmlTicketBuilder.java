@@ -52,6 +52,7 @@ public class HtmlTicketBuilder {
                         "    </p>\n" +
                         "  </body>\n" +
                         "</html>"
+                
         );
     }
 

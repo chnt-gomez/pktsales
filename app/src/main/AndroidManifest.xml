@@ -57,6 +57,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.pocket.poktsales.activities.HomeScreenActivity" />
         </activity>
+        <activity android:name=".activities.IntroActivity"
+            android:theme="@style/Theme.Intro" />
+
+
         <activity
             android:name=".activities.SellActivity"
             android:label="@string/title_activity_add_to_sale"

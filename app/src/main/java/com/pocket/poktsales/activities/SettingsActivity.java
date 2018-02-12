@@ -23,6 +23,7 @@ public class SettingsActivity extends PreferenceActivity {
     private AppCompatDelegate mDelegate;
 
     public static final String KEY_BUSINESS_NAME = "pf_business_name";
+    public static final String KEY_IS_FIRST_START = "pf_is_first_start";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

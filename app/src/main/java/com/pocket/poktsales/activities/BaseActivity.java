@@ -17,6 +17,8 @@ import com.pocket.poktsales.interfaces.OnLoadingEventListener;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
 import com.pocket.poktsales.utils.DataLoader;
 
+import java.util.prefs.PreferenceChangeEvent;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -161,5 +163,13 @@ public abstract class BaseActivity extends AppCompatActivity implements Required
 
     protected String getPreferenceString(String key, String defVal){
         return PreferenceManager.getDefaultSharedPreferences(this).getString((key), defVal);
+    }
+
+    protected boolean getPreferenceBoolean(String key, boolean defVal) {
+        return PreferenceManager.getDefaultSharedPreferences(this).getBoolean(key, defVal);
+    }
+
+    protected void saveBooleanPreference(String key, boolean value){
+        PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean(key, value).apply();
     }
 }
