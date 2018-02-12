@@ -156,7 +156,7 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
         activityAdapter = new InventoryActivityAdapter();
         listAdapter = new SimpleProductAdapter(getApplicationContext(), R.layout.row_simple_product, new ArrayList<MProduct>());
         lvProducts.setAdapter(listAdapter);
-
+        lvProducts.setEmptyView(findViewById(android.R.id.empty));
     }
 
 

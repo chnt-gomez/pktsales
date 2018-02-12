@@ -58,6 +58,7 @@ public interface RequiredPresenterOps {
         MDepartment getDepartment(long id);
         int getProductCountFromDepartment(long departmentId);
         void updateDepartment(String newDepartmentArgs, long departmentId);
+        void updateDepartmentColor(long departmentId, int color);
     }
 
     interface HomePresenterOps{

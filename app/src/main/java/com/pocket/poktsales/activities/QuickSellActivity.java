@@ -85,7 +85,8 @@ public class QuickSellActivity extends BaseActivity implements RequiredViewOps.Q
         btnDelete.setVisibility(View.GONE);
         activityAdapter = new ActivityAdapter();
         presenter = new QuickSalePresenter(this);
-        lvSale.setEmptyView(findViewById(android.R.id.empty));
+        lvSale.setEmptyView(findViewById(R.id.empty_sale));
+        lvProducts.setEmptyView(findViewById(R.id.empty_products));
         lvSale.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {

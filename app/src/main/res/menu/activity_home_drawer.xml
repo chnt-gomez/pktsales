@@ -53,6 +53,10 @@
                     android:id="@+id/nav_contact"
                     android:title="@string/about"
                     android:icon="@drawable/ic_help_circle"/>
+                <item
+                    android:id="@+id/nav_rate"
+                    android:title="@string/rate_us"
+                    android:icon="@drawable/ic_star"/>
             </group>
         </menu>
     </item>

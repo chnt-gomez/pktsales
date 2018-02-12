@@ -1,5 +1,7 @@
 package com.pocket.poktsales.presenter;
 
+import android.graphics.Color;
+
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
@@ -29,6 +31,7 @@ public class CategoryPresenter extends BasePresenter implements RequiredPresente
             }
             Department ormDepartment = new Department(department);
             ormDepartment.setDepartmentStatus(Department.ACTIVE);
+            ormDepartment.setColorResource(Color.argb(255, 255, 255, 255));
             department.id = ormDepartment.save();
             view.onDepartmentAdded(department);
         }else{
@@ -39,6 +42,16 @@ public class CategoryPresenter extends BasePresenter implements RequiredPresente
     @Override
     public List<MDepartment> getAllDepartments() {
         return fromDepartmentList(Department.find(Department.class, "department_status = ?", String.valueOf(Department.ACTIVE)));
+    }
+
+    @Override
+    public void updateDepartmentColor(long departmentId, int color) {
+        Department d = Department.findById(Department.class, departmentId);
+        if (d != null){
+            d.setColorResource(color);
+            d.save();
+        }
+        view.onDepartmentUpdate(fromDepartment(d));
     }
 
     @Override

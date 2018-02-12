@@ -39,6 +39,8 @@ public class SimpleCategoryAdapter extends ArrayAdapter<MDepartment> {
             department = new MDepartment();
         }
         TextView tvCategoryName = (TextView)convertView.findViewById(R.id.tv_department_name);
+        View view = convertView.findViewById(R.id.color_view);
+        view.setBackgroundColor(department.colorResource);
 
         tvCategoryName.setText(department.departmentName);
         return convertView;

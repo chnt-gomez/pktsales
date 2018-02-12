@@ -133,7 +133,8 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
     protected void init() {
         super.init();
         presenter = new SalesPresenter(this);
-        lvSale.setEmptyView(findViewById(android.R.id.empty));
+        lvSale.setEmptyView(findViewById(R.id.empty_sale));
+        lvProducts.setEmptyView(findViewById(R.id.empty_products));
 
         if (getSupportActionBar()!= null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -190,6 +191,7 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
         btnDelete.setOnClickListener(this);
         setTitle(R.string.title_activity_add_to_sale);
         start();
+
     }
 
     @Override

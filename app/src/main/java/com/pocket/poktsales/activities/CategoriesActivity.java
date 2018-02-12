@@ -48,8 +48,13 @@ public class CategoriesActivity extends BaseActivity implements AdapterView.OnIt
     @BindView(R.id.btn_delete)
     ImageButton btnDelete;
 
+    @BindView(R.id.btn_pallete)
+    ImageButton btnPallete;
+
     @BindView(R.id.btn_ok)
     ImageButton btnSave;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +106,7 @@ public class CategoriesActivity extends BaseActivity implements AdapterView.OnIt
 
         setTitle(R.string.title_activity_categories);
         lvDepartments.setOnItemClickListener(this);
+        lvDepartments.setEmptyView(findViewById(android.R.id.empty));
         start();
     }
 
@@ -157,6 +163,20 @@ public class CategoriesActivity extends BaseActivity implements AdapterView.OnIt
                 }).show();
             }
         });
+        btnPallete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogBuilder.colorPicketDialog(CategoriesActivity.this,
+                        department.colorResource, new DialogBuilder.DialogInteractionListener.OnColorSelectedListener() {
+                    @Override
+                    public void onColorSelected(int color) {
+                        presenter.updateDepartmentColor(department.id, color);
+                        btnPallete.setColorFilter(color);
+                    }
+                }).show();
+            }
+        });
+        btnPallete.setColorFilter(department.colorResource);
 
     }
 

@@ -1,9 +1,11 @@
 package com.pocket.poktsales.activities;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
@@ -236,9 +238,28 @@ public class HomeScreenActivity extends BaseActivity
         if (id == R.id.nav_intro){
             startIntro();
         }
+        if (id == R.id.nav_rate){
+            rate();
+        }
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void rate(){
+        Uri uri = Uri.parse("market://details?id=com.pocket.poktsales");
+        Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+        // To count with Play market backstack, After pressing back button,
+        // to taken back to our application, we need to add following flags to intent.
+        goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY |
+                Intent.FLAG_ACTIVITY_NEW_DOCUMENT |
+                Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+        try {
+            startActivity(goToMarket);
+        } catch (ActivityNotFoundException e) {
+            startActivity(new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("http://play.google.com/store/apps/details?id=com.pocket.poktsales")));
+        }
     }
 
     private void goTo(Class activity) {
