@@ -128,6 +128,7 @@ class BasePresenter {
         if (product.getDepartment() != null) {
             modelProduct.productDepartment = product.getDepartment().getDepartmentName();
             modelProduct.departmentId = product.getDepartment().getId();
+            modelProduct.productDepartmentColor = product.getDepartment().getColorResource();
         }
         modelProduct.id = product.getId();
         modelProduct.maskProductSellPrice = Conversor.asCurrency(product.getProductSellPrice());

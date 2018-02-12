@@ -18,4 +18,5 @@ public class MProduct {
     public String productInventory;
     public String productDepartment;
     public float productSellPrice;
+    public int productDepartmentColor;
 }
