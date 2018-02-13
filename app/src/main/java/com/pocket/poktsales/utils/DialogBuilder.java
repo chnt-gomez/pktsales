@@ -22,7 +22,6 @@ import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.adapters.SimpleCategoryAdapter;
@@ -130,7 +129,7 @@ public class DialogBuilder {
         @SuppressLint("InflateParams")
         final View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_sale_success, null);
         final ImageButton positiveButton = (ImageButton)dialogView.findViewById(R.id.btn_ok);
-        final ImageButton shareButton = (ImageButton)dialogView.findViewById(R.id.btn_share);
+        //final ImageButton shareButton = (ImageButton)dialogView.findViewById(R.id.btn_share);
         positiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -138,12 +137,14 @@ public class DialogBuilder {
                 instance.dismiss();
             }
         });
+        /*
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 callback.onShareTicket();
             }
         });
+        */
 
 
         builder.setView(dialogView);
