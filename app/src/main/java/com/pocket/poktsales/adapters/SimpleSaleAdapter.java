@@ -56,9 +56,10 @@ public class SimpleSaleAdapter extends ArraySwipeAdapter<MSale>{
             @Override
             public void onClick(View v) {
                 view.requestDelete(getItemId(position));
+
             }
         });
-
+        depView.setBackgroundColor(sale.colorDepartment);
         return convertView;
     }
 

@@ -1,5 +1,7 @@
 package com.pocket.poktsales.presenter;
 
+import android.util.Log;
+
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieEntry;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
@@ -66,13 +68,21 @@ public class ReportPresenter extends BasePresenter implements RequiredPresenterO
     public float getSaleByDepartment(long departmentId, int monthOfYear, int year) {
         DateTime start = new DateTime(year, monthOfYear, 1, 0, 0);
         DateTime end = start.plusMonths(1);
-        float total = 0;
-        for (Sale s : Sale.findWithQuery(
-                Sale.class, "SELECT * from Sale s, Product p, Department d, Ticket t WHERE " +
-                        "p.department = d.id AND d.id = ? AND s.product = p.id AND s.id = t.id AND t.date_time >= ? " +
-                        "AND t.date_time < ?", String.valueOf(departmentId), String.valueOf(start.getMillis()), String.valueOf(end)
-        )){
-            total += s.getSaleTotal();
+        float total = 0f;
+        List<Ticket> tickets = Ticket.find(Ticket.class, "date_time >= ? AND date_time < ?",
+                String.valueOf(start.getMillis()), String.valueOf(end.getMillis()));
+
+        List<Sale> sales = new ArrayList<>();
+        for (Ticket t: tickets){
+            sales.addAll(Sale.find(Sale.class, "ticket = ?", String.valueOf(t.getId())));
+        }
+
+        for (Sale s : sales){
+            if (s.getProduct().getDepartment() != null){
+                if (s.getProduct().getDepartment().getId() == departmentId){
+                    total += s.getSaleTotal();
+                }
+            }
         }
         return total;
     }

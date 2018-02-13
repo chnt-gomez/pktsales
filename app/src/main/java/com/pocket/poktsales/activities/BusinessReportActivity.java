@@ -17,6 +17,8 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
+import com.pocket.poktsales.model.MDepartment;
+import com.pocket.poktsales.presenter.Department;
 import com.pocket.poktsales.presenter.ReportPresenter;
 import com.pocket.poktsales.utils.ChartValueFormatter;
 import com.pocket.poktsales.utils.Conversor;
@@ -107,9 +109,13 @@ public class BusinessReportActivity extends BaseActivity implements RequiredView
 
     private void setCategoriesChart(List<PieEntry> monthPerformanceEntries) {
         PieDataSet set = new PieDataSet(monthPerformanceEntries, null);
-        set.setColors(new int[]{R.color.chart_red, R.color.chart_red_dark,
-                R.color.chart_purple, R.color.chart_blue, R.color.chart_blue_light,
-                R.color.chart_green, R.color.chart_green_light}, getApplicationContext());
+        List<MDepartment> deps = presenter.getDepartments();
+        int[] colors = new int[deps.size()];
+
+        for (int i=0; i<deps.size(); i++){
+            colors[i] = deps.get(i).colorResource;
+        }
+        set.setColors(colors);
         PieData data = new PieData(set);
         data.setValueFormatter(new ChartValueFormatter());
         categoryChart.setData(data);

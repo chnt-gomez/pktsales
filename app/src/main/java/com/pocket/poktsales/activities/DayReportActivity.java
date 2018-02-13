@@ -117,7 +117,7 @@ public class DayReportActivity extends BaseActivity implements RequiredViewOps.D
         for (MDepartment d : presenter.getAllActiveDepartments()){
             activityAdapter.addToCategorySales(new PieEntry(presenter.getSalesFromDepartment(d.id,
                     activityAdapter.getDateTime().withTimeAtStartOfDay().getMillis(),
-                   activityAdapter.getDateTime().plusDays(1).withTimeAtStartOfDay().getMillis()), d.departmentName));
+                   activityAdapter.getDateTime().withTimeAtStartOfDay().plusDays(1).getMillis()), d.departmentName));
         }
     }
 
@@ -150,9 +150,12 @@ public class DayReportActivity extends BaseActivity implements RequiredViewOps.D
 
     private void setCategorySalesChart(List<PieEntry> entries){
         PieDataSet set = new PieDataSet(entries, null);
-        set.setColors(new int[]{R.color.chart_red, R.color.chart_red_dark,
-                R.color.chart_purple, R.color.chart_blue, R.color.chart_blue_light,
-                R.color.chart_green, R.color.chart_green_light}, getApplicationContext());
+        List<MDepartment> deps = presenter.getAllActiveDepartments();
+        int[] colors = new int[deps.size()];
+        for (int i=0; i<deps.size(); i++){
+            colors[i] = deps.get(i).colorResource;
+        }
+        set.setColors(colors);
         PieData data = new PieData(set);
         data.setValueFormatter(new ChartValueFormatter());
         categoryChart.setData(data);

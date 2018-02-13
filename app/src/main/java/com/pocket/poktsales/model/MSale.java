@@ -13,4 +13,5 @@ public class MSale {
     public String maskSaleTotal;
     public long productId;
     public long ticketId;
+    public int colorDepartment;
 }

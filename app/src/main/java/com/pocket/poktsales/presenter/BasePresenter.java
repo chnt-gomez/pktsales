@@ -1,5 +1,6 @@
 package com.pocket.poktsales.presenter;
 
+import android.graphics.Color;
 import android.util.Log;
 
 import com.pocket.poktsales.model.MDepartment;
@@ -153,8 +154,12 @@ class BasePresenter {
         mSale.saleTotal = s.getSaleTotal();
         mSale.maskSaleTotal = Conversor.asCurrency(s.getSaleTotal());
         mSale.ticketId = s.getTicket().getId();
+        Department d = s.getProduct().getDepartment();
+        if (d != null)
+            mSale.colorDepartment = s.getProduct().getDepartment().getColorResource();
+        else
+            mSale.colorDepartment = 0x138452;
         return mSale;
-
     }
 
     List<MSale> fromSaleList(List<Sale> sales){
