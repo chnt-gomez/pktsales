@@ -15,6 +15,8 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
 import com.pocket.poktsales.model.MDepartment;
@@ -86,6 +88,7 @@ public class BusinessReportActivity extends BaseActivity implements RequiredView
     @Override
     public void onLoadingPrepare() {
         super.onLoadingPrepare();
+        categoryChart.setCenterText("");
         if (activityAdapter == null)
             activityAdapter = new ActivityAdapter();
     }
@@ -116,13 +119,27 @@ public class BusinessReportActivity extends BaseActivity implements RequiredView
             colors[i] = deps.get(i).colorResource;
         }
         set.setColors(colors);
+        set.setDrawValues(false);
         PieData data = new PieData(set);
         data.setValueFormatter(new ChartValueFormatter());
         categoryChart.setData(data);
         categoryChart.getLegend().setEnabled(false);
         categoryChart.setDescription(null);
-        categoryChart.getData().setValueTextColor(Color.WHITE);
-        categoryChart.getData().setValueTextSize(16);
+        categoryChart.setDrawEntryLabels(false);
+        categoryChart.setCenterTextColor(getResources().getColor(R.color.colorPrimary));
+        categoryChart.setCenterTextSize(16);
+        categoryChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                PieEntry pe = (PieEntry)e;
+                categoryChart.setCenterText(String.format("%s \n %s", pe.getLabel(), Conversor.asCurrency(pe.getValue())));
+            }
+
+            @Override
+            public void onNothingSelected() {
+                categoryChart.setCenterText("");
+            }
+        });
         categoryChart.invalidate();
     }
 
