@@ -121,5 +121,5 @@
     <string name="no_products_to_sell">Aún no has creado productos para vender pero puedes añadir productos temporales con el boton del menú superior sin tener que crearlos</string>
     <string name="no_products">Tus productos activos se enlistarán aquí. Crea productos para poder venderlos</string>
     <string name="empty_categories">Crea un departamentgo para ordenar tus productos. Por ejemplo, podrías ordenar todos los refrescos en el departamento \"Bebidas\"</string>
-    <string name="pick_a_color">Selecciona un color…</string>
+    <string name="pick_a_color">Mezcla un color…</string>
 </resources>

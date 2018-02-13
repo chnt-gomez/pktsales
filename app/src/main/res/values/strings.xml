@@ -124,5 +124,5 @@
     <string name="no_products_to_sell">You haven\'t created any products to sell yet. You can add temporary products with the button in the top menu</string>
     <string name="no_products">All your active products will be listed here. Create products to sell them</string>
     <string name="empty_categories">Create categories to order your products. For example all your drinks could be fit into \"Drinks\" category</string>
-    <string name="pick_a_color">Pick a color…</string>
+    <string name="pick_a_color">Mix a color…</string>
 </resources>

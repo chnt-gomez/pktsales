@@ -17,6 +17,7 @@
         android:id="@+id/lv_categories"/>
     <TextView
         android:id="@android:id/empty"
+        android:layout_marginTop="@dimen/barSize"
         android:layout_margin="8dp"
         android:textAlignment="center"
         android:textSize="18sp"

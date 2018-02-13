@@ -44,7 +44,7 @@ public class SimpleSaleAdapter extends ArraySwipeAdapter<MSale>{
         TextView tvQty = (TextView) convertView.findViewById(R.id.tv_product_qty);
         TextView tvSaleName = (TextView) convertView.findViewById(R.id.tv_sale_concept);
         TextView tvSaleTotal = (TextView) convertView.findViewById(R.id.tv_sale_total);
-
+        View depView = convertView.findViewById(R.id.color_view);
         MSale sale = (MSale)getItem(position);
         if (sale != null){
             tvQty.setText(sale.productAmount);
@@ -58,6 +58,7 @@ public class SimpleSaleAdapter extends ArraySwipeAdapter<MSale>{
                 view.requestDelete(getItemId(position));
             }
         });
+
         return convertView;
     }
 
