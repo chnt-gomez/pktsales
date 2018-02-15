@@ -256,11 +256,13 @@ public class QuickSellActivity extends BaseActivity implements RequiredViewOps.Q
     public boolean onQueryTextChange(String query) {
         if (query.length() >= 3 || query.length() % 3 == 0){
             searchProducts(query);
+            return true;
         }
         if(query.length() == 0){
             searchProducts(query);
+            return true;
         }
-        return true;
+        return false;
     }
 
     private void animateTotal() {
