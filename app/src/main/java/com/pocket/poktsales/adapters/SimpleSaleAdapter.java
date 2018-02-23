@@ -63,6 +63,13 @@ public class SimpleSaleAdapter extends ArraySwipeAdapter<MSale>{
         return convertView;
     }
 
+    public void remove(long objectId){
+       for (int i=0; i<getCount(); i++){
+           if (getItemId(i) == objectId)
+               remove(getItem(i));
+       }
+    }
+
     @Override
     public int getSwipeLayoutResourceId(int position) {
         return R.id.swipe;
@@ -71,4 +78,5 @@ public class SimpleSaleAdapter extends ArraySwipeAdapter<MSale>{
     public interface ViewOperations{
         void requestDelete(long saleId);
     }
+
 }
