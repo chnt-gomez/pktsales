@@ -75,7 +75,6 @@ public class QuickSellActivity extends BaseActivity implements RequiredViewOps.Q
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         init();
-
     }
 
     @Override
