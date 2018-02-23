@@ -1,12 +1,12 @@
 package com.pocket.poktsales.activities;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
-
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
@@ -20,7 +20,6 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
 import com.pocket.poktsales.model.MDepartment;
-import com.pocket.poktsales.presenter.Department;
 import com.pocket.poktsales.presenter.ReportPresenter;
 import com.pocket.poktsales.utils.ChartValueFormatter;
 import com.pocket.poktsales.utils.Conversor;
@@ -33,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by MAV1GA on 08/01/2018.
@@ -59,13 +59,15 @@ public class BusinessReportActivity extends BaseActivity implements RequiredView
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        this.layoutResourceId = R.layout.activity_reports;
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_reports);
+        ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
+        init();
     }
 
     @Override
     protected void init() {
-        super.init();
         if (getSupportActionBar()!= null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         presenter = new ReportPresenter(this);

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 public class CategoriesActivity extends BaseActivity implements AdapterView.OnItemClickListener, RequiredViewOps.CategoryViewOps{
@@ -58,8 +59,11 @@ public class CategoriesActivity extends BaseActivity implements AdapterView.OnIt
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        this.layoutResourceId = R.layout.activity_categories;
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_categories);
+        ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
+        init();
     }
 
     @Override

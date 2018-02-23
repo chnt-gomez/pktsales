@@ -36,37 +36,24 @@ public abstract class BaseActivity extends AppCompatActivity implements Required
 
     protected ProgressBar loadingBar;
 
-    protected int layoutResourceId;
-
     protected DataLoader loader;
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        try {
-            setContentView(layoutResourceId);
-        }catch (Exception e){
-            Log.w(getClass().getSimpleName(), "Invalid resource id. Set layoutResourceId");
-        }finally{
-            init();
-        }
-    }
-
-
 
     protected void start(){
         loader = new DataLoader(this);
         loader.execute();
     }
 
-    protected void init() {
-        ButterKnife.bind(this);
-        setSupportActionBar(toolbar);
-    }
-
     @Override
     public void onSuccess() {
 
+    }
+
+    protected void init(){
+
+    }
+
+    protected void setToolbar(){
+        setSupportActionBar(toolbar);
     }
 
 

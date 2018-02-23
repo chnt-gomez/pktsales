@@ -33,6 +33,7 @@ import org.joda.time.DateTime;
 import java.util.ArrayList;
 import java.util.List;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by MAV1GA on 19/12/2017.
@@ -62,8 +63,11 @@ public class DayReportActivity extends BaseActivity implements RequiredViewOps.D
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        layoutResourceId = R.layout.activity_day_report;
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_day_report);
+        ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
+        init();
     }
 
     @Override

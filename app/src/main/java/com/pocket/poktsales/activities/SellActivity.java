@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class SellActivity extends BaseActivity implements SearchView.OnQueryTextListener, View.OnClickListener, RequiredViewOps.SaleViewOps,
     SimpleSaleAdapter.ViewOperations, PickToSellProductAdapter.ViewOperations{
@@ -79,8 +80,11 @@ public class SellActivity extends BaseActivity implements SearchView.OnQueryText
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        layoutResourceId = R.layout.activity_add_to_sale;
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_add_to_sale);
+        ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
+        init();
     }
 
     @Override

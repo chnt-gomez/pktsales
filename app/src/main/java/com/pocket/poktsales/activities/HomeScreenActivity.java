@@ -45,6 +45,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class HomeScreenActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -77,8 +78,11 @@ public class HomeScreenActivity extends BaseActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        layoutResourceId = R.layout.activity_home;
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_home);
+        ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
+        init();
         boolean firstStart = getPreferenceBoolean(SettingsActivity.KEY_IS_FIRST_START, true);
         if (firstStart){
             startIntro();
