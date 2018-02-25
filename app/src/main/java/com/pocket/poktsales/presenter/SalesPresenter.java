@@ -45,7 +45,7 @@ public class SalesPresenter extends BasePresenter implements
         ticket.setSaleTotal(newTotal);
         ticket.save();
         view.onSuccess();
-        view.onProductAddToSale(fromSale(sale), Conversor.asCurrency(newTotal), qty);
+        view.onProductAddToSale(fromSale(sale, view.getResString(R.string.unknown)), Conversor.asCurrency(newTotal), qty);
     }
 
     @Override
@@ -79,7 +79,8 @@ public class SalesPresenter extends BasePresenter implements
 
     @Override
     public List<MSale> getProductsFromTab(long ticketId) {
-        return fromSaleList(Sale.find(Sale.class, "ticket = ?", String.valueOf(ticketId)));
+        return fromSaleList(Sale.find(Sale.class, "ticket = ?", String.valueOf(ticketId)),
+                view.getResString(R.string.unknown));
     }
 
     @Override

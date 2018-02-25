@@ -6,6 +6,7 @@ import com.pocket.poktsales.R;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
 import com.pocket.poktsales.model.MDepartment;
+import com.pocket.poktsales.model.MSale;
 import com.pocket.poktsales.model.MTicket;
 import com.pocket.poktsales.utils.Conversor;
 
@@ -42,6 +43,17 @@ public class HomePresenter extends BasePresenter implements RequiredPresenterOps
     }
 
     @Override
+    public MTicket getTicket(long tickedId) {
+        return fromTicket(Ticket.findById(Ticket.class, tickedId));
+    }
+
+    @Override
+    public List<MSale> getSalesFromTicket(long ticketId) {
+        return fromSaleList(Sale.find(Sale.class, "ticket = ?", String.valueOf(ticketId)),
+                view.getResString(R.string.unknown));
+    }
+
+    @Override
     public String getBestSellerOfTheDay() {
         List<Product> results =
                 Product.findWithQuery(Product.class, "SELECT *, COUNT(*) as products FROM Product p JOIN Sale s ON s.product = p.id JOIN " +
@@ -63,6 +75,8 @@ public class HomePresenter extends BasePresenter implements RequiredPresenterOps
         }
         return total;
     }
+
+
 
     @Override
     public float getSaleFromDepartment(long departmentId) {

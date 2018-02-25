@@ -17,6 +17,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.github.mikephil.charting.charts.LineChart;
@@ -36,6 +37,7 @@ import com.pocket.poktsales.model.MTicket;
 import com.pocket.poktsales.presenter.HomePresenter;
 import com.pocket.poktsales.utils.ChartValueFormatter;
 import com.pocket.poktsales.utils.Conversor;
+import com.pocket.poktsales.utils.DialogBuilder;
 import com.pocket.poktsales.utils.MonthPerformanceMarker;
 
 import org.joda.time.DateTime;
@@ -93,6 +95,8 @@ public class HomeScreenActivity extends BaseActivity
         Intent intent = new Intent(this, IntroActivity.class);
         startActivityForResult(intent, 101);
     }
+
+
 
 
     @Override
@@ -173,6 +177,19 @@ public class HomeScreenActivity extends BaseActivity
             @Override
             public void onAdLoaded() {
                 cvAdvertising.setVisibility(View.VISIBLE);
+            }
+        });
+        lvRecentSales.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                DialogBuilder.seeTicketDialog(HomeScreenActivity.this,
+                        id, presenter.getSalesFromTicket(id),
+                        new DialogBuilder.DialogInteractionListener.OnShareTicketListener() {
+                    @Override
+                    public void onTicketShare() {
+
+                    }
+                }).show();
             }
         });
 

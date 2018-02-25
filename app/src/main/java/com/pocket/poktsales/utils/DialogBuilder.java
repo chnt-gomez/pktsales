@@ -25,9 +25,12 @@ import android.widget.TextView;
 
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.adapters.SimpleCategoryAdapter;
+import com.pocket.poktsales.adapters.SimpleSaleAdapter;
+import com.pocket.poktsales.adapters.SimpleTicketAdapter;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.model.MDepartment;
 import com.pocket.poktsales.model.MProduct;
+import com.pocket.poktsales.model.MSale;
 import com.pocket.poktsales.model.MTicket;
 
 import org.joda.time.DateTime;
@@ -497,6 +500,27 @@ public class DialogBuilder {
         return instance;
     }
 
+    public static Dialog seeTicketDialog(final Context context,
+                                         long ticketId, List<MSale> sale,
+                                         final DialogInteractionListener.OnShareTicketListener callback){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        @SuppressLint("InflateParams")
+        final View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_ticket_details, null);
+        /*
+        Init widgets
+         */
+        final TextView tvTicketReference = (TextView) dialogView.findViewById(R.id.tv_ticket_reference);
+        final ImageButton btnShare = (ImageButton)dialogView.findViewById(R.id.btn_share);
+        final ListView lvSales = (ListView)dialogView.findViewById(R.id.lv_tickets);
+        SimpleTicketAdapter adapter = new SimpleTicketAdapter(context, R.layout.simple_sale_row, sale);
+        String ticket = String.format("%s %d", context.getString(R.string.ticket_no), ticketId);
+        lvSales.setAdapter(adapter);
+        tvTicketReference.setText(ticket);
+        builder.setView(dialogView);
+        instance = builder.create();
+        return instance;
+    }
+
     public static class DialogInteractionListener{
         public interface OnNewProductListener{
             void onNewProduct(MProduct product);
@@ -546,6 +570,10 @@ public class DialogBuilder {
 
         public interface OnColorSelectedListener{
             void onColorSelected(int color);
+        }
+
+        public interface OnShareTicketListener {
+            void onTicketShare();
         }
     }
 }

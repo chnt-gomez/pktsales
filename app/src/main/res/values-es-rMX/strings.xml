@@ -122,4 +122,6 @@
     <string name="no_products">Tus productos activos se enlistarán aquí. Crea productos para poder venderlos</string>
     <string name="empty_categories">Crea un departamento para ordenar tus productos. Por ejemplo, podrías ordenar todos los refrescos en el departamento \"Bebidas\"</string>
     <string name="pick_a_color">Mezcla un color…</string>
+    <string name="ticket_no">Ticket #</string>
+    <string name="unknown">Artículo desconocido</string>
 </resources>

@@ -46,6 +46,7 @@ public class QuickSalePresenter extends BasePresenter implements RequiredPresent
             sale.setProduct(findProductById(p.id));
             sale.setTicket(ticket);
             sale.setProductAmount(1F);
+            sale.setSaleConcept(p.productName);
             sale.setSaleTotal(p.productSellPrice * sale.getProductAmount());
             sale.save();
             ticket.setSaleTotal(ticket.getSaleTotal()+sale.getSaleTotal());

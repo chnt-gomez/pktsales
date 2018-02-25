@@ -70,6 +70,8 @@ public interface RequiredPresenterOps {
         float getSalesFromDay(int dayOfMonth);
         String getBestSellerOfTheDay();
         List<MTicket> getRecentSales();
+        List<MSale> getSalesFromTicket(long ticketId);
+        MTicket getTicket(long ticketId);
     }
 
     interface QuickSalePresenterOps{
