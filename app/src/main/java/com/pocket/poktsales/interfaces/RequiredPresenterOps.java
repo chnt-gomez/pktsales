@@ -90,7 +90,11 @@ public interface RequiredPresenterOps {
         float geTotalSalesAtTime(long from, long to);
         float getSalesFromDepartment(long departmentId, long from, long to);
         List<MDepartment> getAllActiveDepartments();
+        List<MSale> getSalesFromTicket(long ticketId);
+        float getTicketTotal(long ticketId);
     }
+
+
 
     interface ReportsPresenterOps {
         float getMonthSales(int monthOfYear, int year);

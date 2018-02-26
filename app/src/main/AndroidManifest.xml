@@ -110,6 +110,9 @@
             android:name=".activities.ContactActivity"
             android:label="@string/contact"
             android:parentActivityName=".activities.HomeScreenActivity"/>
+        <activity android:name=".activities.NewVersionActivity"
+            android:theme="@style/Theme.Intro"/>
+
     </application>
 
 </manifest>

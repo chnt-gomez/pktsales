@@ -43,13 +43,17 @@
         android:orientation="horizontal"
         android:background="@color/colorSubtleGray">
 
-        <ImageButton
-            android:padding="@dimen/padding_medium"
+        <TextView
+            android:padding="@dimen/padding_big"
             android:contentDescription="@string/desc_ok_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/btn_share"
-            android:background="@drawable/selector_button_gray"
+            android:id="@+id/tv_ticket_total"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:textAlignment="center"
+            android:background="@color/colorPrimary"
             app:srcCompat="@drawable/ic_share_variant"/>
     </LinearLayout>
 </LinearLayout>

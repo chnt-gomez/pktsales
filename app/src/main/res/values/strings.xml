@@ -127,4 +127,6 @@
     <string name="pick_a_color">Mix a color…</string>
     <string name="ticket_no">Ticket #</string>
     <string name="unknown">Unknown</string>
+    <string name="all_tickets_of_day">Today´s tickets</string>
+    <string name="version_features">Version features</string>
 </resources>

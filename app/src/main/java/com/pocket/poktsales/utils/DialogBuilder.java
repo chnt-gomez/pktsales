@@ -501,7 +501,7 @@ public class DialogBuilder {
     }
 
     public static Dialog seeTicketDialog(final Context context,
-                                         long ticketId, List<MSale> sale,
+                                         long ticketId, List<MSale> sale, float ticketTotal,
                                          final DialogInteractionListener.OnShareTicketListener callback){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         @SuppressLint("InflateParams")
@@ -510,10 +510,11 @@ public class DialogBuilder {
         Init widgets
          */
         final TextView tvTicketReference = (TextView) dialogView.findViewById(R.id.tv_ticket_reference);
-        final ImageButton btnShare = (ImageButton)dialogView.findViewById(R.id.btn_share);
+        final TextView tvSaleTotal = (TextView) dialogView.findViewById(R.id.tv_ticket_total);
         final ListView lvSales = (ListView)dialogView.findViewById(R.id.lv_tickets);
         SimpleTicketAdapter adapter = new SimpleTicketAdapter(context, R.layout.simple_sale_row, sale);
         String ticket = String.format("%s %d", context.getString(R.string.ticket_no), ticketId);
+        tvSaleTotal.setText(Conversor.asCurrency(ticketTotal));
         lvSales.setAdapter(adapter);
         tvTicketReference.setText(ticket);
         builder.setView(dialogView);

@@ -86,16 +86,31 @@ public class HomeScreenActivity extends BaseActivity
         setSupportActionBar(toolbar);
         init();
         boolean firstStart = getPreferenceBoolean(SettingsActivity.KEY_IS_FIRST_START, true);
+        boolean newVersion = getPreferenceBoolean(SettingsActivity.KEY_V_1_1_2, true);
         if (firstStart){
             startIntro();
+        }else{
+            if (newVersion){
+                showNewVersion();
+            }
         }
     }
+
+    private void showNewVersion(boolean all) {
+        Intent intent = new Intent(this, NewVersionActivity.class);
+        Bundle args = new Bundle();
+        if (all)
+            args.putBoolean("all", true);
+        args.putString("version", SettingsActivity.KEY_V_1_1_2);
+        intent.putExtras(args);
+        startActivityForResult(intent, 102);
+    }
+
 
     private void startIntro(){
         Intent intent = new Intent(this, IntroActivity.class);
         startActivityForResult(intent, 101);
     }
-
 
 
 
@@ -105,6 +120,11 @@ public class HomeScreenActivity extends BaseActivity
         if (requestCode == 101){
             if (resultCode == RESULT_OK){
                 saveBooleanPreference(SettingsActivity.KEY_IS_FIRST_START, false);
+            }
+        }
+        if (requestCode == 102){
+            if (resultCode == RESULT_OK){
+                saveBooleanPreference(SettingsActivity.KEY_V_1_1_2, false);
             }
         }
     }
@@ -183,7 +203,7 @@ public class HomeScreenActivity extends BaseActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 DialogBuilder.seeTicketDialog(HomeScreenActivity.this,
-                        id, presenter.getSalesFromTicket(id),
+                        id, presenter.getSalesFromTicket(id), presenter.getTicket(id).saleTotal,
                         new DialogBuilder.DialogInteractionListener.OnShareTicketListener() {
                     @Override
                     public void onTicketShare() {
@@ -261,6 +281,9 @@ public class HomeScreenActivity extends BaseActivity
         }
         if (id == R.id.nav_rate){
             rate();
+        }
+        if (id == R.id.nav_version_features){
+            showNewVersion();
         }
 
         drawer.closeDrawer(GravityCompat.START);

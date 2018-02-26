@@ -1,18 +1,13 @@
 package com.pocket.poktsales.presenter;
 
-import android.util.Log;
-
+import com.pocket.poktsales.R;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
 import com.pocket.poktsales.model.MDepartment;
+import com.pocket.poktsales.model.MSale;
 import com.pocket.poktsales.model.MTicket;
 import com.pocket.poktsales.utils.Conversor;
-
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeFieldType;
-
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -85,5 +80,16 @@ public class DayReportPresenter extends BasePresenter implements RequiredPresent
     @Override
     public List<MDepartment> getAllActiveDepartments() {
         return fromDepartmentList(Department.find(Department.class, "department_status = ?", String.valueOf(Department.ACTIVE)));
+    }
+
+    @Override
+    public List<MSale> getSalesFromTicket(long ticketId) {
+        return fromSaleList(Sale.find(Sale.class, "ticket = ?", String.valueOf(ticketId)),
+                view.getResString(R.string.unknown));
+    }
+
+    @Override
+    public float getTicketTotal(long ticketId) {
+        return Ticket.findById(Ticket.class, ticketId).getSaleTotal();
     }
 }

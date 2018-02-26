@@ -24,6 +24,7 @@ public class SettingsActivity extends PreferenceActivity {
 
     public static final String KEY_BUSINESS_NAME = "pf_business_name";
     public static final String KEY_IS_FIRST_START = "pf_is_first_start";
+    public static final String KEY_V_1_1_2 = "pf_1_1_2";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

@@ -50,6 +50,10 @@
                     android:title="@string/replay_intro"
                     android:icon="@drawable/ic_play_box_outline"/>
                 <item
+                    android:id="@+id/nav_version_features"
+                    android:title="@string/version_features"
+                    android:icon="@drawable/ic_play_box_outline"/>
+                <item
                     android:id="@+id/nav_contact"
                     android:title="@string/about"
                     android:icon="@drawable/ic_help_circle"/>

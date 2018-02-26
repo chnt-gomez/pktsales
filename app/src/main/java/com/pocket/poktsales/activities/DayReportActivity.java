@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.github.mikephil.charting.charts.BarChart;
@@ -19,6 +21,7 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.pocket.poktsales.R;
+import com.pocket.poktsales.adapters.RecentSaleAdapter;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
 import com.pocket.poktsales.model.MDepartment;
@@ -55,11 +58,15 @@ public class DayReportActivity extends BaseActivity implements RequiredViewOps.D
     @BindView(R.id.chart_day_department_sales)
     PieChart categoryChart;
 
+    @BindView(R.id.lv_sales)
+    ListView lvAllSales;
+
     @BindView(R.id.fab)
     FloatingActionButton fabDate;
 
     RequiredPresenterOps.DayReportPresenterOps presenter;
     ActivityAdapter activityAdapter;
+    RecentSaleAdapter salesAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,6 +81,7 @@ public class DayReportActivity extends BaseActivity implements RequiredViewOps.D
     protected void init() {
         super.init();
         presenter = new DayReportPresenter(this);
+        salesAdapter = new RecentSaleAdapter(getApplicationContext(), R.layout.row_recent_sale, new ArrayList<MTicket>());
         loadingBar = (ProgressBar)findViewById(R.id.progressBar);
         if (getSupportActionBar()!= null)
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -82,6 +90,19 @@ public class DayReportActivity extends BaseActivity implements RequiredViewOps.D
             @Override
             public void onClick(View v) {
                 pickDate();
+            }
+        });
+        lvAllSales.setAdapter(salesAdapter);
+        lvAllSales.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                DialogBuilder.seeTicketDialog(DayReportActivity.this, id, presenter.getSalesFromTicket(id),
+                        presenter.getTicketTotal(id), new DialogBuilder.DialogInteractionListener.OnShareTicketListener() {
+                    @Override
+                    public void onTicketShare() {
+
+                    }
+                }).show();
             }
         });
     }
@@ -109,6 +130,11 @@ public class DayReportActivity extends BaseActivity implements RequiredViewOps.D
             activityAdapter.categorySales.clear();
         if (activityAdapter.dayPerformance != null)
             activityAdapter.dayPerformance.clear();
+        if (salesAdapter == null){
+            salesAdapter = new RecentSaleAdapter(getApplicationContext(), R.layout.row_recent_sale, new ArrayList<MTicket>());
+        }else{
+            salesAdapter.clear();
+        }
     }
 
     @Override
@@ -137,6 +163,8 @@ public class DayReportActivity extends BaseActivity implements RequiredViewOps.D
         tvPerformance.setText(activityAdapter.getDateTime().toString("dd - MMMM"));
         setPerformanceChart(activityAdapter.getDayPerformance());
         setCategorySalesChart(activityAdapter.getCategorySales());
+        salesAdapter.addAll(activityAdapter.allTickets);
+        salesAdapter.notifyDataSetChanged();
     }
 
     private void setPerformanceChart( List<BarEntry> entries ){

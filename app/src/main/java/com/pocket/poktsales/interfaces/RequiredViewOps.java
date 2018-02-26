@@ -49,7 +49,7 @@ public interface RequiredViewOps {
         void onApplySale();
     }
 
-    interface DayReportOps {
+    interface DayReportOps extends RequiredViewOps{
 
     }
 
