@@ -6,6 +6,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieEntry;
 import com.pocket.poktsales.model.MDepartment;
 import com.pocket.poktsales.model.MProduct;
+import com.pocket.poktsales.model.MReport;
 import com.pocket.poktsales.model.MSale;
 import com.pocket.poktsales.model.MTicket;
 import com.pocket.poktsales.presenter.Ticket;
@@ -72,6 +73,7 @@ public interface RequiredPresenterOps {
         List<MTicket> getRecentSales();
         List<MSale> getSalesFromTicket(long ticketId);
         MTicket getTicket(long ticketId);
+        MReport getReport(long ticketId);
     }
 
     interface QuickSalePresenterOps{

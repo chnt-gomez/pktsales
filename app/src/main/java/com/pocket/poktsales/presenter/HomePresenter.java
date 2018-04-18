@@ -6,6 +6,7 @@ import com.pocket.poktsales.R;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
 import com.pocket.poktsales.model.MDepartment;
+import com.pocket.poktsales.model.MReport;
 import com.pocket.poktsales.model.MSale;
 import com.pocket.poktsales.model.MTicket;
 import com.pocket.poktsales.utils.Conversor;
@@ -76,8 +77,6 @@ public class HomePresenter extends BasePresenter implements RequiredPresenterOps
         return total;
     }
 
-
-
     @Override
     public float getSaleFromDepartment(long departmentId) {
         float total = 0;
@@ -132,5 +131,15 @@ public class HomePresenter extends BasePresenter implements RequiredPresenterOps
     public List<MDepartment> getAllDepartments() {
         return fromDepartmentList(
                 Department.find(Department.class, "department_status = ?", String.valueOf(Department.ACTIVE)));
+    }
+
+    @Override
+    public MReport getReport(long ticketId) {
+        MTicket ticket = getTicket(ticketId);
+        MReport report = new MReport();
+        report.ticketNo = Conversor.asTicketFormat(ticket.id);
+        report.listSale = getSalesFromTicket(ticketId);
+        return report;
+
     }
 }

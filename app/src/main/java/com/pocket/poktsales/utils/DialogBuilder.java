@@ -3,10 +3,7 @@ package com.pocket.poktsales.utils;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -25,7 +22,6 @@ import android.widget.TextView;
 
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.adapters.SimpleCategoryAdapter;
-import com.pocket.poktsales.adapters.SimpleSaleAdapter;
 import com.pocket.poktsales.adapters.SimpleTicketAdapter;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.model.MDepartment;
@@ -355,7 +351,7 @@ public class DialogBuilder {
         return instance;
     }
 
-    public static Dialog colorPicketDialog(final Context context, int currentColor, final DialogInteractionListener.OnColorSelectedListener callback){
+    public static Dialog colorPickerDialog(final Context context, int currentColor, final DialogInteractionListener.OnColorSelectedListener callback){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         @SuppressLint("InflateParams")
         final View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_color_picker, null);

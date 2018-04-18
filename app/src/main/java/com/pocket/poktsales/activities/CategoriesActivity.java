@@ -170,7 +170,7 @@ public class CategoriesActivity extends BaseActivity implements AdapterView.OnIt
         btnPallete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogBuilder.colorPicketDialog(CategoriesActivity.this,
+                DialogBuilder.colorPickerDialog(CategoriesActivity.this,
                         department.colorResource, new DialogBuilder.DialogInteractionListener.OnColorSelectedListener() {
                     @Override
                     public void onColorSelected(int color) {

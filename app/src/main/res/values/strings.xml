@@ -129,4 +129,8 @@
     <string name="unknown">Unknown</string>
     <string name="all_tickets_of_day">Today´s tickets</string>
     <string name="version_features">Version features</string>
+    <string name="ticket">Purchase ticket</string>
+    <string name="business_address">Business address</string>
+    <string name="set_default_address">Your business address</string>
+    <string name="label_address">Business address</string>
 </resources>

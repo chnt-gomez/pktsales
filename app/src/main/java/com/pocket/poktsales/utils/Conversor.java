@@ -2,7 +2,10 @@ package com.pocket.poktsales.utils;
 
 import android.util.Log;
 
+import org.joda.time.DateTime;
+
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 /**
@@ -42,5 +45,18 @@ public class Conversor {
        return new DecimalFormat("##%").format(argument);
     }
 
+    public static String formatDate(DateTime time){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+        return simpleDateFormat.format(time);
+    }
+
+    public static String asTicketFormat(long arg){
+        try{
+            return new DecimalFormat("0000000").format(arg);
+        }catch(NumberFormatException e){
+            Log.w("Conversor", String.format("%d can't be converted to a ticket String", arg));
+            return String.valueOf(arg);
+        }
+    }
 
 }

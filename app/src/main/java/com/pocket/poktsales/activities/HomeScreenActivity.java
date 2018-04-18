@@ -39,6 +39,7 @@ import com.pocket.poktsales.utils.ChartValueFormatter;
 import com.pocket.poktsales.utils.Conversor;
 import com.pocket.poktsales.utils.DialogBuilder;
 import com.pocket.poktsales.utils.MonthPerformanceMarker;
+import com.pocket.poktsales.utils.ReportView;
 
 import org.joda.time.DateTime;
 
@@ -91,7 +92,7 @@ public class HomeScreenActivity extends BaseActivity
             startIntro();
         }else{
             if (newVersion){
-                showNewVersion();
+                //showNewVersion();
             }
         }
     }
@@ -202,14 +203,7 @@ public class HomeScreenActivity extends BaseActivity
         lvRecentSales.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                DialogBuilder.seeTicketDialog(HomeScreenActivity.this,
-                        id, presenter.getSalesFromTicket(id), presenter.getTicket(id).saleTotal,
-                        new DialogBuilder.DialogInteractionListener.OnShareTicketListener() {
-                    @Override
-                    public void onTicketShare() {
-
-                    }
-                }).show();
+                ReportView.showReport(HomeScreenActivity.this, presenter.getReport(id));
             }
         });
 
@@ -283,7 +277,7 @@ public class HomeScreenActivity extends BaseActivity
             rate();
         }
         if (id == R.id.nav_version_features){
-            showNewVersion();
+            //showNewVersion();
         }
 
         drawer.closeDrawer(GravityCompat.START);

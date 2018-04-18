@@ -26,6 +26,8 @@ public class SettingsActivity extends PreferenceActivity {
     public static final String KEY_IS_FIRST_START = "pf_is_first_start";
     public static final String KEY_V_1_1_2 = "pf_1_1_2";
 
+    public static final String KEY_ADDRESS = "pf_business_address";
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +79,10 @@ public class SettingsActivity extends PreferenceActivity {
             /* Admin Name */
             EditTextPreference etPrefAdminName = (EditTextPreference)findPreference("pf_admin_name");
             etPrefAdminName.setSummary(sp.getString("pf_admin_name", getString(R.string.set_default_administrator_name)));
+
+            /* Address */
+            EditTextPreference etPrefAddress = (EditTextPreference) findPreference(KEY_ADDRESS);
+            etPrefAddress.setSummary(sp.getString(KEY_ADDRESS, getString(R.string.business_address)));
         }
 
         @Override
