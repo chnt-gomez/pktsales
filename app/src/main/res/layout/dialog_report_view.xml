@@ -65,7 +65,7 @@
         <ListView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/lv_report"/>
+            android:id="@+id/lv_sales"/>
 
         <ImageButton
             android:padding="@dimen/padding_medium"

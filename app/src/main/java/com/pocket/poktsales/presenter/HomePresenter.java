@@ -140,6 +140,5 @@ public class HomePresenter extends BasePresenter implements RequiredPresenterOps
         report.ticketNo = Conversor.asTicketFormat(ticket.id);
         report.listSale = getSalesFromTicket(ticketId);
         return report;
-
     }
 }

@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -47,6 +48,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -73,9 +76,14 @@ public class HomeScreenActivity extends BaseActivity
     @BindView(R.id.card_advertising)
     CardView cvAdvertising;
 
-    HomeActivityDataAdapter adapter;
     RequiredPresenterOps.HomePresenterOps presenter;
     RecentSaleAdapter recentSaleAdapter;
+
+    String todayIncome;
+    String performance;
+    List<Entry> qDaySales;
+    List<PieEntry> qDepartmentSales;
+    List<MTicket> mRecentSales;
 
     private AdView mAdView;
 
@@ -148,37 +156,39 @@ public class HomeScreenActivity extends BaseActivity
         super.onLoadingPrepare();
         if (recentSaleAdapter != null)
             recentSaleAdapter.clear();
+        if (qDaySales == null)
+            qDaySales = new ArrayList<>();
+        else
+            qDaySales.clear();
+        if (mRecentSales == null)
+            mRecentSales = new ArrayList<>();
+        else
+            mRecentSales.clear();
     }
 
     @Override
     public void onLoading() {
         super.onLoading();
-        adapter = new HomeActivityDataAdapter();
-        adapter.setTodayIncome(Conversor.asCurrency(presenter.getDaySales()));
-        adapter.setPerformance(presenter.getImprovement(getApplicationContext()));
+        todayIncome = Conversor.asCurrency(presenter.getDaySales());
+        performance = presenter.getImprovement(getApplicationContext());
         for (int i = 1; i<= DateTime.now().getDayOfMonth(); i++){
-            adapter.addToDaySales(new Entry(i, presenter.getSalesFromDay(i)));
+            qDaySales.add(new Entry(i, presenter.getSalesFromDay(i)));
         }
-        for (MDepartment d : presenter.getAllDepartments()){
-            adapter.addToDepartmentSales(new PieEntry(presenter.getSaleFromDepartment(d.id),
-                    d.departmentName));
-        }
-        adapter.setRecentSales(presenter.getRecentSales());
+        mRecentSales.addAll(presenter.getRecentSales());
     }
 
     @Override
     public void onLoadingComplete() {
         super.onLoadingComplete();
-        tvTodayIncome.setText(adapter.getTodayIncome());
-        tvPerformance.setText(adapter.getPerformance());
-        setPerformanceChart(adapter.getDaySalesEntries());
-        recentSaleAdapter.addAll(adapter.getRecentSales());
+        tvTodayIncome.setText(todayIncome);
+        tvPerformance.setText(performance);
+        setPerformanceChart(qDaySales);
+        recentSaleAdapter.addAll(mRecentSales);
         recentSaleAdapter.notifyDataSetChanged();
     }
 
     @Override
     protected void init() {
-        super.init();
         MobileAds.initialize(this, "ca-app-pub-2236350735048598~2611871037");
         recentSaleAdapter = new RecentSaleAdapter(this, R.layout.row_recent_sale, new ArrayList(0));
         presenter = new HomePresenter(this);
@@ -190,7 +200,7 @@ public class HomeScreenActivity extends BaseActivity
         navigationView.setItemIconTintList(null);
         lvRecentSales.setAdapter(recentSaleAdapter);
 
-        mAdView = (AdView)findViewById(R.id.adView);
+        mAdView = findViewById(R.id.adView);
         cvAdvertising.setVisibility(View.GONE);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
@@ -206,7 +216,6 @@ public class HomeScreenActivity extends BaseActivity
                 ReportView.showReport(HomeScreenActivity.this, presenter.getReport(id));
             }
         });
-
     }
 
     private void setPerformanceChart( List<Entry> entries ){
@@ -231,11 +240,9 @@ public class HomeScreenActivity extends BaseActivity
         chartPerformance.setMarkerView(mv);
     }
 
-
-
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -279,7 +286,6 @@ public class HomeScreenActivity extends BaseActivity
         if (id == R.id.nav_version_features){
             //showNewVersion();
         }
-
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -287,8 +293,6 @@ public class HomeScreenActivity extends BaseActivity
     private void rate(){
         Uri uri = Uri.parse("market://details?id=com.pocket.poktsales");
         Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
-        // To count with Play market backstack, After pressing back button,
-        // to taken back to our application, we need to add following flags to intent.
         goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY |
                 Intent.FLAG_ACTIVITY_NEW_DOCUMENT |
                 Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
@@ -302,62 +306,5 @@ public class HomeScreenActivity extends BaseActivity
 
     private void goTo(Class activity) {
         startActivity(new Intent(HomeScreenActivity.this, activity));
-    }
-
-    private class HomeActivityDataAdapter {
-
-        String todayIncome;
-        String performance;
-
-        List<Entry> getDaySalesEntries() {
-            return daySalesEntries;
-        }
-
-        List<PieEntry> getDepartmentSaleEntries() {
-            return departmentSaleEntries;
-        }
-
-        List<Entry> daySalesEntries;
-        List<PieEntry> departmentSaleEntries = new ArrayList<>();
-
-        List<MTicket> getRecentSales() {
-            return recentSales;
-        }
-
-        void setRecentSales(List<MTicket> recentSales) {
-            this.recentSales = recentSales;
-        }
-
-        List<MTicket> recentSales;
-
-        String getTodayIncome() {
-            return todayIncome;
-        }
-
-        void setTodayIncome(String todayIncome) {
-            this.todayIncome = todayIncome;
-        }
-
-        String getPerformance() {
-            return performance;
-        }
-
-        void setPerformance(String performance) {
-            this.performance = performance;
-        }
-
-        void addToDaySales(Entry daySale){
-            if (daySalesEntries == null)
-                daySalesEntries = new ArrayList<>();
-            daySalesEntries.add(daySale);
-        }
-
-        void addToDepartmentSales(PieEntry departmentSale){
-            if (departmentSaleEntries == null)
-                departmentSaleEntries = new ArrayList<>();
-            departmentSaleEntries.add(departmentSale);
-        }
-
-
     }
 }
