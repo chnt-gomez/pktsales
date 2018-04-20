@@ -52,6 +52,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Required
 
     }
 
+
+
     protected void setToolbar(){
         setSupportActionBar(toolbar);
     }
@@ -70,7 +72,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Required
         onSuccess();
     }
 
-    public void showMessage(String message){
+    public void showMessage(String message) {
 
     }
 

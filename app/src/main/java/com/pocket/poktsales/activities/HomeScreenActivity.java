@@ -82,10 +82,7 @@ public class HomeScreenActivity extends BaseActivity
     String todayIncome;
     String performance;
     List<Entry> qDaySales;
-    List<PieEntry> qDepartmentSales;
     List<MTicket> mRecentSales;
-
-    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,8 +151,6 @@ public class HomeScreenActivity extends BaseActivity
     @Override
     public void onLoadingPrepare() {
         super.onLoadingPrepare();
-        if (recentSaleAdapter != null)
-            recentSaleAdapter.clear();
         if (qDaySales == null)
             qDaySales = new ArrayList<>();
         else
@@ -164,6 +159,10 @@ public class HomeScreenActivity extends BaseActivity
             mRecentSales = new ArrayList<>();
         else
             mRecentSales.clear();
+        if (recentSaleAdapter == null) {
+            recentSaleAdapter = new RecentSaleAdapter(this, R.layout.row_recent_sale, mRecentSales);
+            lvRecentSales.setAdapter(recentSaleAdapter);
+        }
     }
 
     @Override
@@ -175,6 +174,7 @@ public class HomeScreenActivity extends BaseActivity
             qDaySales.add(new Entry(i, presenter.getSalesFromDay(i)));
         }
         mRecentSales.addAll(presenter.getRecentSales());
+
     }
 
     @Override
@@ -183,14 +183,13 @@ public class HomeScreenActivity extends BaseActivity
         tvTodayIncome.setText(todayIncome);
         tvPerformance.setText(performance);
         setPerformanceChart(qDaySales);
-        recentSaleAdapter.addAll(mRecentSales);
         recentSaleAdapter.notifyDataSetChanged();
     }
 
     @Override
     protected void init() {
-        MobileAds.initialize(this, "ca-app-pub-2236350735048598~2611871037");
-        recentSaleAdapter = new RecentSaleAdapter(this, R.layout.row_recent_sale, new ArrayList(0));
+
+
         presenter = new HomePresenter(this);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -198,10 +197,19 @@ public class HomeScreenActivity extends BaseActivity
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setItemIconTintList(null);
-        lvRecentSales.setAdapter(recentSaleAdapter);
-
-        mAdView = findViewById(R.id.adView);
         cvAdvertising.setVisibility(View.GONE);
+        lvRecentSales.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ReportView.showReport(HomeScreenActivity.this, presenter.getReport(id));
+            }
+        });
+        loadAd();
+    }
+
+    private void loadAd(){
+        MobileAds.initialize(this, "ca-app-pub-2236350735048598~2611871037");
+        AdView mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
         mAdView.setAdListener(new AdListener(){
@@ -210,13 +218,9 @@ public class HomeScreenActivity extends BaseActivity
                 cvAdvertising.setVisibility(View.VISIBLE);
             }
         });
-        lvRecentSales.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ReportView.showReport(HomeScreenActivity.this, presenter.getReport(id));
-            }
-        });
     }
+
+
 
     private void setPerformanceChart( List<Entry> entries ){
         LineDataSet dataSet = new LineDataSet(entries, null);
