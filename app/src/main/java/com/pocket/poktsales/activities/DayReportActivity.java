@@ -81,7 +81,7 @@ public class DayReportActivity extends BaseActivity implements RequiredViewOps.D
     protected void init() {
         super.init();
         presenter = new DayReportPresenter(this);
-        salesAdapter = new RecentSaleAdapter(getApplicationContext(), R.layout.row_recent_sale, new ArrayList<MTicket>());
+        salesAdapter = new RecentSaleAdapter(getApplicationContext());
         loadingBar = (ProgressBar)findViewById(R.id.progressBar);
         if (getSupportActionBar()!= null)
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -131,7 +131,7 @@ public class DayReportActivity extends BaseActivity implements RequiredViewOps.D
         if (activityAdapter.dayPerformance != null)
             activityAdapter.dayPerformance.clear();
         if (salesAdapter == null){
-            salesAdapter = new RecentSaleAdapter(getApplicationContext(), R.layout.row_recent_sale, new ArrayList<MTicket>());
+            salesAdapter = new RecentSaleAdapter(getApplicationContext());
         }else{
             salesAdapter.clear();
         }

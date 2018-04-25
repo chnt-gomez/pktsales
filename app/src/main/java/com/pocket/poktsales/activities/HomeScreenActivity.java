@@ -14,6 +14,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
 import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
@@ -82,7 +83,6 @@ public class HomeScreenActivity extends BaseActivity
     String todayIncome;
     String performance;
     List<Entry> qDaySales;
-    List<MTicket> mRecentSales;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,14 +155,7 @@ public class HomeScreenActivity extends BaseActivity
             qDaySales = new ArrayList<>();
         else
             qDaySales.clear();
-        if (mRecentSales == null)
-            mRecentSales = new ArrayList<>();
-        else
-            mRecentSales.clear();
-        if (recentSaleAdapter == null) {
-            recentSaleAdapter = new RecentSaleAdapter(this, R.layout.row_recent_sale, mRecentSales);
-            lvRecentSales.setAdapter(recentSaleAdapter);
-        }
+        recentSaleAdapter.clear();
     }
 
     @Override
@@ -173,8 +166,7 @@ public class HomeScreenActivity extends BaseActivity
         for (int i = 1; i<= DateTime.now().getDayOfMonth(); i++){
             qDaySales.add(new Entry(i, presenter.getSalesFromDay(i)));
         }
-        mRecentSales.addAll(presenter.getRecentSales());
-
+        recentSaleAdapter.addAll(presenter.getRecentSales());
     }
 
     @Override
@@ -188,8 +180,6 @@ public class HomeScreenActivity extends BaseActivity
 
     @Override
     protected void init() {
-
-
         presenter = new HomePresenter(this);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -198,6 +188,8 @@ public class HomeScreenActivity extends BaseActivity
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setItemIconTintList(null);
         cvAdvertising.setVisibility(View.GONE);
+        recentSaleAdapter = new RecentSaleAdapter(getApplicationContext());
+        lvRecentSales.setAdapter(recentSaleAdapter);
         lvRecentSales.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -219,8 +211,6 @@ public class HomeScreenActivity extends BaseActivity
             }
         });
     }
-
-
 
     private void setPerformanceChart( List<Entry> entries ){
         LineDataSet dataSet = new LineDataSet(entries, null);
