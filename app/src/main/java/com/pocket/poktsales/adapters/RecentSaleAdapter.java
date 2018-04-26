@@ -76,4 +76,10 @@ public class RecentSaleAdapter extends BaseAdapter {
             return ticket.id;
         return -1;
     }
+
+    public void refreshItems(List<MTicket> items){
+        this.items.clear();
+        this.items.addAll(items);
+        notifyDataSetChanged();
+    }
 }

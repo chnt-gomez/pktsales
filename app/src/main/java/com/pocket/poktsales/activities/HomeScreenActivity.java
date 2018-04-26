@@ -35,6 +35,7 @@ import com.pocket.poktsales.R;
 import com.pocket.poktsales.adapters.RecentSaleAdapter;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.model.MDepartment;
+import com.pocket.poktsales.model.MSale;
 import com.pocket.poktsales.model.MTicket;
 import com.pocket.poktsales.presenter.HomePresenter;
 import com.pocket.poktsales.utils.ChartValueFormatter;
@@ -83,6 +84,7 @@ public class HomeScreenActivity extends BaseActivity
     String todayIncome;
     String performance;
     List<Entry> qDaySales;
+    List<MTicket> recentSales;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,8 +119,6 @@ public class HomeScreenActivity extends BaseActivity
         Intent intent = new Intent(this, IntroActivity.class);
         startActivityForResult(intent, 101);
     }
-
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -155,7 +155,7 @@ public class HomeScreenActivity extends BaseActivity
             qDaySales = new ArrayList<>();
         else
             qDaySales.clear();
-        recentSaleAdapter.clear();
+        recentSaleAdapter.refreshItems(presenter.getRecentSales()); //TODO: <- This is a bug! Cant update the list
     }
 
     @Override
@@ -166,7 +166,6 @@ public class HomeScreenActivity extends BaseActivity
         for (int i = 1; i<= DateTime.now().getDayOfMonth(); i++){
             qDaySales.add(new Entry(i, presenter.getSalesFromDay(i)));
         }
-        recentSaleAdapter.addAll(presenter.getRecentSales());
     }
 
     @Override
@@ -175,12 +174,12 @@ public class HomeScreenActivity extends BaseActivity
         tvTodayIncome.setText(todayIncome);
         tvPerformance.setText(performance);
         setPerformanceChart(qDaySales);
-        recentSaleAdapter.notifyDataSetChanged();
     }
 
     @Override
     protected void init() {
         presenter = new HomePresenter(this);
+        recentSales = new ArrayList<>();
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -247,7 +246,7 @@ public class HomeScreenActivity extends BaseActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+
         int id = item.getItemId();
 
         if (id == R.id.nav_inventory) {

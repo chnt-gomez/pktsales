@@ -110,17 +110,20 @@ public abstract class BaseActivity extends AppCompatActivity implements Required
 
     @Override
     public void onLoadingPrepare() {
+        Log.d("ON LOADING PREPARE", "start");
         if (loadingBar != null){
             loadingBar.animate()
                     .setInterpolator(new AccelerateInterpolator())
                     .setDuration(300)
                     .alpha(1f);
         }
+        Log.d("ON LOADING PREPARE", "end");
     }
 
     @Override
-    public void onLoading() {
-
+    public void onLoading(){
+        Log.d("ON LOADING", "start");
+        Log.d("ON LOADING", "end");
     }
 
     @Override
@@ -130,6 +133,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Required
 
     @Override
     public void onLoadingComplete() {
+        Log.d("ON LOADING COMPLETE", "start");
         if (loadingBar != null){
             loadingBar.animate()
                     .translationY(-loadingBar.getHeight())
@@ -137,6 +141,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Required
                     .setDuration(300)
                     .alpha(0f);
         }
+        Log.d("ON LOADING COMPLETE", "end");
     }
 
     @Override
