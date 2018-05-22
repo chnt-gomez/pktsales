@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/margin_big"
+        android:paddingTop="@dimen/margin_big"
+        android:background="@color/colorPrimary"
+        android:orientation="vertical">
+        <ImageView
+            android:contentDescription="@string/desc_product"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/padding_title"
+            android:id="@+id/img_pallete"
+            android:layout_gravity="center_horizontal"
+            app:srcCompat="@drawable/ic_palette_big"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textAlignment="center"
+            android:layout_gravity="center_vertical"
+            android:text="@string/pick_a_color"
+            android:padding="@dimen/padding_title"/>
+    </LinearLayout>
+
+    <SeekBar
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/padding_medium"
+        android:max="255"
+        android:id="@+id/pb_color_picker_red"/>
+    <SeekBar
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/padding_medium"
+        android:max="255"
+        android:id="@+id/pb_color_picker_green"/>
+    <SeekBar
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/padding_medium"
+        android:max="255"
+        android:id="@+id/pb_color_picker_blue"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/colorSubtleGray">
+
+        <ImageButton
+            android:padding="@dimen/padding_medium"
+            android:contentDescription="@string/desc_ok_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_ok"
+            android:background="@drawable/selector_button_gray"
+            app:srcCompat="@drawable/ic_check"/>
+    </LinearLayout>
+</LinearLayout>

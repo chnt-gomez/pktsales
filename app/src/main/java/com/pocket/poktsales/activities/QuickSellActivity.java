@@ -31,6 +31,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import java.util.ArrayList;
 import java.util.List;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by MAV1GA on 30/11/2017.
@@ -69,8 +70,11 @@ public class QuickSellActivity extends BaseActivity implements RequiredViewOps.Q
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        layoutResourceId = R.layout.activity_add_to_sale;
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_add_to_sale);
+        ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
+        init();
     }
 
     @Override
@@ -85,7 +89,8 @@ public class QuickSellActivity extends BaseActivity implements RequiredViewOps.Q
         btnDelete.setVisibility(View.GONE);
         activityAdapter = new ActivityAdapter();
         presenter = new QuickSalePresenter(this);
-        lvSale.setEmptyView(findViewById(android.R.id.empty));
+        lvSale.setEmptyView(findViewById(R.id.empty_sale));
+        lvProducts.setEmptyView(findViewById(R.id.empty_products));
         lvSale.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -209,6 +214,11 @@ public class QuickSellActivity extends BaseActivity implements RequiredViewOps.Q
             public void onSuccess() {
                 finish();
             }
+
+            @Override
+            public void onShareTicket() {
+                finish();
+            }
         }).show();
     }
     private void applySale(){
@@ -250,11 +260,13 @@ public class QuickSellActivity extends BaseActivity implements RequiredViewOps.Q
     public boolean onQueryTextChange(String query) {
         if (query.length() >= 3 || query.length() % 3 == 0){
             searchProducts(query);
+            return true;
         }
         if(query.length() == 0){
             searchProducts(query);
+            return true;
         }
-        return true;
+        return false;
     }
 
     private void animateTotal() {

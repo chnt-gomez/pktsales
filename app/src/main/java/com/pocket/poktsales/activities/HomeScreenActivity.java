@@ -1,19 +1,25 @@
 package com.pocket.poktsales.activities;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
 import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.github.mikephil.charting.charts.LineChart;
@@ -29,11 +35,14 @@ import com.pocket.poktsales.R;
 import com.pocket.poktsales.adapters.RecentSaleAdapter;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.model.MDepartment;
+import com.pocket.poktsales.model.MSale;
 import com.pocket.poktsales.model.MTicket;
 import com.pocket.poktsales.presenter.HomePresenter;
 import com.pocket.poktsales.utils.ChartValueFormatter;
 import com.pocket.poktsales.utils.Conversor;
+import com.pocket.poktsales.utils.DialogBuilder;
 import com.pocket.poktsales.utils.MonthPerformanceMarker;
+import com.pocket.poktsales.utils.ReportView;
 
 import org.joda.time.DateTime;
 
@@ -41,7 +50,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
+
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class HomeScreenActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -66,16 +78,61 @@ public class HomeScreenActivity extends BaseActivity
     @BindView(R.id.card_advertising)
     CardView cvAdvertising;
 
-    HomeActivityDataAdapter adapter;
     RequiredPresenterOps.HomePresenterOps presenter;
     RecentSaleAdapter recentSaleAdapter;
 
-    private AdView mAdView;
+    String todayIncome;
+    String performance;
+    List<Entry> qDaySales;
+    List<MTicket> recentSales;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        layoutResourceId = R.layout.activity_home;
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_home);
+        ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
+        init();
+        boolean firstStart = getPreferenceBoolean(SettingsActivity.KEY_IS_FIRST_START, true);
+        boolean newVersion = getPreferenceBoolean(SettingsActivity.KEY_V_1_1_2, true);
+        if (firstStart){
+            startIntro();
+        }else{
+            if (newVersion){
+                //showNewVersion();
+            }
+        }
+    }
+
+    private void showNewVersion(boolean all) {
+        Intent intent = new Intent(this, NewVersionActivity.class);
+        Bundle args = new Bundle();
+        if (all)
+            args.putBoolean("all", true);
+        args.putString("version", SettingsActivity.KEY_V_1_1_2);
+        intent.putExtras(args);
+        startActivityForResult(intent, 102);
+    }
+
+
+    private void startIntro(){
+        Intent intent = new Intent(this, IntroActivity.class);
+        startActivityForResult(intent, 101);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 101){
+            if (resultCode == RESULT_OK){
+                saveBooleanPreference(SettingsActivity.KEY_IS_FIRST_START, false);
+            }
+        }
+        if (requestCode == 102){
+            if (resultCode == RESULT_OK){
+                saveBooleanPreference(SettingsActivity.KEY_V_1_1_2, false);
+            }
+        }
     }
 
     @Override
@@ -94,52 +151,56 @@ public class HomeScreenActivity extends BaseActivity
     @Override
     public void onLoadingPrepare() {
         super.onLoadingPrepare();
-        if (recentSaleAdapter != null)
-            recentSaleAdapter.clear();
+        if (qDaySales == null)
+            qDaySales = new ArrayList<>();
+        else
+            qDaySales.clear();
+        recentSaleAdapter.refreshItems(presenter.getRecentSales()); //TODO: <- This is a bug! Cant update the list
     }
 
     @Override
     public void onLoading() {
         super.onLoading();
-        adapter = new HomeActivityDataAdapter();
-        adapter.setTodayIncome(Conversor.asCurrency(presenter.getDaySales()));
-        adapter.setPerformance(presenter.getImprovement(getApplicationContext()));
+        todayIncome = Conversor.asCurrency(presenter.getDaySales());
+        performance = presenter.getImprovement(getApplicationContext());
         for (int i = 1; i<= DateTime.now().getDayOfMonth(); i++){
-            adapter.addToDaySales(new Entry(i, presenter.getSalesFromDay(i)));
+            qDaySales.add(new Entry(i, presenter.getSalesFromDay(i)));
         }
-        for (MDepartment d : presenter.getAllDepartments()){
-            adapter.addToDepartmentSales(new PieEntry(presenter.getSaleFromDepartment(d.id),
-                    d.departmentName));
-        }
-        adapter.setRecentSales(presenter.getRecentSales());
     }
 
     @Override
     public void onLoadingComplete() {
         super.onLoadingComplete();
-        tvTodayIncome.setText(adapter.getTodayIncome());
-        tvPerformance.setText(adapter.getPerformance());
-        setPerformanceChart(adapter.getDaySalesEntries());
-        recentSaleAdapter.addAll(adapter.getRecentSales());
-        recentSaleAdapter.notifyDataSetChanged();
+        tvTodayIncome.setText(todayIncome);
+        tvPerformance.setText(performance);
+        setPerformanceChart(qDaySales);
     }
 
     @Override
     protected void init() {
-        super.init();
-        MobileAds.initialize(this, "ca-app-pub-2236350735048598~2611871037");
-        recentSaleAdapter = new RecentSaleAdapter(this, R.layout.row_recent_sale, new ArrayList(0));
         presenter = new HomePresenter(this);
+        recentSales = new ArrayList<>();
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setItemIconTintList(null);
-        lvRecentSales.setAdapter(recentSaleAdapter);
-
-        mAdView = (AdView)findViewById(R.id.adView);
         cvAdvertising.setVisibility(View.GONE);
+        recentSaleAdapter = new RecentSaleAdapter(getApplicationContext());
+        lvRecentSales.setAdapter(recentSaleAdapter);
+        lvRecentSales.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ReportView.showReport(HomeScreenActivity.this, presenter.getReport(id));
+            }
+        });
+        loadAd();
+    }
+
+    private void loadAd(){
+        MobileAds.initialize(this, "ca-app-pub-2236350735048598~2611871037");
+        AdView mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
         mAdView.setAdListener(new AdListener(){
@@ -148,7 +209,6 @@ public class HomeScreenActivity extends BaseActivity
                 cvAdvertising.setVisibility(View.VISIBLE);
             }
         });
-
     }
 
     private void setPerformanceChart( List<Entry> entries ){
@@ -173,11 +233,9 @@ public class HomeScreenActivity extends BaseActivity
         chartPerformance.setMarkerView(mv);
     }
 
-
-
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -188,7 +246,7 @@ public class HomeScreenActivity extends BaseActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+
         int id = item.getItemId();
 
         if (id == R.id.nav_inventory) {
@@ -212,69 +270,34 @@ public class HomeScreenActivity extends BaseActivity
         if (id == R.id.nav_contact){
             goTo(ContactActivity.class);
         }
-
+        if (id == R.id.nav_intro){
+            startIntro();
+        }
+        if (id == R.id.nav_rate){
+            rate();
+        }
+        if (id == R.id.nav_version_features){
+            //showNewVersion();
+        }
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    private void goTo(Class activity) {
-        startActivity(new Intent(HomeScreenActivity.this, activity));
+    private void rate(){
+        Uri uri = Uri.parse("market://details?id=com.pocket.poktsales");
+        Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+        goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY |
+                Intent.FLAG_ACTIVITY_NEW_DOCUMENT |
+                Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+        try {
+            startActivity(goToMarket);
+        } catch (ActivityNotFoundException e) {
+            startActivity(new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("http://play.google.com/store/apps/details?id=com.pocket.poktsales")));
+        }
     }
 
-    private class HomeActivityDataAdapter {
-
-        String todayIncome;
-        String performance;
-
-        List<Entry> getDaySalesEntries() {
-            return daySalesEntries;
-        }
-
-        List<PieEntry> getDepartmentSaleEntries() {
-            return departmentSaleEntries;
-        }
-
-        List<Entry> daySalesEntries;
-        List<PieEntry> departmentSaleEntries = new ArrayList<>();
-
-        List<MTicket> getRecentSales() {
-            return recentSales;
-        }
-
-        void setRecentSales(List<MTicket> recentSales) {
-            this.recentSales = recentSales;
-        }
-
-        List<MTicket> recentSales;
-
-        String getTodayIncome() {
-            return todayIncome;
-        }
-
-        void setTodayIncome(String todayIncome) {
-            this.todayIncome = todayIncome;
-        }
-
-        String getPerformance() {
-            return performance;
-        }
-
-        void setPerformance(String performance) {
-            this.performance = performance;
-        }
-
-        void addToDaySales(Entry daySale){
-            if (daySalesEntries == null)
-                daySalesEntries = new ArrayList<>();
-            daySalesEntries.add(daySale);
-        }
-
-        void addToDepartmentSales(PieEntry departmentSale){
-            if (departmentSaleEntries == null)
-                departmentSaleEntries = new ArrayList<>();
-            departmentSaleEntries.add(departmentSale);
-        }
-
-
+    private void goTo(Class activity) {
+        startActivity(new Intent(HomeScreenActivity.this, activity));
     }
 }

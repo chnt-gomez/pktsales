@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class InventoryActivity extends BaseActivity implements SearchView.OnQueryTextListener,
         AdapterView.OnItemClickListener, RequiredViewOps.InventoryViewOps{
@@ -75,8 +76,11 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        layoutResourceId = R.layout.activity_inventory;
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_inventory);
+        ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
+        init();
     }
 
     @Override
@@ -156,7 +160,7 @@ public class InventoryActivity extends BaseActivity implements SearchView.OnQuer
         activityAdapter = new InventoryActivityAdapter();
         listAdapter = new SimpleProductAdapter(getApplicationContext(), R.layout.row_simple_product, new ArrayList<MProduct>());
         lvProducts.setAdapter(listAdapter);
-
+        lvProducts.setEmptyView(findViewById(android.R.id.empty));
     }
 
 

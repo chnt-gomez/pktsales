@@ -51,6 +51,6 @@
             android:layout_height="wrap_content"
             android:id="@+id/btn_ok"
             android:background="@drawable/selector_button_gray"
-            android:src="@drawable/ic_check"/>
+            app:srcCompat="@drawable/ic_check"/>
     </LinearLayout>
 </LinearLayout>

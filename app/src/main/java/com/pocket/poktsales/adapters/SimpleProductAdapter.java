@@ -35,14 +35,14 @@ public class SimpleProductAdapter extends ArrayAdapter<MProduct> {
         }
         TextView tvProductName = (TextView)convertView.findViewById(R.id.tv_product_name);
         TextView tvProductPrice = (TextView)convertView.findViewById(R.id.tv_product_price);
-
+        View view = convertView.findViewById(R.id.color_view);
         MProduct product = getItem(position);
         if (product == null){
             product = new MProduct();
         }
         tvProductName.setText(product.productName);
         tvProductPrice.setText(product.maskProductSellPrice);
-
+        view.setBackgroundColor(product.productDepartmentColor);
         return convertView;
     }
 

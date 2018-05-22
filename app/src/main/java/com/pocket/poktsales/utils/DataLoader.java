@@ -26,6 +26,7 @@ public class DataLoader extends AsyncTask<String, Void, Void> {
         else
             callback.onLoading(params[0]);
         return null;
+
     }
 
     @Override

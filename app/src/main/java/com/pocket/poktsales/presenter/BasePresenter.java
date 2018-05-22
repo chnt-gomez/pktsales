@@ -1,5 +1,5 @@
 package com.pocket.poktsales.presenter;
-
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
 
 import com.pocket.poktsales.model.MDepartment;
@@ -7,9 +7,7 @@ import com.pocket.poktsales.model.MProduct;
 import com.pocket.poktsales.model.MSale;
 import com.pocket.poktsales.model.MTicket;
 import com.pocket.poktsales.utils.Conversor;
-
 import org.joda.time.DateTime;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -128,6 +126,7 @@ class BasePresenter {
         if (product.getDepartment() != null) {
             modelProduct.productDepartment = product.getDepartment().getDepartmentName();
             modelProduct.departmentId = product.getDepartment().getId();
+            modelProduct.productDepartmentColor = product.getDepartment().getColorResource();
         }
         modelProduct.id = product.getId();
         modelProduct.maskProductSellPrice = Conversor.asCurrency(product.getProductSellPrice());
@@ -143,23 +142,30 @@ class BasePresenter {
         return list;
     }
 
-    MSale fromSale(Sale s){
+    MSale fromSale(Sale s, String defConcept){
         MSale mSale = new MSale();
         mSale.id = s.getId();
         mSale.productAmount = String.valueOf(s.getProductAmount());
         mSale.productId = s.getProduct().getId();
         mSale.saleConcept = s.getSaleConcept();
+        if (mSale.saleConcept == null){
+            mSale.saleConcept = defConcept;
+        }
         mSale.saleTotal = s.getSaleTotal();
         mSale.maskSaleTotal = Conversor.asCurrency(s.getSaleTotal());
         mSale.ticketId = s.getTicket().getId();
+        Department d = s.getProduct().getDepartment();
+        if (d != null)
+            mSale.colorDepartment = s.getProduct().getDepartment().getColorResource();
+        else
+            mSale.colorDepartment = 0x138452;
         return mSale;
-
     }
 
-    List<MSale> fromSaleList(List<Sale> sales){
+    List<MSale> fromSaleList(List<Sale> sales, String defConcept){
         List<MSale> list = new ArrayList<>();
         for (Sale s : sales){
-            list.add(fromSale(s));
+            list.add(fromSale(s, defConcept));
         }
         return list;
     }

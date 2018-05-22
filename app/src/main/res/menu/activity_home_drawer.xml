@@ -42,13 +42,25 @@
             </group>
         </menu>
     </item>
-    <item android:title="@string/contact">
+    <item android:title="@string/help">
         <menu>
             <group>
+                <item
+                    android:id="@+id/nav_intro"
+                    android:title="@string/replay_intro"
+                    android:icon="@drawable/ic_play_box_outline"/>
+                <item
+                    android:id="@+id/nav_version_features"
+                    android:title="@string/version_features"
+                    android:icon="@drawable/ic_play_box_outline"/>
                 <item
                     android:id="@+id/nav_contact"
                     android:title="@string/about"
                     android:icon="@drawable/ic_help_circle"/>
+                <item
+                    android:id="@+id/nav_rate"
+                    android:title="@string/rate_us"
+                    android:icon="@drawable/ic_star"/>
             </group>
         </menu>
     </item>

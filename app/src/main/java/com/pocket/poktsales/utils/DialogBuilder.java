@@ -3,10 +3,8 @@ package com.pocket.poktsales.utils;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.res.Resources;
+import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,15 +16,17 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.adapters.SimpleCategoryAdapter;
+import com.pocket.poktsales.adapters.SimpleTicketAdapter;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.model.MDepartment;
 import com.pocket.poktsales.model.MProduct;
+import com.pocket.poktsales.model.MSale;
 import com.pocket.poktsales.model.MTicket;
 
 import org.joda.time.DateTime;
@@ -128,6 +128,7 @@ public class DialogBuilder {
         @SuppressLint("InflateParams")
         final View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_sale_success, null);
         final ImageButton positiveButton = (ImageButton)dialogView.findViewById(R.id.btn_ok);
+        //final ImageButton shareButton = (ImageButton)dialogView.findViewById(R.id.btn_share);
         positiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -135,6 +136,15 @@ public class DialogBuilder {
                 instance.dismiss();
             }
         });
+        /*
+        shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback.onShareTicket();
+            }
+        });
+        */
+
 
         builder.setView(dialogView);
         instance = builder.create();
@@ -341,6 +351,64 @@ public class DialogBuilder {
         return instance;
     }
 
+    public static Dialog colorPickerDialog(final Context context, int currentColor, final DialogInteractionListener.OnColorSelectedListener callback){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        @SuppressLint("InflateParams")
+        final View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_color_picker, null);
+        final SeekBar sbRed = (SeekBar)dialogView.findViewById(R.id.pb_color_picker_red);
+        final SeekBar sbGreen = (SeekBar)dialogView.findViewById(R.id.pb_color_picker_green);
+        final SeekBar sbBlue = (SeekBar)dialogView.findViewById(R.id.pb_color_picker_blue);
+        final ImageView imageColor = (ImageView)dialogView.findViewById(R.id.img_pallete);
+        final ImageButton btnOk = (ImageButton)dialogView.findViewById(R.id.btn_ok);
+        imageColor.setColorFilter(currentColor);
+        sbRed.setProgress(Color.red(currentColor));
+        sbGreen.setProgress(Color.green(currentColor));
+        sbBlue.setProgress(Color.blue(currentColor));
+
+        final int[] colors = new int[3];
+        final int RED = 0;
+        final int BLUE = 2;
+        final int GREEN = 1;
+        colors[RED] = Color.red(currentColor);
+        colors[GREEN] = Color.green(currentColor);
+        colors[BLUE] = Color.blue(currentColor);
+        SeekBar.OnSeekBarChangeListener listener = new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (seekBar.getId() == R.id.pb_color_picker_red)
+                    colors[RED] = progress;
+                if (seekBar.getId() == R.id.pb_color_picker_green)
+                    colors[GREEN] = progress;
+                if (seekBar.getId() == R.id.pb_color_picker_blue)
+                    colors[BLUE] = progress;
+                imageColor.setColorFilter(Color.argb(255, colors[RED], colors[GREEN], colors[BLUE]));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        };
+        sbBlue.setOnSeekBarChangeListener(listener);
+        sbRed.setOnSeekBarChangeListener(listener);
+        sbGreen.setOnSeekBarChangeListener(listener);
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback.onColorSelected(Color.argb(255, colors[RED], colors[GREEN], colors[BLUE]));
+                instance.dismiss();
+            }
+        });
+        builder.setView(dialogView);
+        instance = builder.create();
+        return instance;
+    }
+
     public static Dialog newDatePickerDialog(final Context context, final DialogInteractionListener.OnDateSelected callback){
 
         return new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
@@ -428,6 +496,28 @@ public class DialogBuilder {
         return instance;
     }
 
+    public static Dialog seeTicketDialog(final Context context,
+                                         long ticketId, List<MSale> sale, float ticketTotal,
+                                         final DialogInteractionListener.OnShareTicketListener callback){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        @SuppressLint("InflateParams")
+        final View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_ticket_details, null);
+        /*
+        Init widgets
+         */
+        final TextView tvTicketReference = (TextView) dialogView.findViewById(R.id.tv_ticket_reference);
+        final TextView tvSaleTotal = (TextView) dialogView.findViewById(R.id.tv_ticket_total);
+        final ListView lvSales = (ListView)dialogView.findViewById(R.id.lv_tickets);
+        SimpleTicketAdapter adapter = new SimpleTicketAdapter(context, R.layout.simple_sale_row, sale);
+        String ticket = String.format("%s %d", context.getString(R.string.ticket_no), ticketId);
+        tvSaleTotal.setText(Conversor.asCurrency(ticketTotal));
+        lvSales.setAdapter(adapter);
+        tvTicketReference.setText(ticket);
+        builder.setView(dialogView);
+        instance = builder.create();
+        return instance;
+    }
+
     public static class DialogInteractionListener{
         public interface OnNewProductListener{
             void onNewProduct(MProduct product);
@@ -464,6 +554,7 @@ public class DialogBuilder {
 
         public interface OnSaleSuccessListener {
             void onSuccess();
+            void onShareTicket();
         }
 
         public interface OnSaleCancelListener{
@@ -472,6 +563,14 @@ public class DialogBuilder {
 
         public interface OnDeleteCategoryListener {
             void onDeleteCategory(long categoryId);
+        }
+
+        public interface OnColorSelectedListener{
+            void onColorSelected(int color);
+        }
+
+        public interface OnShareTicketListener {
+            void onTicketShare();
         }
     }
 }

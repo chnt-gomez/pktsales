@@ -2,6 +2,7 @@ package com.pocket.poktsales.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +25,13 @@ public class SimpleSaleAdapter extends ArraySwipeAdapter<MSale>{
 
     public SimpleSaleAdapter(Context context, int resource, List<MSale> objects) {
         super(context, resource, objects);
-        view = (ViewOperations)context;
+        try{
+            view = (ViewOperations)context;
+        }catch(ClassCastException e){
+            Log.i(getClass().getSimpleName(), "There is no ViewOperations layer in this context");
+            view = null;
+        }
+
     }
 
     @Override
@@ -41,24 +48,32 @@ public class SimpleSaleAdapter extends ArraySwipeAdapter<MSale>{
         if (convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.simple_sale_row, null);
         }
-        TextView tvQty = (TextView) convertView.findViewById(R.id.tv_product_qty);
-        TextView tvSaleName = (TextView) convertView.findViewById(R.id.tv_sale_concept);
-        TextView tvSaleTotal = (TextView) convertView.findViewById(R.id.tv_sale_total);
-
+        TextView tvQty = convertView.findViewById(R.id.tv_product_qty);
+        TextView tvSaleName = convertView.findViewById(R.id.tv_sale_concept);
+        TextView tvSaleTotal = convertView.findViewById(R.id.tv_sale_total);
+        View depView = convertView.findViewById(R.id.color_view);
         MSale sale = (MSale)getItem(position);
         if (sale != null){
             tvQty.setText(sale.productAmount);
             tvSaleName.setText(sale.saleConcept);
             tvSaleTotal.setText(Conversor.asCurrency(sale.saleTotal));
         }
-        final int pos = position;
-        convertView.findViewById(R.id.btn_confirm_delete).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                view.requestDelete(getItemId(position));
-            }
-        });
+        if (view != null)
+            convertView.findViewById(R.id.btn_confirm_delete).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                        view.requestDelete(getItemId(position));
+                    }
+            });
+        depView.setBackgroundColor(sale.colorDepartment);
         return convertView;
+    }
+
+    public void remove(long objectId){
+       for (int i=0; i<getCount(); i++){
+           if (getItemId(i) == objectId)
+               remove(getItem(i));
+       }
     }
 
     @Override
@@ -69,4 +84,5 @@ public class SimpleSaleAdapter extends ArraySwipeAdapter<MSale>{
     public interface ViewOperations{
         void requestDelete(long saleId);
     }
+
 }

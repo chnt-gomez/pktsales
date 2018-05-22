@@ -1,12 +1,12 @@
 package com.pocket.poktsales.activities;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
-
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
@@ -15,8 +15,11 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.pocket.poktsales.R;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
+import com.pocket.poktsales.model.MDepartment;
 import com.pocket.poktsales.presenter.ReportPresenter;
 import com.pocket.poktsales.utils.ChartValueFormatter;
 import com.pocket.poktsales.utils.Conversor;
@@ -29,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by MAV1GA on 08/01/2018.
@@ -55,13 +59,15 @@ public class BusinessReportActivity extends BaseActivity implements RequiredView
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        this.layoutResourceId = R.layout.activity_reports;
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_reports);
+        ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
+        init();
     }
 
     @Override
     protected void init() {
-        super.init();
         if (getSupportActionBar()!= null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         presenter = new ReportPresenter(this);
@@ -84,6 +90,7 @@ public class BusinessReportActivity extends BaseActivity implements RequiredView
     @Override
     public void onLoadingPrepare() {
         super.onLoadingPrepare();
+        categoryChart.setCenterText("");
         if (activityAdapter == null)
             activityAdapter = new ActivityAdapter();
     }
@@ -107,16 +114,34 @@ public class BusinessReportActivity extends BaseActivity implements RequiredView
 
     private void setCategoriesChart(List<PieEntry> monthPerformanceEntries) {
         PieDataSet set = new PieDataSet(monthPerformanceEntries, null);
-        set.setColors(new int[]{R.color.chart_red, R.color.chart_red_dark,
-                R.color.chart_purple, R.color.chart_blue, R.color.chart_blue_light,
-                R.color.chart_green, R.color.chart_green_light}, getApplicationContext());
+        List<MDepartment> deps = presenter.getDepartments();
+        int[] colors = new int[deps.size()];
+
+        for (int i=0; i<deps.size(); i++){
+            colors[i] = deps.get(i).colorResource;
+        }
+        set.setColors(colors);
+        set.setDrawValues(false);
         PieData data = new PieData(set);
         data.setValueFormatter(new ChartValueFormatter());
         categoryChart.setData(data);
         categoryChart.getLegend().setEnabled(false);
         categoryChart.setDescription(null);
-        categoryChart.getData().setValueTextColor(Color.WHITE);
-        categoryChart.getData().setValueTextSize(16);
+        categoryChart.setDrawEntryLabels(false);
+        categoryChart.setCenterTextColor(getResources().getColor(R.color.colorPrimary));
+        categoryChart.setCenterTextSize(16);
+        categoryChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                PieEntry pe = (PieEntry)e;
+                categoryChart.setCenterText(String.format("%s \n %s", pe.getLabel(), Conversor.asCurrency(pe.getValue())));
+            }
+
+            @Override
+            public void onNothingSelected() {
+                categoryChart.setCenterText("");
+            }
+        });
         categoryChart.invalidate();
     }
 

@@ -13,4 +13,10 @@
         android:selectAllOnFocus="true"
         android:singleLine="true"
         android:title="@string/label_administrator_name" />
+    <EditTextPreference
+        android:defaultValue="@string/set_default_address"
+        android:key="pf_business_address"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/label_address" />
 </PreferenceScreen>

@@ -17,6 +17,8 @@ import com.pocket.poktsales.interfaces.OnLoadingEventListener;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
 import com.pocket.poktsales.utils.DataLoader;
 
+import java.util.prefs.PreferenceChangeEvent;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -34,37 +36,26 @@ public abstract class BaseActivity extends AppCompatActivity implements Required
 
     protected ProgressBar loadingBar;
 
-    protected int layoutResourceId;
-
     protected DataLoader loader;
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        try {
-            setContentView(layoutResourceId);
-        }catch (Exception e){
-            Log.w(getClass().getSimpleName(), "Invalid resource id. Set layoutResourceId");
-        }finally{
-            init();
-        }
-    }
-
-
 
     protected void start(){
         loader = new DataLoader(this);
         loader.execute();
     }
 
-    protected void init() {
-        ButterKnife.bind(this);
-        setSupportActionBar(toolbar);
-    }
-
     @Override
     public void onSuccess() {
 
+    }
+
+    protected void init(){
+
+    }
+
+
+
+    protected void setToolbar(){
+        setSupportActionBar(toolbar);
     }
 
 
@@ -81,7 +72,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Required
         onSuccess();
     }
 
-    public void showMessage(String message){
+    public void showMessage(String message) {
 
     }
 
@@ -119,17 +110,20 @@ public abstract class BaseActivity extends AppCompatActivity implements Required
 
     @Override
     public void onLoadingPrepare() {
+        Log.d("ON LOADING PREPARE", "start");
         if (loadingBar != null){
             loadingBar.animate()
                     .setInterpolator(new AccelerateInterpolator())
                     .setDuration(300)
                     .alpha(1f);
         }
+        Log.d("ON LOADING PREPARE", "end");
     }
 
     @Override
-    public void onLoading() {
-
+    public void onLoading(){
+        Log.d("ON LOADING", "start");
+        Log.d("ON LOADING", "end");
     }
 
     @Override
@@ -139,6 +133,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Required
 
     @Override
     public void onLoadingComplete() {
+        Log.d("ON LOADING COMPLETE", "start");
         if (loadingBar != null){
             loadingBar.animate()
                     .translationY(-loadingBar.getHeight())
@@ -146,6 +141,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Required
                     .setDuration(300)
                     .alpha(0f);
         }
+        Log.d("ON LOADING COMPLETE", "end");
     }
 
     @Override
@@ -161,5 +157,13 @@ public abstract class BaseActivity extends AppCompatActivity implements Required
 
     protected String getPreferenceString(String key, String defVal){
         return PreferenceManager.getDefaultSharedPreferences(this).getString((key), defVal);
+    }
+
+    protected boolean getPreferenceBoolean(String key, boolean defVal) {
+        return PreferenceManager.getDefaultSharedPreferences(this).getBoolean(key, defVal);
+    }
+
+    protected void saveBooleanPreference(String key, boolean value){
+        PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean(key, value).apply();
     }
 }

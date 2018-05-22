@@ -6,6 +6,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieEntry;
 import com.pocket.poktsales.model.MDepartment;
 import com.pocket.poktsales.model.MProduct;
+import com.pocket.poktsales.model.MReport;
 import com.pocket.poktsales.model.MSale;
 import com.pocket.poktsales.model.MTicket;
 import com.pocket.poktsales.presenter.Ticket;
@@ -58,6 +59,7 @@ public interface RequiredPresenterOps {
         MDepartment getDepartment(long id);
         int getProductCountFromDepartment(long departmentId);
         void updateDepartment(String newDepartmentArgs, long departmentId);
+        void updateDepartmentColor(long departmentId, int color);
     }
 
     interface HomePresenterOps{
@@ -69,6 +71,9 @@ public interface RequiredPresenterOps {
         float getSalesFromDay(int dayOfMonth);
         String getBestSellerOfTheDay();
         List<MTicket> getRecentSales();
+        List<MSale> getSalesFromTicket(long ticketId);
+        MTicket getTicket(long ticketId);
+        MReport getReport(long ticketId);
     }
 
     interface QuickSalePresenterOps{
@@ -87,7 +92,11 @@ public interface RequiredPresenterOps {
         float geTotalSalesAtTime(long from, long to);
         float getSalesFromDepartment(long departmentId, long from, long to);
         List<MDepartment> getAllActiveDepartments();
+        List<MSale> getSalesFromTicket(long ticketId);
+        float getTicketTotal(long ticketId);
     }
+
+
 
     interface ReportsPresenterOps {
         float getMonthSales(int monthOfYear, int year);

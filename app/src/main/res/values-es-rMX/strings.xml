@@ -42,7 +42,7 @@
     <string name="title_activity_categories">Categorias</string>
     <string name="todays_income">Ganancias de hoy</string>
     <string name="see_more">Ver más</string>
-    <string name="empty_sale">No hay Productos en la venta</string>
+    <string name="empty_sale">Los productos en esta venta aparecerán aquí. Añade productos a esta venta de la lista de arriba</string>
     <string name="quick_sale">Venta rápida</string>
     <string name="new_sale">Nueva venta</string>
     <string name="new_temp_product">Añadir Producto Temporal…</string>
@@ -114,4 +114,16 @@
     <string name="contact">Contacto</string>
     <string name="about">Acerca de</string>
     <string name="thankyou">Gracias!</string>
+    <string name="replay_intro">Reproducir intro</string>
+    <string name="help">Ayuda</string>
+    <string name="empty_content_sell">Tus cuentas abiertas aparecen aquí. Puedes abrir una cuenta con el boton de abajo o vender algo enseguida con el boton del menu superior.</string>
+    <string name="rate_us">Califícanos</string>
+    <string name="no_products_to_sell">Aún no has creado productos para vender pero puedes añadir productos temporales con el boton del menú superior sin tener que crearlos</string>
+    <string name="no_products">Tus productos activos se enlistarán aquí. Crea productos para poder venderlos</string>
+    <string name="empty_categories">Crea un departamento para ordenar tus productos. Por ejemplo, podrías ordenar todos los refrescos en el departamento \"Bebidas\"</string>
+    <string name="pick_a_color">Mezcla un color…</string>
+    <string name="ticket_no">Ticket #</string>
+    <string name="unknown">Artículo desconocido</string>
+    <string name="all_tickets_of_day">Tickets registrados</string>
+    <string name="version_features">Novedades</string>
 </resources>

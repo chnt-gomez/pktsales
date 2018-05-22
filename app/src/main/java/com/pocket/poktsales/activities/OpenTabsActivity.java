@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class OpenTabsActivity extends BaseActivity implements AdapterView.OnItemClickListener, RequiredViewOps.TabViewOps{
 
@@ -36,8 +37,11 @@ public class OpenTabsActivity extends BaseActivity implements AdapterView.OnItem
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        layoutResourceId = R.layout.activity_sell;
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_sell);
+        ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
+        init();
     }
 
     @Override
@@ -79,6 +83,7 @@ public class OpenTabsActivity extends BaseActivity implements AdapterView.OnItem
         gridView.setAdapter(adapter);
         activityAdapter = new ActivityAdapter();
         setTitle(R.string.title_activity_sell);
+        gridView.setEmptyView(findViewById(android.R.id.empty));
     }
 
     @Override

@@ -40,14 +40,13 @@ public class PickToSellProductAdapter extends ArraySwipeAdapter<MProduct> {
         }
         TextView tvProductName = (TextView) convertView.findViewById(R.id.tv_product_name);
         TextView tvProductPrice = (TextView) convertView.findViewById(R.id.tv_product_price);
-
+        View depView = convertView.findViewById(R.id.color_view);
         MProduct product = (MProduct)getItem(position);
         if (product != null){
 
             tvProductName.setText(product.productName);
             tvProductPrice.setText(product.maskProductSellPrice);
         }
-        final int pos = position;
         convertView.findViewById(R.id.btn_add_many).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,6 +59,7 @@ public class PickToSellProductAdapter extends ArraySwipeAdapter<MProduct> {
                 view.addOne(getItemId(position));
             }
         });
+        depView.setBackgroundColor(product.productDepartmentColor);
         return convertView;
     }
 

@@ -42,7 +42,7 @@
     <string name="todays_income">Today\'s income</string>
     <string name="see_more">See more</string>
     <string name="zero_currency" translatable="false">$ 0.00 MXN</string>
-    <string name="empty_sale">No products in sale.</string>
+    <string name="empty_sale">The products in this sale will show up here. Add products to this sale from the list above</string>
     <string name="quick_sale">Quick sale</string>
     <string name="new_sale">New sale</string>
     <string name="new_temp_product">Add temporary product…</string>
@@ -117,4 +117,20 @@
     <string name="about_content" translatable="false">OhKey is the small business app to help you grow your business. It is free to download and use and constantly updated by a dedicated team.</string>
     <string name="help_instructions" translatable="false">We are currenlty working in providing more resources to help you use better this app. If you need assistance you can contact us in our social media</string>
     <string name="thankyou">Thank you!</string>
+    <string name="replay_intro">Replay intro</string>
+    <string name="help">Help</string>
+    <string name="empty_content_sell">Your open tabs will show here. You open a tab with the button below or sell something right away with the button in he right-top corner</string>
+    <string name="rate_us">Rate us</string>
+    <string name="no_products_to_sell">You haven\'t created any products to sell yet. You can add temporary products with the button in the top menu</string>
+    <string name="no_products">All your active products will be listed here. Create products to sell them</string>
+    <string name="empty_categories">Create categories to order your products. For example all your drinks could be fit into \"Drinks\" category</string>
+    <string name="pick_a_color">Mix a color…</string>
+    <string name="ticket_no">Ticket #</string>
+    <string name="unknown">Unknown</string>
+    <string name="all_tickets_of_day">Today´s tickets</string>
+    <string name="version_features">Version features</string>
+    <string name="ticket">Purchase ticket</string>
+    <string name="business_address">Business address</string>
+    <string name="set_default_address">Your business address</string>
+    <string name="label_address">Business address</string>
 </resources>

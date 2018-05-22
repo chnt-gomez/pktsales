@@ -25,6 +25,15 @@
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/barSize"
             android:id="@+id/lv_products"/>
+        <TextView
+            android:id="@+id/empty_products"
+            android:layout_marginTop="@dimen/barSize"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_products_to_sell"/>
 
     </LinearLayout>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -93,10 +102,11 @@
             android:layout_height="wrap_content"
             android:id="@+id/lv_products_in_sale"/>
         <TextView
-            android:id="@android:id/empty"
-            android:padding="@dimen/margin_big"
+            android:id="@+id/empty_sale"
+            android:layout_margin="8dp"
             android:textAlignment="center"
             android:textSize="18sp"
+            android:textColor="@color/colorPrimary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/empty_sale"/>

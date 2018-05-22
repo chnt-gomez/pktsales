@@ -1,11 +1,12 @@
 package com.pocket.poktsales.presenter;
 
+import com.pocket.poktsales.R;
 import com.pocket.poktsales.interfaces.RequiredPresenterOps;
 import com.pocket.poktsales.interfaces.RequiredViewOps;
 import com.pocket.poktsales.model.MDepartment;
+import com.pocket.poktsales.model.MSale;
 import com.pocket.poktsales.model.MTicket;
 import com.pocket.poktsales.utils.Conversor;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,19 +59,37 @@ public class DayReportPresenter extends BasePresenter implements RequiredPresent
     @Override
     public float getSalesFromDepartment(long departmentId, long from, long to) {
         float total = 0;
-        for (Sale s : Sale.findWithQuery(
-                Sale.class, "SELECT * from Sale s, Product p, Department d, Ticket t WHERE " +
-                        "p.department = d.id AND d.id = ? AND s.product = p.id AND s.id = t.id AND t.date_time >= ? " +
-                        "AND t.date_time < ?", String.valueOf(departmentId), String.valueOf(from), String.valueOf(to)
-        )){
-            total += s.getSaleTotal();
+
+        List<Ticket> tickets = Ticket.find(Ticket.class, "date_time >= ? AND date_time < ?", String.valueOf(from), String.valueOf(to));
+
+        List<Sale> sales = new ArrayList<>();
+        for (Ticket t: tickets){
+            sales.addAll(Sale.find(Sale.class, "ticket = ?", String.valueOf(t.getId())));
+        }
+
+        for (Sale s : sales){
+            if (s.getProduct().getDepartment() != null){
+                if (s.getProduct().getDepartment().getId() == departmentId){
+                    total += s.getSaleTotal();
+                }
+            }
         }
         return total;
     }
 
     @Override
     public List<MDepartment> getAllActiveDepartments() {
-        return fromDepartmentList(
-                Department.find(Department.class, "department_status = ?", String.valueOf(Department.ACTIVE)));
+        return fromDepartmentList(Department.find(Department.class, "department_status = ?", String.valueOf(Department.ACTIVE)));
+    }
+
+    @Override
+    public List<MSale> getSalesFromTicket(long ticketId) {
+        return fromSaleList(Sale.find(Sale.class, "ticket = ?", String.valueOf(ticketId)),
+                view.getResString(R.string.unknown));
+    }
+
+    @Override
+    public float getTicketTotal(long ticketId) {
+        return Ticket.findById(Ticket.class, ticketId).getSaleTotal();
     }
 }
